@@ -3,12 +3,16 @@
   <id>org.sauvegardebureau.SauvegardeBureau</id>
   <name>Sauvegarde du bureau</name>
   <summary>Sauvegarder et restaurer applications, extensions GNOME et réglages</summary>
-  <developer_name>BreizhMann</developer_name>
+  <developer id="io.github.breizhmann">
+    <name>BreizhMann</name>
+  </developer>
+  <pkgname>sauvegarde-bureau</pkgname>
   <metadata_license>MIT</metadata_license>
   <project_license>MIT</project_license>
   <url type="homepage">https://www.iactualite.info/</url>
   <url type="vcs-browser">https://github.com/BreizhMann/sauvegarde-bureau</url>
   <url type="bugtracker">https://github.com/BreizhMann/sauvegarde-bureau/issues</url>
+  <content_rating type="oars-1.1"/>
   <launchable type="desktop-id">org.sauvegardebureau.SauvegardeBureau.desktop</launchable>
   <description>
     <p>Sauvegarde et restaure les applications (apt, snap, flatpak), les dépôts tiers, les extensions GNOME et les réglages du bureau (dconf), via une interface GTK4/libadwaita.</p>
@@ -36,7 +40,25 @@
     <binary>sauvegarde-bureau</binary>
   </provides>
   <releases>
-    <release version="1.24.7" date="2026-10-15"/>
-    <release version="1.24.6" date="2026-10-15"/>
+    <release version="1.24.9" date="2026-10-15">
+      <description>
+        <p>Ajout des notes de version dans la fiche de l’application.</p>
+      </description>
+    </release>
+    <release version="1.24.8" date="2026-10-15">
+      <description>
+        <p>Meilleure intégration dans les logithèques : lien avec le paquet, informations sur le développeur et classification d’âge.</p>
+      </description>
+    </release>
+    <release version="1.24.7" date="2026-10-15">
+      <description>
+        <p>Ajout des captures d’écran et des liens du projet dans la fiche de l’application.</p>
+      </description>
+    </release>
+    <release version="1.24.6" date="2026-10-15">
+      <description>
+        <p>Première version publiée sur GitHub.</p>
+      </description>
+    </release>
   </releases>
 </component>
