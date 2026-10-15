@@ -1,0 +1,10 @@
+#!/usr/bin/python3
+import sys
+
+if "--auto" in sys.argv[1:]:
+    # Mode sans fenêtre, lancé par le timer systemd
+    from sauvegarde_bureau.auto import run_auto
+    sys.exit(run_auto())
+
+from sauvegarde_bureau.app import main
+sys.exit(main())

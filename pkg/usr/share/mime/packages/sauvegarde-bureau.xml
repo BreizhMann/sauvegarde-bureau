@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mime-info xmlns="http://www.freedesktop.org/standards/shared-mime-info">
+  <!-- Archives chiffrées créées par l'application (manuelles et automatiques).
+       Type dédié : un double-clic ouvre l'application sans s'emparer des autres fichiers .gpg. -->
+  <mime-type type="application/x-sauvegarde-bureau">
+    <comment>Desktop backup (encrypted archive)</comment>
+    <comment xml:lang="fr">Sauvegarde du bureau (archive chiffrée)</comment>
+    <sub-class-of type="application/pgp-encrypted"/>
+    <icon name="sauvegarde-bureau"/>
+    <glob pattern="sauvegarde-ubuntu-*.tar.gz.gpg" weight="60"/>
+  </mime-type>
+</mime-info>

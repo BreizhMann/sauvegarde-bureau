@@ -1,0 +1,11 @@
+[Desktop Entry]
+Type=Application
+Name=Sauvegarde du bureau
+Comment=Sauvegarder et restaurer applications, extensions GNOME et réglages
+Exec=sauvegarde-bureau %F
+Icon=sauvegarde-bureau
+Terminal=false
+Categories=GNOME;GTK;Utility;System;
+Keywords=sauvegarde;backup;restaurer;extensions;réglages;
+StartupNotify=true
+MimeType=application/x-sauvegarde-bureau;

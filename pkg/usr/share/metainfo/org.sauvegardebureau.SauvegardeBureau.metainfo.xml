@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<component type="desktop-application">
+  <id>org.sauvegardebureau.SauvegardeBureau</id>
+  <name>Sauvegarde du bureau</name>
+  <summary>Sauvegarder et restaurer applications, extensions GNOME et réglages</summary>
+  <developer_name>BreizhMann</developer_name>
+  <metadata_license>MIT</metadata_license>
+  <project_license>MIT</project_license>
+  <url type="homepage">https://www.iactualite.info/</url>
+  <launchable type="desktop-id">org.sauvegardebureau.SauvegardeBureau.desktop</launchable>
+  <description>
+    <p>Sauvegarde et restaure les applications (apt, snap, flatpak), les dépôts tiers, les extensions GNOME et les réglages du bureau (dconf), via une interface GTK4/libadwaita.</p>
+    <p>Les sauvegardes sont protégées par une somme de contrôle SHA-256, vérifiée à la création, avant restauration et après rotation. Elles peuvent être chiffrées et copiées dans le cloud (rclone).</p>
+  </description>
+  <provides>
+    <binary>sauvegarde-bureau</binary>
+  </provides>
+  <releases>
+    <release version="1.24.6" date="2026-10-15"/>
+  </releases>
+</component>
