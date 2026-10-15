@@ -38,7 +38,7 @@ Prérequis : Ubuntu avec GNOME et libadwaita 1.5 ou plus (Ubuntu 24.04 et suivan
 ## Construire le paquet soi-même
 
 ```bash
-git clone https://github.com/VOTRE-PSEUDO/sauvegarde-bureau.git
+git clone https://github.com/BreizhMann/sauvegarde-bureau.git
 cd sauvegarde-bureau
 make deb
 ```
