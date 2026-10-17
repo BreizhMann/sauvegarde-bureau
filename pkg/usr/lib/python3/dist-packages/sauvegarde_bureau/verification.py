@@ -17,6 +17,7 @@ from pathlib import Path
 from typing import Iterable, NamedTuple
 
 from . import backend
+from .i18n import DATE_FORMAT, DATETIME_FORMAT, ZERO_IS_SINGULAR, _, ngettext
 
 STATE_DIR = Path(os.environ.get("XDG_STATE_HOME") or Path.home() / ".local/state") / "sauvegarde-bureau"
 STATE = STATE_DIR / "verifications.json"
@@ -117,8 +118,8 @@ def date_text(path: Path) -> str:
     try:
         when = backup_time(path)
     except OSError:
-        return "date inconnue"
-    return when.strftime("%d/%m/%Y") if m and not m[4] and _valid_date(m) else when.strftime("%d/%m/%Y à %H:%M")
+        return _("date inconnue")
+    return when.strftime(DATE_FORMAT) if m and not m[4] and _valid_date(m) else when.strftime(DATETIME_FORMAT)
 
 
 def _valid_date(m: re.Match) -> bool:
@@ -130,22 +131,23 @@ def _valid_date(m: re.Match) -> bool:
 
 
 def _n(count: int, one: str, many: str) -> str:
-    return f"{count} {one if count < 2 else many}"
+    singular = count < 2 if ZERO_IS_SINGULAR else count == 1
+    return f"{count} {one if singular else many}"
 
 
 def human_age(delta: timedelta) -> str:
     """« à l'instant », « il y a 3 jours »…"""
     seconds = max(0, int(delta.total_seconds()))
     if seconds < 60:
-        return "à l'instant"
+        return _("à l'instant")
     if seconds < 3600:
-        return "il y a " + _n(seconds // 60, "minute", "minutes")
+        return _("il y a {n}").format(n=_n(seconds // 60, "minute", _("minutes")))
     if seconds < 86400:
-        return "il y a " + _n(seconds // 3600, "heure", "heures")
+        return _("il y a {n}").format(n=_n(seconds // 3600, _("heure"), _("heures")))
     days = seconds // 86400
     if days < 60:
-        return "il y a " + _n(days, "jour", "jours")
-    return f"il y a {days // 30} mois"
+        return _("il y a {n}").format(n=_n(days, _("jour"), _("jours")))
+    return ngettext("il y a {n} mois", "il y a {n} mois", days // 30).format(n=days // 30)
 
 
 # --------------------------------------------------------------------------
@@ -194,21 +196,20 @@ def evaluate(folder: Path | None, search: list[Path] | None = None,
 
     alert = ""
     if last is not None and now - last > timedelta(days=alert_days):
-        alert = (f"Votre dernière sauvegarde date d'{human_age(now - last)} "
-                 f"(alerte au-delà de {_n(alert_days, 'jour', 'jours')})."
-                 + ("" if visible else " Le dossier de sauvegarde est-il accessible (disque branché) ?"))
+        alert = (_("Votre dernière sauvegarde date d'{v1} (alerte au-delà de {v2}).").format(v1=human_age(now - last), v2=_n(alert_days, _('jour'), _('jours')))
+                 + ("" if visible else _(" Le dossier de sauvegarde est-il accessible (disque branché) ?")))
 
     if folder is None or not folder.is_dir():
-        return Status("Aucun dossier de sauvegarde connu", "none", alert, last)
+        return Status(_("Aucun dossier de sauvegarde connu"), "none", alert, last)
     present = {p.name for p in backend.backups_in_folder(folder)}
     if not present:
-        return Status(f"Aucune sauvegarde dans {folder}", "none", alert, last)
+        return Status(_('Aucune sauvegarde dans {folder}').format(folder=folder), "none", alert, last)
 
     items = state.get("folders", {}).get(str(folder), {})
     checked = {name: i for name, i in items.items()
                if name in present and isinstance(i, dict) and _when(i.get("at"))}
     if not checked:
-        return Status("Jamais vérifiée", "warn", alert, last)
+        return Status(_("Jamais vérifiée"), "warn", alert, last)
 
     # Une sauvegarde absente de la liste n'a jamais été contrôlée : l'ancienneté affichée est
     # celle du contrôle le plus ancien, pour ne rien promettre de plus que ce qui est vrai.
@@ -222,20 +223,18 @@ def evaluate(folder: Path | None, search: list[Path] | None = None,
     pending = len(present) - len(checked)
 
     if unrestorable and not bad:
-        text, level = (f"Vérifiée {age} : restauration à blanc échouée pour "
-                       f"{_n(unrestorable, 'sauvegarde', 'sauvegardes')}"), "bad"
+        text, level = (_('Vérifiée {age} : restauration à blanc échouée pour {v2}').format(age=age, v2=_n(unrestorable, _('sauvegarde'), _('sauvegardes')))), "bad"
     elif bad:
-        text, level = f"Vérifiée {age} : {_n(bad, 'sauvegarde abîmée', 'sauvegardes abîmées')}", "bad"
+        text, level = _('Vérifiée {age} : {v2}').format(age=age, v2=_n(bad, _('sauvegarde abîmée'), _('sauvegardes abîmées'))), "bad"
     elif refused:
-        text, level = (f"Vérifiée {age} : mot de passe refusé par "
-                       f"{_n(refused, 'archive', 'archives')}"), "bad"
+        text, level = (_('Vérifiée {age} : mot de passe refusé par {v2}').format(age=age, v2=_n(refused, _('archive'), _('archives')))), "bad"
     elif missing:
-        text, level = (f"Vérifiée {age} : {_n(missing, 'sauvegarde', 'sauvegardes')} "
-                       "sans somme de contrôle"), "warn"
+        text, level = (_('Vérifiée {age} : {v2} sans somme de contrôle').format(age=age, v2=_n(missing, _('sauvegarde'), _('sauvegardes')))), "warn"
     else:
-        text, level = f"Vérifiée {age} : tout est intact", "ok"
+        text, level = _('Vérifiée {age} : tout est intact').format(age=age), "ok"
     if pending:
-        text += f" · {_n(pending, 'sauvegarde', 'sauvegardes')} pas encore contrôlée{'s' if pending > 1 else ''}"
+        text += ngettext(" · {n} sauvegarde pas encore contrôlée", " · {n} sauvegardes pas encore contrôlées",
+                         pending).format(n=pending)
         level = level if level == "bad" else "warn"
     return Status(text, level, alert, last)
 
@@ -251,27 +250,27 @@ def item_states(folder: Path | None) -> dict[str, dict]:
 def describe_item(info: dict | None, now: datetime | None = None) -> tuple[str, str]:
     """(texte, niveau ok | warn | bad) du dernier contrôle d'UNE sauvegarde ; `info` vient de item_states."""
     if not info:
-        return "Jamais vérifiée", "warn"
+        return _("Jamais vérifiée"), "warn"
     now = now or datetime.now()
     when = _when(info.get("at"))
-    age = human_age(now - when) if when else "à une date inconnue"
+    age = human_age(now - when) if when else _("à une date inconnue")
     reh = info.get("rehearsal") if isinstance(info.get("rehearsal"), dict) else None
     reh_when = _when(reh.get("at")) if reh else None
     reh_text = ""
     if reh and reh_when:
         reh_age = human_age(now - reh_when)
-        reh_text = {backend.REH_OK: f" · restauration à blanc réussie {reh_age}",
-                    backend.REH_PARTIAL: f" · restauration à blanc sans comparaison possible {reh_age}",
-                    backend.REH_BAD: f" · restauration à blanc ÉCHOUÉE {reh_age}"}.get(reh.get("verdict"), "")
+        reh_text = {backend.REH_OK: _(' · restauration à blanc réussie {reh_age}').format(reh_age=reh_age),
+                    backend.REH_PARTIAL: _(' · restauration à blanc sans comparaison possible {reh_age}').format(reh_age=reh_age),
+                    backend.REH_BAD: _(' · restauration à blanc ÉCHOUÉE {reh_age}').format(reh_age=reh_age)}.get(reh.get("verdict"), "")
     if reh_text and reh.get("verdict") == backend.REH_BAD:
-        return f"Irrécupérable ? Vérifiée {age}{reh_text}", "bad"
+        return _('Irrécupérable ? Vérifiée {age}{reh_text}').format(age=age, reh_text=reh_text), "bad"
     if info.get("status") == backend.BAD:
-        return f"Abîmée · vérifiée {age}", "bad"
+        return _('Abîmée · vérifiée {age}').format(age=age), "bad"
     if info.get("pw") is False:
-        return f"Mot de passe refusé · vérifiée {age}", "bad"
+        return _('Mot de passe refusé · vérifiée {age}').format(age=age), "bad"
     if info.get("status") == backend.MISSING:
-        return f"Sans somme de contrôle · vérifiée {age}{reh_text}", "warn"
-    return f"Intacte · vérifiée {age}" + (" · mot de passe correct" if info.get("pw") else "") + reh_text, "ok"
+        return _('Sans somme de contrôle · vérifiée {age}{reh_text}').format(age=age, reh_text=reh_text), "warn"
+    return _('Intacte · vérifiée {age}').format(age=age) + (_(" · mot de passe correct") if info.get("pw") else "") + reh_text, "ok"
 
 
 def record_rehearsal(path: Path, verdict: str, now: datetime | None = None) -> None:
@@ -345,14 +344,15 @@ def cloud_status(remote: str, path: str, now: datetime | None = None) -> tuple[s
     items = _load().get("cloud", {}).get(f"{remote}:{path}", {})
     stamps = [t for i in items.values() if isinstance(i, dict) and (t := _when(i.get("at")))]
     if not stamps:
-        return "Jamais vérifiées", "warn"
+        return _("Jamais vérifiées"), "warn"
     age = human_age(now - min(stamps))
     states = [i.get("status") for i in items.values() if isinstance(i, dict)]
     bad = states.count(backend.CLOUD_BAD)
     unsure = states.count(backend.CLOUD_WEAK) + states.count(backend.CLOUD_NOREF)
     if bad:
-        return f"Vérifiées {age} : {_n(bad, 'copie cloud abîmée', 'copies cloud abîmées')}", "bad"
+        return _('Vérifiées {age} : {v2}').format(age=age, v2=_n(bad, _('copie cloud abîmée'), _('copies cloud abîmées'))), "bad"
     if unsure:
-        return (f"Vérifiées {age} : {_n(unsure, 'copie', 'copies')} non confirmée{'s' if unsure > 1 else ''} "
-                "(taille seulement)"), "warn"
-    return f"Vérifiées {age} : toutes identiques à vos copies locales", "ok"
+        return ngettext("Vérifiées {age} : {n} copie non confirmée (taille seulement)",
+                        "Vérifiées {age} : {n} copies non confirmées (taille seulement)",
+                        unsure).format(age=age, n=unsure), "warn"
+    return _('Vérifiées {age} : toutes identiques à vos copies locales').format(age=age), "ok"

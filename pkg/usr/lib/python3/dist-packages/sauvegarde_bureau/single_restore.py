@@ -19,26 +19,28 @@ gi.require_version("Pango", "1.0")
 from gi.repository import Adw, Gio, GLib, Gtk, Pango  # noqa: E402
 
 from . import backend  # noqa: E402
+from .i18n import DATE_FORMAT, ZERO_IS_SINGULAR, _, ngettext  # noqa: E402
 
 MAX_ROWS = 300   # lignes affichées d'un coup : au-delà, la recherche est plus utile qu'une liste interminable
 
 
 def _n(count: int, one: str, many: str) -> str:
-    return f"{count} {one if count < 2 else many}"
+    singular = count < 2 if ZERO_IS_SINGULAR else count == 1
+    return f"{count} {one if singular else many}"
 
 
 def _date(mtime: float) -> str:
     try:
-        return datetime.fromtimestamp(mtime).strftime("%d/%m/%Y")
+        return datetime.fromtimestamp(mtime).strftime(DATE_FORMAT)
     except (OverflowError, OSError, ValueError):
-        return "date inconnue"
+        return _("date inconnue")
 
 
 class SingleRestoreDialog(Adw.Dialog):
     """Explorateur d'une sauvegarde : chaque ligne a son bouton « Restaurer »."""
 
     def __init__(self, window, index: backend.BackupIndex, passphrase: str | None) -> None:
-        super().__init__(title="Restaurer un fichier ou un dossier", content_width=680, content_height=680)
+        super().__init__(title=_("Restaurer un fichier ou un dossier"), content_width=680, content_height=680)
         self.window = window
         self.index = index
         self._passphrase = passphrase       # gardé le temps de la fenêtre, jamais écrit ailleurs
@@ -49,13 +51,13 @@ class SingleRestoreDialog(Adw.Dialog):
         self.connect("closed", self._closed)
 
         header = Adw.HeaderBar()
-        header.set_title_widget(Adw.WindowTitle(title="Restaurer un fichier ou un dossier",
+        header.set_title_widget(Adw.WindowTitle(title=_("Restaurer un fichier ou un dossier"),
                                                 subtitle=index.source.name))
 
-        self.search = Gtk.SearchEntry(placeholder_text="Chercher un fichier ou un dossier par son nom…",
+        self.search = Gtk.SearchEntry(placeholder_text=_("Chercher un fichier ou un dossier par son nom…"),
                                       hexpand=True)
         self.search.connect("search-changed", lambda _e: self._show())
-        self.up = Gtk.Button(icon_name="go-up-symbolic", css_classes=["flat"], tooltip_text="Dossier parent",
+        self.up = Gtk.Button(icon_name="go-up-symbolic", css_classes=["flat"], tooltip_text=_("Dossier parent"),
                              valign=Gtk.Align.CENTER)
         self.up.connect("clicked", self._go_up)
         self.crumb = Gtk.Label(xalign=0, hexpand=True, ellipsize=Pango.EllipsizeMode.START,
@@ -69,9 +71,9 @@ class SingleRestoreDialog(Adw.Dialog):
 
         self.spinner = Gtk.Spinner(visible=False)
         self.status = Gtk.Label(xalign=0, hexpand=True, wrap=True, css_classes=["dim-label", "caption"],
-                                label=("Seuls les fichiers personnels de la sauvegarde sont listés "
-                                       "(configurations, profils de navigateurs et de courrier)."))
-        self.stop = Gtk.Button(label="Arrêter", css_classes=["destructive-action"], visible=False,
+                                label=(_("Seuls les fichiers personnels de la sauvegarde sont listés "
+                                       "(configurations, profils de navigateurs et de courrier).")))
+        self.stop = Gtk.Button(label=_("Arrêter"), css_classes=["destructive-action"], visible=False,
                                valign=Gtk.Align.CENTER)
         self.stop.connect("clicked", self._stop_clicked)
         bottom = Gtk.Box(spacing=8)
@@ -106,8 +108,8 @@ class SingleRestoreDialog(Adw.Dialog):
 
     def _describe(self, e: backend.BackupEntry) -> str:
         if e.is_dir:
-            return f"{_n(e.count, 'fichier', 'fichiers')} · {backend.fmt_size(e.size)} · modifié le {_date(e.mtime)}"
-        return f"{backend.fmt_size(e.size)} · modifié le {_date(e.mtime)}"
+            return _('{v1} · {v2} · modifié le {v3}').format(v1=_n(e.count, _('fichier'), _('fichiers')), v2=backend.fmt_size(e.size), v3=_date(e.mtime))
+        return _('{v1} · modifié le {v2}').format(v1=backend.fmt_size(e.size), v2=_date(e.mtime))
 
     def _row(self, e: backend.BackupEntry, searching: bool) -> Adw.ActionRow:
         subtitle = self._describe(e)
@@ -117,9 +119,9 @@ class SingleRestoreDialog(Adw.Dialog):
         row = Adw.ActionRow(title=e.name, subtitle=subtitle, use_markup=False, subtitle_lines=2,
                             title_lines=1, activatable=True)
         row.add_prefix(Gtk.Image(icon_name="folder-symbolic" if e.is_dir else "text-x-generic-symbolic"))
-        button = Gtk.Button(label="Restaurer", css_classes=["flat"], valign=Gtk.Align.CENTER,
-                            tooltip_text="Remettre cet élément dans le dossier personnel")
-        button.update_property([Gtk.AccessibleProperty.LABEL], [f"Restaurer {e.target}"])
+        button = Gtk.Button(label=_("Restaurer"), css_classes=["flat"], valign=Gtk.Align.CENTER,
+                            tooltip_text=_("Remettre cet élément dans le dossier personnel"))
+        button.update_property([Gtk.AccessibleProperty.LABEL], [_('Restaurer {v1}').format(v1=e.target)])
         button.connect("clicked", lambda _b, entry=e: self._ask_restore(entry))
         row.add_suffix(button)
         if e.is_dir:
@@ -137,22 +139,21 @@ class SingleRestoreDialog(Adw.Dialog):
         more = False
         if searching:
             entries, more = self.index.search(text)
-            self.crumb.set_label(f"Résultats pour « {text} »")
+            self.crumb.set_label(_('Résultats pour « {text} »').format(text=text))
         else:
             entries = self.index.children(self.cwd)
-            self.crumb.set_label("~/" + self.cwd if self.cwd else "Dossier personnel (~)")
+            self.crumb.set_label("~/" + self.cwd if self.cwd else _("Dossier personnel (~)"))
         shown = entries[:MAX_ROWS]
         for e in shown:
             self.listbox.append(self._row(e, searching))
         if not entries:
             self.listbox.append(Adw.ActionRow(
-                title="Aucun résultat" if searching else "Ce dossier est vide", use_markup=False,
-                subtitle="Essayez une partie plus courte du nom." if searching else ""))
+                title=_("Aucun résultat") if searching else _("Ce dossier est vide"), use_markup=False,
+                subtitle=_("Essayez une partie plus courte du nom.") if searching else ""))
         elif more or len(entries) > len(shown):
             self.listbox.append(Adw.ActionRow(
-                title=("Il y a d'autres résultats : précisez la recherche." if searching else
-                       f"{_n(len(entries) - len(shown), 'autre élément', 'autres éléments')} : "
-                       "utilisez la recherche."), use_markup=False, selectable=False))
+                title=(_("Il y a d'autres résultats : précisez la recherche.") if searching else
+                       _('{v1} : utilisez la recherche.').format(v1=_n(len(entries) - len(shown), _('autre élément'), _('autres éléments')))), use_markup=False, selectable=False))
 
     # ------------------------------------------------------------------ Restauration
 
@@ -162,7 +163,7 @@ class SingleRestoreDialog(Adw.Dialog):
             return
         self.gen += 1
         gen = self.gen
-        self.status.set_label(f"Préparation de « {entry.name} »…")
+        self.status.set_label(_('Préparation de « {v1} »…').format(v1=entry.name))
 
         def worker() -> None:
             existing = backend.existing_count(entry.target)
@@ -176,26 +177,28 @@ class SingleRestoreDialog(Adw.Dialog):
         if gen != self.gen or self.running:
             return GLib.SOURCE_REMOVE
         self._idle_status()
-        what = _n(entry.count, "fichier", "fichiers") + f", {backend.fmt_size(entry.size)}"
-        lines = [f"« {entry.target} » ({what}) sera remis dans ~/{entry.target}."]
+        what = _n(entry.count, _("fichier"), _("fichiers")) + f", {backend.fmt_size(entry.size)}"
+        lines = [_('« {v1} » ({what}) sera remis dans ~/{v1}.').format(v1=entry.target, what=what)]
         if existing:
             lines.append(
-                (f"{_n(existing, 'fichier existe', 'fichiers existent')} déjà à cet endroit et "
-                 f"{'sera remplacé' if existing < 2 else 'seront remplacés'} par la version de la sauvegarde. "
-                 f"L'ancienne version est conservée à côté, avec l'extension {backend.BACKUP_SUFFIX}."))
+                ngettext(
+                    "{n} fichier existe déjà à cet endroit et sera remplacé par la version de la sauvegarde. "
+                    "L'ancienne version est conservée à côté, avec l'extension {suffix}.",
+                    "{n} fichiers existent déjà à cet endroit et seront remplacés par la version de la "
+                    "sauvegarde. L'ancienne version est conservée à côté, avec l'extension {suffix}.",
+                    existing).format(n=existing, suffix=backend.BACKUP_SUFFIX))
         else:
-            lines.append("Rien n'existe à cet emplacement : rien ne sera remplacé.")
+            lines.append(_("Rien n'existe à cet emplacement : rien ne sera remplacé."))
         if open_apps:
-            lines.append(f"Attention : {', '.join(open_apps)} est ouvert. Fermez-le avant de restaurer un fichier "
-                         "de son profil, sinon il risque d'écraser le résultat.")
+            lines.append(_("Attention : {v1} est ouvert. Fermez-le avant de restaurer un fichier de son profil, sinon il risque d'écraser le résultat.").format(v1=', '.join(open_apps)))
         if self.index.encrypted:
-            lines.append("L'archive va être relue en entier, ce qui peut prendre quelques minutes.")
+            lines.append(_("L'archive va être relue en entier, ce qui peut prendre quelques minutes."))
         if entry.size > 1024 ** 3:
-            lines.append("C'est volumineux : vérifiez que la place disque est suffisante.")
-        alert = Adw.AlertDialog(heading=f"Restaurer « {entry.name} » ?", body="\n\n".join(lines))
-        alert.add_response("cancel", "Annuler")
-        alert.add_response("elsewhere", "Dans un autre dossier…")
-        alert.add_response("ok", "Restaurer ici")
+            lines.append(_("C'est volumineux : vérifiez que la place disque est suffisante."))
+        alert = Adw.AlertDialog(heading=_('Restaurer « {v1} » ?').format(v1=entry.name), body="\n\n".join(lines))
+        alert.add_response("cancel", _("Annuler"))
+        alert.add_response("elsewhere", _("Dans un autre dossier…"))
+        alert.add_response("ok", _("Restaurer ici"))
         alert.set_response_appearance("ok", Adw.ResponseAppearance.SUGGESTED)
         alert.set_default_response("ok")
         alert.set_close_response("cancel")
@@ -211,7 +214,7 @@ class SingleRestoreDialog(Adw.Dialog):
         return GLib.SOURCE_REMOVE
 
     def _choose_dest(self, entry: backend.BackupEntry) -> None:
-        dialog = Gtk.FileDialog(title=f"Où copier « {entry.name} » ?")
+        dialog = Gtk.FileDialog(title=_('Où copier « {v1} » ?').format(v1=entry.name))
         dialog.set_initial_folder(Gio.File.new_for_path(str(backend.HOME)))
 
         def done(dlg: Gtk.FileDialog, result) -> None:
@@ -224,8 +227,8 @@ class SingleRestoreDialog(Adw.Dialog):
         dialog.select_folder(self.window, None, done)
 
     def _idle_status(self) -> None:
-        self.status.set_label("Seuls les fichiers personnels de la sauvegarde sont listés "
-                              "(configurations, profils de navigateurs et de courrier).")
+        self.status.set_label(_("Seuls les fichiers personnels de la sauvegarde sont listés "
+                              "(configurations, profils de navigateurs et de courrier)."))
 
     def _set_running(self, running: bool) -> None:
         self.running = running
@@ -237,7 +240,7 @@ class SingleRestoreDialog(Adw.Dialog):
         self.up.set_sensitive(not running and bool(self.cwd) and not self.search.get_text().strip())
         self.stop.set_visible(running)
         self.stop.set_sensitive(running)
-        self.stop.set_label("Arrêter")
+        self.stop.set_label(_("Arrêter"))
         self.spinner.set_visible(running)
         if running:
             self.spinner.start()
@@ -248,7 +251,7 @@ class SingleRestoreDialog(Adw.Dialog):
         if self.cancel is not None:
             self.cancel.set()
             self.stop.set_sensitive(False)
-            self.stop.set_label("Arrêt…")
+            self.stop.set_label(_("Arrêt…"))
 
     def _run(self, entry: backend.BackupEntry, dest: Path | None) -> None:
         if self.running or self.window.busy:
@@ -256,7 +259,7 @@ class SingleRestoreDialog(Adw.Dialog):
         cancel = threading.Event()
         self.cancel = cancel
         self._set_running(True)
-        self.status.set_label(f"Restauration de « {entry.name} »…")
+        self.status.set_label(_('Restauration de « {v1} »…').format(v1=entry.name))
 
         def progress(_fraction: float, text: str) -> None:
             if text:
@@ -279,32 +282,30 @@ class SingleRestoreDialog(Adw.Dialog):
         self._idle_status()
         if error is not None:
             if isinstance(error, backend.OperationCancelled):
-                self.toasts.add_toast(Adw.Toast(title="Restauration interrompue : rien n'a été modifié.",
+                self.toasts.add_toast(Adw.Toast(title=_("Restauration interrompue : rien n'a été modifié."),
                                                 use_markup=False))
                 return GLib.SOURCE_REMOVE
             if isinstance(error, backend.IntegrityError):
-                heading = "Sauvegarde abîmée"
-                body = f"{error}.\n\nUtilisez une autre sauvegarde pour cet élément."
+                heading = _("Sauvegarde abîmée")
+                body = _('{error}.\n\nUtilisez une autre sauvegarde pour cet élément.').format(error=error)
             else:
-                heading = "Restauration impossible"
-                body = f"{error}.\n\nRien n'a été modifié dans votre dossier personnel."
+                heading = _("Restauration impossible")
+                body = _("{error}.\n\nRien n'a été modifié dans votre dossier personnel.").format(error=error)
             alert = Adw.AlertDialog(heading=heading, body=body)
-            alert.add_response("ok", "Fermer")
+            alert.add_response("ok", _("Fermer"))
             alert.present(self)
             return GLib.SOURCE_REMOVE
 
         assert outcome is not None
-        lines = [f"{_n(outcome.files, 'fichier remis', 'fichiers remis')} ({backend.fmt_size(outcome.size)}) "
-                 f"dans {outcome.where}."]
+        lines = [_('{v1} ({v2}) dans {v3}.').format(v1=_n(outcome.files, _('fichier remis'), _('fichiers remis')), v2=backend.fmt_size(outcome.size), v3=outcome.where)]
         if outcome.replaced:
-            lines.append(f"{_n(outcome.replaced, 'fichier existant a été remplacé', 'fichiers existants ont été remplacés')} : "
-                         f"l'ancienne version est conservée à côté, avec l'extension {backend.BACKUP_SUFFIX}.")
-        lines.append("Chaque fichier a été comparé à sa somme de contrôle avant d'être remis."
+            lines.append(_("{v1} : l'ancienne version est conservée à côté, avec l'extension {v2}.").format(v1=_n(outcome.replaced, _('fichier existant a été remplacé'), _('fichiers existants ont été remplacés')), v2=backend.BACKUP_SUFFIX))
+        lines.append(_("Chaque fichier a été comparé à sa somme de contrôle avant d'être remis.")
                      if outcome.verified else
-                     "Cette sauvegarde n'a pas de somme de contrôle : le contenu n'a pas pu être comparé.")
-        alert = Adw.AlertDialog(heading="Restauré", body="\n\n".join(lines))
-        alert.add_response("ok", "Fermer")
-        alert.add_response("show", "Afficher dans les fichiers")
+                     _("Cette sauvegarde n'a pas de somme de contrôle : le contenu n'a pas pu être comparé."))
+        alert = Adw.AlertDialog(heading=_("Restauré"), body="\n\n".join(lines))
+        alert.add_response("ok", _("Fermer"))
+        alert.add_response("show", _("Afficher dans les fichiers"))
         folder = outcome.where if outcome.where.is_dir() else outcome.where.parent
         alert.connect("response", lambda _d, r: self.window._open_folder(None, GLib.Variant.new_string(str(folder)))
                       if r == "show" else None)

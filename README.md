@@ -1,5 +1,7 @@
 # Sauvegarde du bureau
 
+🇫🇷 Français · [🇬🇧 English](README.en.md)
+
 Application GNOME (GTK4 / libadwaita) pour **sauvegarder et restaurer son bureau Ubuntu** : applications, dépôts tiers, extensions GNOME et réglages.
 
 ![Page Sauvegarder](docs/screenshots/01-sauvegarder.png)
@@ -20,6 +22,7 @@ Application GNOME (GTK4 / libadwaita) pour **sauvegarder et restaurer son bureau
 - Assistant **« Nouveau PC »** pour tout remettre en place, étape par étape
 - Comparaison de deux sauvegardes
 - Sauvegardes **automatiques** planifiées, avec rotation et alerte si la dernière est trop ancienne
+- Interface en **français et en anglais**, selon la langue du système
 
 | Restaurer | Nouveau PC | Automatique |
 |---|---|---|
@@ -43,7 +46,11 @@ cd sauvegarde-bureau
 make deb
 ```
 
-Le paquet est créé dans `dist/`.
+Le paquet est créé dans `dist/`. La construction a besoin du paquet `gettext` (`sudo apt install gettext`), qui compile les traductions.
+
+## Traduire
+
+Les textes sont dans `po/`. Pour ajouter une langue : copier `po/sauvegarde-bureau.pot` en `po/xx.po` (par exemple `po/de.po`), traduire les textes, puis lancer `make deb`. Pour mettre le modèle à jour après une modification du code : `make pot`. Une langue sans traduction s'affiche en anglais ; le français est la langue d'origine du code.
 
 ## Licence
 

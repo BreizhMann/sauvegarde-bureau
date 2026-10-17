@@ -27,6 +27,8 @@ from datetime import datetime
 from pathlib import Path
 from typing import Callable, NamedTuple
 
+from .i18n import IS_FRENCH, ZERO_IS_SINGULAR, _, ngettext
+
 Log = Callable[[str], None]
 Progress = Callable[[float, str], None]
 
@@ -42,15 +44,15 @@ APT_DIR = Path("/etc/apt")
 COMPONENTS = ("repos", "apt", "snap", "flatpak", "extensions", "dconf", "profiles", "home")
 
 LABELS = {
-    "repos": "Dépôts tiers",
-    "apt": "Applications (apt)",
-    "snap": "Snaps",
-    "flatpak": "Flatpaks",
-    "extensions": "Extensions GNOME",
-    "dconf": "Réglages du bureau",
-    "profiles": "Navigateurs et courrier",
-    "home": "Configurations personnelles",
-    "cloud": "Envoi cloud",  # étape finale d'une sauvegarde, pas un composant
+    "repos": _("Dépôts tiers"),
+    "apt": _("Applications (apt)"),
+    "snap": _("Snaps"),
+    "flatpak": _("Flatpaks"),
+    "extensions": _("Extensions GNOME"),
+    "dconf": _("Réglages du bureau"),
+    "profiles": _("Navigateurs et courrier"),
+    "home": _("Configurations personnelles"),
+    "cloud": _("Envoi cloud"),  # étape finale d'une sauvegarde, pas un composant
 }
 
 # Éléments copiés avec « configurations personnelles »
@@ -60,7 +62,7 @@ HOME_ITEMS = [
 ]
 HOME_EXCLUDES = [
     ".local/share/Trash", ".local/share/flatpak", ".local/share/containers",
-    "Cache", "cache", ".cache", "GPUCache", "Code Cache", "CachedData",
+    _("Cache"), "cache", ".cache", _("GPUCache"), _("Code Cache"), _("CachedData"),
 ]
 
 # Les dépôts système d'Ubuntu ne doivent jamais être restaurés : ils sont liés
@@ -90,7 +92,7 @@ def run(cmd, log: Log, on_line: Callable[[str], None] | None = None, stdin=None)
             text=True, errors="replace",
         )
     except FileNotFoundError:
-        log(f"Commande introuvable : {cmd[0]}")
+        log(_('Commande introuvable : {v1}').format(v1=cmd[0]))
         return 127
     assert proc.stdout is not None
     for line in proc.stdout:
@@ -108,7 +110,7 @@ def os_name() -> str:
                 return line.split("=", 1)[1].strip().strip('"')
     except OSError:
         pass
-    return "Linux"
+    return _("Linux")
 
 
 def _read_lines(path: Path) -> list[str]:
@@ -192,7 +194,7 @@ def encrypt_directory(folder: Path, out: Path, passphrase: str) -> None:
         os.close(fd)
     if gpg.returncode != 0 or tar_rc != 0:
         out.unlink(missing_ok=True)
-        raise RuntimeError("Le chiffrement a échoué : " + output.strip()[-300:])
+        raise RuntimeError(_("Le chiffrement a échoué : ") + output.strip()[-300:])
     os.chmod(out, 0o600)
 
 
@@ -215,9 +217,9 @@ def _gpg_tar(archive: Path, passphrase: str, tar_args: list[str]) -> tuple[bool,
     gpg_err = errors.read().decode(errors="replace")
     errors.close()
     if gpg.returncode != 0:
-        return False, "mot de passe incorrect ou archive illisible"
+        return False, PASSWORD_REFUSED
     if tar.returncode != 0:
-        return False, tar_err.strip()[-300:] or "archive corrompue"
+        return False, tar_err.strip()[-300:] or _("archive corrompue")
     return True, ""
 
 
@@ -236,6 +238,7 @@ def decrypt_archive(archive: Path, passphrase: str) -> tuple[Path, Path]:
 
 
 GZIP_MAGIC = b"\x1f\x8b"
+PASSWORD_REFUSED = _("mot de passe incorrect ou archive illisible")
 PASSPHRASE_TEST_TIMEOUT = 60  # secondes ; la dérivation de la clé en prend environ une
 
 
@@ -251,7 +254,7 @@ def check_passphrase(archive: Path, passphrase: str) -> tuple[bool, str]:
                                stdout=subprocess.PIPE, stderr=subprocess.DEVNULL, pass_fds=(fd,))
     except OSError as exc:
         os.close(fd)
-        return False, f"gpg est introuvable ou inutilisable : {exc.strerror or exc}"
+        return False, _('gpg est introuvable ou inutilisable : {v1}').format(v1=exc.strerror or exc)
     assert gpg.stdout is not None
     timer = threading.Timer(PASSPHRASE_TEST_TIMEOUT, gpg.kill)
     timer.start()
@@ -265,7 +268,7 @@ def check_passphrase(archive: Path, passphrase: str) -> tuple[bool, str]:
         os.close(fd)
     if head == GZIP_MAGIC:
         return True, ""
-    return False, "mot de passe incorrect ou archive illisible"
+    return False, PASSWORD_REFUSED
 
 
 # --------------------------------------------------------------------------
@@ -359,7 +362,7 @@ def _rehearsal_extract(archive: Path, passphrase: str, dest: Path,
         for proc in procs:
             if proc.poll() is None:
                 proc.kill()
-        return REH_BAD, f"gpg ou tar est inutilisable : {exc.strerror or exc}"
+        return REH_BAD, _('gpg ou tar est inutilisable : {v1}').format(v1=exc.strerror or exc)
     finally:
         stop.set()
         os.close(fd)
@@ -368,17 +371,17 @@ def _rehearsal_extract(archive: Path, passphrase: str, dest: Path,
     errors.close()
 
     if killed.is_set():
-        return REH_CANCELLED, "Répétition interrompue."
+        return REH_CANCELLED, _("Répétition interrompue.")
     if _NO_SPACE.search(tar_err):
-        return REH_SPACE, "la place disque a manqué pendant l'extraction"
+        return REH_SPACE, _("la place disque a manqué pendant l'extraction")
     if gpg.returncode == 0 and tar.returncode == 0:
         return REH_OK, ""
     tail = lambda text: (text.splitlines() or [""])[-1][-200:]  # noqa: E731
     if gpg.returncode != 0 and (not tar_err or _TAR_TRUNCATED.search(tar_err)):
         detail = tail(gpg_err)
-        return REH_BAD, ("le déchiffrement s'est arrêté avant la fin : l'archive est tronquée ou abîmée"
+        return REH_BAD, (_("le déchiffrement s'est arrêté avant la fin : l'archive est tronquée ou abîmée")
                          + (f" ({detail})" if detail else ""))
-    return REH_BAD, "l'extraction a échoué : " + (tail(tar_err) or "archive corrompue")
+    return REH_BAD, _("l'extraction a échoué : ") + (tail(tar_err) or _("archive corrompue"))
 
 
 def rehearse_restore(archive: Path, passphrase: str, progress: Progress | None = None,
@@ -391,29 +394,28 @@ def rehearse_restore(archive: Path, passphrase: str, progress: Progress | None =
     say = progress or (lambda _fraction, _text: None)
     stop = cancelled or (lambda: False)
     if not archive.is_file():
-        return RehearsalResult(REH_BAD, "archive introuvable")
+        return RehearsalResult(REH_BAD, _("archive introuvable"))
 
-    say(0.0, "Test du mot de passe")
+    say(0.0, _("Test du mot de passe"))
     accepted, message = check_passphrase(archive, passphrase)
     if not accepted:
         return RehearsalResult(REH_PASSWORD, message)
     if stop():
-        return RehearsalResult(REH_CANCELLED, "Répétition interrompue.")
+        return RehearsalResult(REH_CANCELLED, _("Répétition interrompue."))
 
     needed, free = rehearsal_space(archive)
     minimum = archive.stat().st_size + SPACE_MARGIN_MIN
     if free is not None and free < minimum:
-        return RehearsalResult(REH_SPACE, f"il faut environ {fmt_size(needed)} de place temporaire "
-                                          f"dans {_workdir_path()}, il reste {fmt_size(free)}")
+        return RehearsalResult(REH_SPACE, _('il faut environ {v1} de place temporaire dans {v2}, il reste {v3}').format(v1=fmt_size(needed), v2=_workdir_path(), v3=fmt_size(free)))
 
     tmp = None
     verdict, text, files, size = REH_BAD, "", 0, 0
     try:
         tmp = new_tempdir()
-        say(0.1, "Déchiffrement et extraction de toute l'archive")
+        say(0.1, _("Déchiffrement et extraction de toute l'archive"))
         verdict, text = _rehearsal_extract(archive, passphrase, tmp, stop)
         if verdict == REH_OK:
-            say(0.8, "Contrôle des sommes de contrôle internes")
+            say(0.8, _("Contrôle des sommes de contrôle internes"))
             folders = [p for p in tmp.iterdir() if p.is_dir()]
             root = folders[0] if len(folders) == 1 else tmp
             for _rel, path in _folder_files(root):
@@ -424,15 +426,15 @@ def rehearse_restore(archive: Path, passphrase: str, progress: Progress | None =
                     pass
             status, detail = verify_folder(root)
             if status == BAD:
-                verdict, text = REH_BAD, "contenu extrait différent des sommes de contrôle : " + detail
+                verdict, text = REH_BAD, _("contenu extrait différent des sommes de contrôle : ") + detail
             elif status == MISSING:
-                verdict, text = REH_PARTIAL, ("l'archive se déchiffre et s'extrait entièrement, mais elle ne "
-                                              "contient pas de SHA256SUMS : le contenu n'est pas comparé")
+                verdict, text = REH_PARTIAL, (_("l'archive se déchiffre et s'extrait entièrement, mais elle ne "
+                                              "contient pas de SHA256SUMS : le contenu n'est pas comparé"))
     except OSError as exc:
-        verdict, text = REH_BAD, f"lecture ou écriture impossible : {exc.strerror or exc}"
+        verdict, text = REH_BAD, _('lecture ou écriture impossible : {v1}').format(v1=exc.strerror or exc)
     finally:
         if tmp is not None:
-            say(0.95, "Suppression du dossier temporaire")
+            say(0.95, _("Suppression du dossier temporaire"))
             remove_tree(tmp)
     cleaned = tmp is None or not tmp.exists()
     say(1.0, "")
@@ -459,6 +461,10 @@ BACKUP_SUFFIX = ".avant-restauration"
 
 class OperationCancelled(RuntimeError):
     """L'utilisateur a interrompu l'opération."""
+
+
+class WrongPassword(RuntimeError):
+    """Le mot de passe de l'archive est refusé (ou l'archive est illisible)."""
 
 
 class BackupFile(NamedTuple):
@@ -542,7 +548,7 @@ class BackupIndex:
 
     def entry(self, target: str) -> BackupEntry | None:
         target = target.strip("/")
-        parent, _, name = target.rpartition("/")
+        parent, _sep, name = target.rpartition("/")
         return self._children.get(parent, {}).get(name)
 
     def search(self, text: str, limit: int = SINGLE_MAX_RESULTS) -> tuple[list[BackupEntry], bool]:
@@ -597,7 +603,7 @@ def list_folder_files(folder: Path, cancelled: Callable[[], bool] | None = None)
             continue
         for root, dirs, names in os.walk(base):
             if stop():
-                raise OperationCancelled("Lecture interrompue.")
+                raise OperationCancelled(_("Lecture interrompue."))
             here = Path(root)
             for name in list(dirs):
                 if (here / name).is_symlink():    # lien vers un dossier : traité comme un lien, jamais suivi
@@ -631,7 +637,7 @@ def list_archive_files(archive: Path, passphrase: str, cancelled: Callable[[], b
     say = progress or (lambda _fraction, _text: None)
     accepted, message = check_passphrase(archive, passphrase)
     if not accepted:
-        raise RuntimeError(message)
+        raise (WrongPassword if message == PASSWORD_REFUSED else RuntimeError)(message)
     fd = _passphrase_fd(passphrase)
     killed, done = threading.Event(), threading.Event()
     try:
@@ -639,7 +645,7 @@ def list_archive_files(archive: Path, passphrase: str, cancelled: Callable[[], b
                                stdout=subprocess.PIPE, stderr=subprocess.DEVNULL, pass_fds=(fd,))
     except OSError as exc:
         os.close(fd)
-        raise RuntimeError(f"gpg est introuvable ou inutilisable : {exc.strerror or exc}") from exc
+        raise RuntimeError(_('gpg est introuvable ou inutilisable : {v1}').format(v1=exc.strerror or exc)) from exc
     assert gpg.stdout is not None
 
     def watch() -> None:
@@ -657,7 +663,7 @@ def list_archive_files(archive: Path, passphrase: str, cancelled: Callable[[], b
             for info in tf:
                 seen += 1
                 if seen % 500 == 0:
-                    say(0.0, f"{seen} éléments lus")
+                    say(0.0, _('{seen} éléments lus').format(seen=seen))
                 parts = [x for x in info.name.split("/") if x not in ("", ".")]
                 if not parts:
                     continue
@@ -681,8 +687,8 @@ def list_archive_files(archive: Path, passphrase: str, cancelled: Callable[[], b
     except (tarfile.TarError, EOFError, OSError, zlib.error) as exc:
         gpg.kill()
         if killed.is_set():
-            raise OperationCancelled("Lecture interrompue.") from exc
-        raise RuntimeError("l'archive est abîmée ou tronquée : impossible de la lire en entier") from exc
+            raise OperationCancelled(_("Lecture interrompue.")) from exc
+        raise RuntimeError(_("l'archive est abîmée ou tronquée : impossible de la lire en entier")) from exc
     finally:
         done.set()
         if gpg.poll() is None:
@@ -691,9 +697,9 @@ def list_archive_files(archive: Path, passphrase: str, cancelled: Callable[[], b
         gpg.stdout.close()
         os.close(fd)
     if killed.is_set():
-        raise OperationCancelled("Lecture interrompue.")
+        raise OperationCancelled(_("Lecture interrompue."))
     if gpg.returncode != 0:
-        raise RuntimeError("l'archive est tronquée ou a été modifiée : le déchiffrement s'est arrêté avant la fin")
+        raise RuntimeError(_("l'archive est tronquée ou a été modifiée : le déchiffrement s'est arrêté avant la fin"))
     say(1.0, "")
     return BackupIndex(archive, files, root, has_sums, True)
 
@@ -734,9 +740,9 @@ def restore_path(index: BackupIndex, target: str, passphrase: str | None = None,
     target = target.strip("/")
     picked = index.select(target)
     if not picked:
-        raise RuntimeError(f"« {target} » n'existe pas dans cette sauvegarde")
+        raise RuntimeError(_("« {target} » n'existe pas dans cette sauvegarde").format(target=target))
     if not has("rsync"):
-        raise RuntimeError("le paquet rsync est requis")
+        raise RuntimeError(_("le paquet rsync est requis"))
     files_count, size = index.summary(target)
     origins = sorted({f.origin for f in picked}, key=_origin_rank)
     members = [f"{_member_prefix(o)}/{target}" for o in origins]
@@ -745,40 +751,39 @@ def restore_path(index: BackupIndex, target: str, passphrase: str | None = None,
     try:
         if index.encrypted:
             if passphrase is None:
-                raise RuntimeError("mot de passe requis")
+                raise RuntimeError(_("mot de passe requis"))
             try:
                 free = shutil.disk_usage(_existing_parent(_workdir_path())).free
             except OSError:
                 free = None
             need = sum(f.size for f in picked) + SPACE_MARGIN_MIN
             if free is not None and free < need:
-                raise RuntimeError(f"place temporaire insuffisante dans {_workdir_path()} : il faut "
-                                   f"{fmt_size(need)}, il reste {fmt_size(free)}")
+                raise RuntimeError(_('place temporaire insuffisante dans {v1} : il faut {v2}, il reste {v3}').format(v1=_workdir_path(), v2=fmt_size(need), v3=fmt_size(free)))
             tmp = new_tempdir()
             wanted = [f"{index.root}/{m}" for m in members]
             if index.has_sums:
                 wanted.append(f"{index.root}/{FOLDER_SUMS}")
-            say(0.1, "Lecture de l'archive et extraction de l'élément choisi")
+            say(0.1, _("Lecture de l'archive et extraction de l'élément choisi"))
             verdict, text = _rehearsal_extract(index.source, passphrase, tmp, stop, wanted)
             if verdict == REH_CANCELLED:
-                raise OperationCancelled("Restauration interrompue.")
+                raise OperationCancelled(_("Restauration interrompue."))
             if verdict != REH_OK:
                 raise RuntimeError(text)
             src_root = tmp / index.root
         else:
             src_root = index.source
         if stop():
-            raise OperationCancelled("Restauration interrompue.")
+            raise OperationCancelled(_("Restauration interrompue."))
 
         # Contrôle de chaque fichier extrait avant de toucher au dossier personnel
         verified = False
         sums_file = src_root / FOLDER_SUMS
         if sums_file.is_file():
-            say(0.7, "Contrôle des sommes de contrôle")
+            say(0.7, _("Contrôle des sommes de contrôle"))
             try:
                 expected = {name: digest for digest, name in _parse_sums(sums_file.read_text(encoding="utf-8"))}
             except OSError as exc:
-                raise RuntimeError(f"{FOLDER_SUMS} illisible : {exc.strerror or exc}") from exc
+                raise RuntimeError(_('{FOLDER_SUMS} illisible : {v2}').format(FOLDER_SUMS=FOLDER_SUMS, v2=exc.strerror or exc)) from exc
             problems = []
             for f in picked:
                 if f.kind != "file":
@@ -786,21 +791,21 @@ def restore_path(index: BackupIndex, target: str, passphrase: str | None = None,
                 path = src_root / f.member
                 try:
                     if f.member not in expected:
-                        problems.append(f"{f.target} (sans somme de contrôle)")
+                        problems.append(_('{v1} (sans somme de contrôle)').format(v1=f.target))
                     elif _sha256_file(path) != expected[f.member]:
-                        problems.append(f"{f.target} (modifié)")
+                        problems.append(_('{v1} (modifié)').format(v1=f.target))
                 except OSError:
-                    problems.append(f"{f.target} (illisible)")
+                    problems.append(_('{v1} (illisible)').format(v1=f.target))
             if problems:
-                more = f" et {len(problems) - 3} autre(s)" if len(problems) > 3 else ""
-                raise IntegrityError("fichiers abîmés dans la sauvegarde : " + ", ".join(problems[:3]) + more
-                                     + ". Rien n'a été restauré")
+                more = _(' et {v1} autre(s)').format(v1=len(problems) - 3) if len(problems) > 3 else ""
+                raise IntegrityError(_("fichiers abîmés dans la sauvegarde : ") + ", ".join(problems[:3]) + more
+                                     + _(". Rien n'a été restauré"))
             verified = True
 
         final = (HOME / target) if dest is None else (dest / Path(target).name)
         replaced = sum(1 for f in {x.target: x for x in picked}.values()
                        if os.path.lexists(final if f.target == target else final / f.target[len(target) + 1:]))
-        say(0.85, "Remise en place")
+        say(0.85, _("Remise en place"))
         for member in members:
             source = src_root / member
             if source.is_dir() and not source.is_symlink():
@@ -811,7 +816,7 @@ def restore_path(index: BackupIndex, target: str, passphrase: str | None = None,
                 cmd = ["rsync", "-a", "--backup", f"--suffix={BACKUP_SUFFIX}", str(source), str(final)]
             rc = run(cmd, lambda _line: None)
             if rc not in (0, 23, 24):
-                raise RuntimeError(f"rsync a échoué (code {rc})")
+                raise RuntimeError(_('rsync a échoué (code {rc})').format(rc=rc))
         say(1.0, "")
         return RestoreOutcome(files_count, size, replaced, final, verified)
     finally:
@@ -875,16 +880,16 @@ def verify_checksum(archive: Path) -> tuple[str, str]:
     """Contrôle une archive. Renvoie (OK | MISSING | BAD, message)."""
     sums = checksum_path(archive)
     if not sums.is_file():
-        return MISSING, "fichier .sha256 introuvable à côté de l'archive"
+        return MISSING, _("fichier .sha256 introuvable à côté de l'archive")
     try:
         entries = _parse_sums(sums.read_text(encoding="utf-8"))
         if not entries:
-            return BAD, f"{sums.name} est illisible"
+            return BAD, _('{v1} est illisible').format(v1=sums.name)
         if _sha256_file(archive) != entries[0][0]:
-            return BAD, ("la somme de contrôle ne correspond plus : l'archive est corrompue "
-                         "ou a été modifiée depuis sa création")
+            return BAD, (_("la somme de contrôle ne correspond plus : l'archive est corrompue "
+                         "ou a été modifiée depuis sa création"))
     except OSError as exc:
-        return BAD, f"lecture impossible : {exc.strerror or exc}"
+        return BAD, _('lecture impossible : {v1}').format(v1=exc.strerror or exc)
     return OK, ""
 
 
@@ -907,26 +912,26 @@ def verify_folder(folder: Path) -> tuple[str, str]:
     """Contrôle un dossier de sauvegarde non chiffré."""
     sums = folder / FOLDER_SUMS
     if not sums.is_file():
-        return MISSING, "fichier SHA256SUMS absent du dossier"
+        return MISSING, _("fichier SHA256SUMS absent du dossier")
     try:
         entries = _parse_sums(sums.read_text(encoding="utf-8"))
     except OSError as exc:
-        return BAD, f"{FOLDER_SUMS} illisible : {exc.strerror or exc}"
+        return BAD, _('{FOLDER_SUMS} illisible : {v2}').format(FOLDER_SUMS=FOLDER_SUMS, v2=exc.strerror or exc)
     if not entries:
-        return BAD, f"{FOLDER_SUMS} est vide ou illisible"
+        return BAD, _('{FOLDER_SUMS} est vide ou illisible').format(FOLDER_SUMS=FOLDER_SUMS)
     problems = []
     for digest, rel in entries:
         p = folder / rel
         try:
             if not p.is_file():
-                problems.append(f"{rel} (manquant)")
+                problems.append(_('{rel} (manquant)').format(rel=rel))
             elif _sha256_file(p) != digest:
-                problems.append(f"{rel} (modifié)")
+                problems.append(_('{rel} (modifié)').format(rel=rel))
         except OSError:
-            problems.append(f"{rel} (illisible)")
+            problems.append(_('{rel} (illisible)').format(rel=rel))
     if problems:
-        more = f" et {len(problems) - 3} autre(s)" if len(problems) > 3 else ""
-        return BAD, "fichiers abîmés : " + ", ".join(problems[:3]) + more
+        more = _(' et {v1} autre(s)').format(v1=len(problems) - 3) if len(problems) > 3 else ""
+        return BAD, _("fichiers abîmés : ") + ", ".join(problems[:3]) + more
     return OK, ""
 
 
@@ -1003,10 +1008,10 @@ def verify_existing(names: list[Path], log: Log,
         if statuses is not None:
             statuses[path] = status
         if status == BAD:
-            log(f"ALERTE : {path.name} est abîmée ({msg}).")
+            log(_('ALERTE : {v1} est abîmée ({msg}).').format(v1=path.name, msg=msg))
             damaged.append(path)
         elif status == OK:
-            log(f"Intégrité vérifiée : {path.name}")
+            log(_('Intégrité vérifiée : {v1}').format(v1=path.name))
     return damaged
 
 
@@ -1069,7 +1074,7 @@ def verify_many(paths: list[Path], progress: Progress | None = None,
         try:
             status, message = verify_backup(path)
         except OSError as exc:
-            status, message = BAD, f"lecture impossible : {exc.strerror or exc}"
+            status, message = BAD, _('lecture impossible : {v1}').format(v1=exc.strerror or exc)
         accepted, pw_message = None, ""
         if passphrase is not None and status != BAD and path.is_file():
             accepted, pw_message = check_passphrase(path, passphrase)
@@ -1086,25 +1091,25 @@ def verify_many(paths: list[Path], progress: Progress | None = None,
 def _backup_apt(dest: Path, log: Log) -> None:
     out = capture(["apt-mark", "showmanual"])
     (dest / "apt-manual.txt").write_text(out)
-    log(f"{len(out.split())} paquets apt enregistrés")
+    log(_('{v1} paquets apt enregistrés').format(v1=len(out.split())))
 
 
 def _backup_snap(dest: Path, log: Log) -> None:
     if not has("snap"):
-        log("Snap n'est pas installé : étape ignorée")
+        log(_("Snap n'est pas installé : étape ignorée"))
         return
     names = [l.split()[0] for l in capture(["snap", "list"]).splitlines()[1:] if l.strip()]
     (dest / "snap.txt").write_text("\n".join(names) + "\n")
-    log(f"{len(names)} snaps enregistrés")
+    log(_('{v1} snaps enregistrés').format(v1=len(names)))
 
 
 def _backup_flatpak(dest: Path, log: Log) -> None:
     if not has("flatpak"):
-        log("Flatpak n'est pas installé : étape ignorée")
+        log(_("Flatpak n'est pas installé : étape ignorée"))
         return
     out = capture(["flatpak", "list", "--app", "--columns=application"])
     (dest / "flatpak.txt").write_text(out)
-    log(f"{len(out.split())} flatpaks enregistrés")
+    log(_('{v1} flatpaks enregistrés').format(v1=len(out.split())))
 
 
 def _backup_repos(dest: Path, log: Log) -> None:
@@ -1117,8 +1122,8 @@ def _backup_repos(dest: Path, log: Log) -> None:
                 shutil.copy2(f, target)
                 count += 1
             except OSError as exc:
-                log(f"Impossible de copier {f} : {exc}")
-    log(f"{count} fichiers de dépôts/clés copiés (dépôts système Ubuntu exclus)")
+                log(_('Impossible de copier {f} : {exc}').format(f=f, exc=exc))
+    log(_('{count} fichiers de dépôts/clés copiés (dépôts système Ubuntu exclus)').format(count=count))
 
 
 class _Offline(Exception):
@@ -1130,7 +1135,7 @@ def _ego_get(url: str, limit: int = 1024 * 1024) -> bytes:
     with urllib.request.urlopen(req, timeout=EGO_TIMEOUT) as resp:
         data = resp.read(limit + 1)
     if len(data) > limit:
-        raise ValueError("réponse trop volumineuse")
+        raise ValueError(_("réponse trop volumineuse"))
     return data
 
 
@@ -1155,7 +1160,7 @@ def _ego_query(query: dict, shell: str | None) -> dict | None:
     except urllib.error.HTTPError as exc:
         if exc.code in (400, 404):
             return None
-        raise _Offline(f"HTTP {exc.code}") from exc
+        raise _Offline(_('HTTP {v1}').format(v1=exc.code)) from exc
     except (urllib.error.URLError, TimeoutError, OSError) as exc:
         raise _Offline(str(exc)) from exc
     except ValueError:
@@ -1181,7 +1186,7 @@ def _backup_extensions(dest: Path, log: Log) -> None:
         (dest / "extensions-actives.txt").write_text("\n".join(sorted(enabled)) + "\n")
     folders = sorted(d for d in EXT_DIR.iterdir() if d.is_dir()) if EXT_DIR.is_dir() else []
     if not folders:
-        log("Aucune extension installée par l'utilisateur")
+        log(_("Aucune extension installée par l'utilisateur"))
         return
 
     entries, online, offline = [], 0, False
@@ -1201,8 +1206,7 @@ def _backup_extensions(dest: Path, log: Log) -> None:
                 info = _ego_info(uuid)
             except _Offline as exc:
                 offline = True
-                log(f"extensions.gnome.org injoignable ({exc}) : les fichiers des extensions "
-                    "seront copiés par précaution.")
+                log(_('extensions.gnome.org injoignable ({exc}) : les fichiers des extensions seront copiés par précaution.').format(exc=exc))
             else:
                 entry["ego"] = info is not None
                 if info and info.get("pk") is not None:
@@ -1220,15 +1224,14 @@ def _backup_extensions(dest: Path, log: Log) -> None:
     (dest / EXT_INDEX).write_text(json.dumps(
         {"version": 2, "shell": _gnome_major(), "extensions": entries},
         indent=2, ensure_ascii=False))
-    log(f"{len(entries)} extensions enregistrées : {online} seront retéléchargées depuis "
-        f"extensions.gnome.org, {len(local)} copiées en fichiers"
+    log(_('{v1} extensions enregistrées : {online} seront retéléchargées depuis extensions.gnome.org, {v3} copiées en fichiers').format(v1=len(entries), online=online, v3=len(local))
         + (f" ({', '.join(local)})" if local else ""))
 
 
 def _backup_dconf(dest: Path, log: Log) -> None:
     out = capture(["dconf", "dump", "/"])
     (dest / "dconf-reglages.ini").write_text(out)
-    log(f"{len(out.splitlines())} lignes de réglages enregistrées")
+    log(_('{v1} lignes de réglages enregistrées').format(v1=len(out.splitlines())))
 
 
 def _backup_home(dest: Path, log: Log) -> None:
@@ -1238,10 +1241,10 @@ def _backup_home(dest: Path, log: Log) -> None:
     for item in HOME_ITEMS:
         if not (HOME / item).exists():
             continue
-        log(f"Copie de ~/{item}")
+        log(_('Copie de ~/{item}').format(item=item))
         rc = run(["rsync", "-aR", *excludes, f"{HOME}/./{item}", str(target) + "/"], log)
         if rc not in (0, 23, 24):  # 23/24 : fichiers illisibles ou disparus en cours de copie
-            raise RuntimeError(f"rsync a échoué pour ~/{item} (code {rc})")
+            raise RuntimeError(_('rsync a échoué pour ~/{item} (code {rc})').format(item=item, rc=rc))
 
 
 # --------------------------------------------------------------------------
@@ -1262,11 +1265,11 @@ class ProfileItem(NamedTuple):
     heavy: bool = False                # volumineux : non coché par défaut
 
 
-_MOZ_EXCLUDES = ("lock", ".parentlock", "parent.lock", "cache2", "startupCache", "crashes",
+_MOZ_EXCLUDES = ("lock", ".parentlock", "parent.lock", "cache2", _("startupCache"), "crashes",
                  "minidumps", "saved-telemetry-pings", "datareporting", "shader-cache",
-                 "OfflineCache", "thumbnails", "Crash Reports", "Pending Pings")
-_CHROME_EXCLUDES = ("Singleton*", "ShaderCache", "GrShaderCache", "DawnCache", "Crashpad",
-                    "BrowserMetrics*", "Service Worker")
+                 _("OfflineCache"), "thumbnails", _("Crash Reports"), _("Pending Pings"))
+_CHROME_EXCLUDES = (_("Singleton*"), _("ShaderCache"), _("GrShaderCache"), _("DawnCache"), _("Crashpad"),
+                    _("BrowserMetrics*"), _("Service Worker"))
 _TB_PATHS = (".thunderbird", "snap/thunderbird/common/.thunderbird",
              ".var/app/org.mozilla.Thunderbird/.thunderbird")
 _TB_PROCS = ("thunderbird", "thunderbird-bin")
@@ -1274,20 +1277,20 @@ _TB_PROCS = ("thunderbird", "thunderbird-bin")
 # Chaque application peut être installée avec apt, snap ou flatpak : chacune range son profil
 # à un endroit différent, on copie ceux qui existent.
 PROFILE_ITEMS = (
-    ProfileItem("firefox", "Firefox", "Firefox",
+    ProfileItem("firefox", _("Firefox"), _("Firefox"),
                 (".mozilla/firefox", "snap/firefox/common/.mozilla/firefox",
                  ".var/app/org.mozilla.firefox/.mozilla/firefox"),
                 _MOZ_EXCLUDES, processes=("firefox", "firefox-bin")),
-    ProfileItem("thunderbird", "Thunderbird (comptes et réglages)", "Thunderbird", _TB_PATHS,
-                _MOZ_EXCLUDES + ("Mail", "ImapMail", "global-messages-db.sqlite*"),
+    ProfileItem("thunderbird", _("Thunderbird (comptes et réglages)"), _("Thunderbird"), _TB_PATHS,
+                _MOZ_EXCLUDES + (_("Mail"), _("ImapMail"), "global-messages-db.sqlite*"),
                 processes=_TB_PROCS),
-    ProfileItem("thunderbird-mail", "Thunderbird (courriers téléchargés)", "Thunderbird", _TB_PATHS,
-                only_dirs=("Mail", "ImapMail"), processes=_TB_PROCS, heavy=True),
-    ProfileItem("chromium", "Chromium", "Chromium",
+    ProfileItem("thunderbird-mail", _("Thunderbird (courriers téléchargés)"), _("Thunderbird"), _TB_PATHS,
+                only_dirs=(_("Mail"), _("ImapMail")), processes=_TB_PROCS, heavy=True),
+    ProfileItem("chromium", _("Chromium"), _("Chromium"),
                 (".config/chromium", "snap/chromium/common/chromium",
                  ".var/app/org.chromium.Chromium/config/chromium"),
                 _CHROME_EXCLUDES, processes=("chromium", "chrome")),
-    ProfileItem("chrome", "Google Chrome", "Google Chrome", (".config/google-chrome",),
+    ProfileItem("chrome", _("Google Chrome"), _("Google Chrome"), (".config/google-chrome",),
                 _CHROME_EXCLUDES, processes=("chrome",)),
 )
 
@@ -1375,7 +1378,7 @@ def _copy_profile(src_root: Path, dst_root: Path, item: ProfileItem, log: Log) -
         except OSError as exc:
             failed += 1
             if failed <= 5:
-                log(f"Impossible de copier {src_root / rel} : {exc}")
+                log(_('Impossible de copier {v1} : {exc}').format(v1=src_root / rel, exc=exc))
     return copied, failed
 
 
@@ -1403,9 +1406,9 @@ def _merge_profile(src_root: Path, dst_root: Path, log: Log) -> tuple[int, int]:
             except OSError as exc:
                 failed += 1
                 if failed <= 5:
-                    log(f"Impossible de restaurer {rel} : {exc}")
+                    log(_('Impossible de restaurer {rel} : {exc}').format(rel=rel, exc=exc))
     if failed:
-        raise OSError(f"{failed} fichier(s) non restauré(s)")
+        raise OSError(_('{failed} fichier(s) non restauré(s)').format(failed=failed))
     return copied, same
 
 
@@ -1421,9 +1424,13 @@ def _dir_size(path: Path) -> int:
 
 
 def _fmt_size(n: float) -> str:
-    for unit in ("o", "Ko", "Mo", "Go"):
-        if n < 1024 or unit == "Go":
-            return (f"{n:.0f} {unit}" if unit == "o" else f"{n:.1f} {unit}".replace(".", ","))
+    units = ("o", _("Ko"), _("Mo"), "Go") if IS_FRENCH else ("B", "KB", "MB", "GB")
+    for unit in units:
+        if n < 1024 or unit == units[-1]:
+            if unit == units[0]:
+                return f"{n:.0f} {unit}"
+            text = f"{n:.1f} {unit}"
+            return text.replace(".", ",") if IS_FRENCH else text
         n /= 1024
     return ""
 
@@ -1447,28 +1454,27 @@ def _backup_profiles(dest: Path, log: Log, items: set[str] | None = None) -> Non
     keys = default_profile_keys() if items is None else set(items)
     running = running_apps(keys)
     if running:
-        log(f"Attention : {', '.join(running)} ouvert : la copie peut être incohérente. "
-            "Fermez l'application puis recommencez pour une sauvegarde fiable.")
+        log(_("Attention : {v1} ouvert : la copie peut être incohérente. Fermez l'application puis recommencez pour une sauvegarde fiable.").format(v1=', '.join(running)))
     index = []
     for item in PROFILE_ITEMS:
         if item.key not in keys:
             continue
         present = [r for r in item.paths if (HOME / r).is_dir()]
         if not present:
-            log(f"{item.label} : introuvable sur cette machine, ignoré")
+            log(_('{v1} : introuvable sur cette machine, ignoré').format(v1=item.label))
             continue
         copied = failed = 0
         for rel in present:
-            log(f"Copie de ~/{rel}")
+            log(_('Copie de ~/{rel}').format(rel=rel))
             c, f = _copy_profile(HOME / rel, dest / "profils" / item.key / rel, item, log)
             copied, failed = copied + c, failed + f
         index.append({"key": item.key, "label": item.label, "paths": present})
-        log(f"{item.label} : {copied} fichiers copiés"
-            + (f", {failed} en échec" if failed else ""))
+        log(_('{v1} : {copied} fichiers copiés').format(v1=item.label, copied=copied)
+            + (_(', {failed} en échec').format(failed=failed) if failed else ""))
         if failed:
-            raise RuntimeError(f"{item.label} : {failed} fichier(s) non copiés")
+            raise RuntimeError(_('{v1} : {failed} fichier(s) non copiés').format(v1=item.label, failed=failed))
     if not index:
-        log("Aucun profil de navigateur ou de client mail trouvé")
+        log(_("Aucun profil de navigateur ou de client mail trouvé"))
         return
     (dest / PROFILE_INDEX).write_text(json.dumps({"version": 1, "items": index},
                                                  indent=2, ensure_ascii=False))
@@ -1493,19 +1499,19 @@ def _install_kind(rel: str) -> str:
         return "installation snap"
     if rel.startswith(".var/app/"):
         return "installation flatpak"
-    return "installation apt ou locale"
+    return _("installation apt ou locale")
 
 
 def _preview_profiles(src: Path) -> Preview:
     index = _load_profile_index(src)
     if not index:
-        raise RuntimeError("liste des profils absente ou illisible")
+        raise RuntimeError(_("liste des profils absente ou illisible"))
     p = Preview()
     for e in index:
         key, label = str(e["key"]), str(e.get("label") or e["key"])
         paths = [str(x) for x in e["paths"]]
         folder = src / "profils" / key
-        parts = [_fmt_size(_dir_size(folder))] if folder.is_dir() else ["dossier manquant"]
+        parts = [_fmt_size(_dir_size(folder))] if folder.is_dir() else [_("dossier manquant")]
         kinds = sorted({_install_kind(x) for x in paths})
         parts.append(", ".join(kinds))
         warn, status = False, NEW
@@ -1514,21 +1520,21 @@ def _preview_profiles(src: Path) -> Preview:
             continue
         if any((HOME / x).exists() for x in paths):
             status = CHANGE
-            parts.append("fusionné avec le profil actuel (fichiers remplacés gardés en .avant-restauration)")
+            parts.append(_("fusionné avec le profil actuel (fichiers remplacés gardés en .avant-restauration)"))
         missing = [k for k in kinds if (k == "installation snap" and not has("snap"))
                    or (k == "installation flatpak" and not has("flatpak"))]
         if missing:
             warn = True
-            parts.append(f"{missing[0].split()[-1]} n'est pas installé sur cette machine")
+            parts.append(_("{v1} n'est pas installé sur cette machine").format(v1=missing[0].split()[-1]))
         running = running_apps({key})
         if running:
             warn = True
-            parts.append(f"{running[0]} est ouvert : fermez-le avant de restaurer")
+            parts.append(_('{v1} est ouvert : fermez-le avant de restaurer').format(v1=running[0]))
         p.items.append(Item(label, status, " · ".join(parts), warn))
     if p.items:
-        p.note = ("Installez et lancez une première fois l'application avant de restaurer son "
+        p.note = (_("Installez et lancez une première fois l'application avant de restaurer son "
                   "profil si possible. Un profil créé avec une version récente peut être refusé "
-                  "par une version plus ancienne.")
+                  "par une version plus ancienne."))
     return p
 
 
@@ -1536,17 +1542,17 @@ def _restore_profiles(src: Path, log: Log, only: dict | None = None) -> None:
     labels = (only or {}).get("profiles")
     entries = [e for e in _load_profile_index(src) if labels is None or e.get("label") in labels]
     if not entries:
-        raise RuntimeError("aucun profil à restaurer")
+        raise RuntimeError(_("aucun profil à restaurer"))
     failed: list[str] = []
     for e in entries:
         key, label = str(e["key"]), str(e.get("label") or e["key"])
         if running_apps({key}):
-            log(f"{label} : application ouverte, profil non restauré (fermez-la puis recommencez).")
+            log(_('{label} : application ouverte, profil non restauré (fermez-la puis recommencez).').format(label=label))
             failed.append(label)
             continue
         folder = src / "profils" / key
         if not folder.is_dir():
-            log(f"{label} : dossier absent de la sauvegarde.")
+            log(_('{label} : dossier absent de la sauvegarde.').format(label=label))
             failed.append(label)
             continue
         try:
@@ -1554,15 +1560,15 @@ def _restore_profiles(src: Path, log: Log, only: dict | None = None) -> None:
             for rel in e["paths"]:
                 if not (folder / rel).is_dir():
                     continue
-                log(f"Restauration de ~/{rel}")
+                log(_('Restauration de ~/{rel}').format(rel=rel))
                 c, s = _merge_profile(folder / rel, HOME / rel, log)
                 copied, same = copied + c, same + s
-            log(f"{label} : {copied} fichiers restaurés, {same} déjà identiques")
+            log(_('{label} : {copied} fichiers restaurés, {same} déjà identiques').format(label=label, copied=copied, same=same))
         except OSError as exc:
             log(f"{label} : {exc}")
             failed.append(label)
     if failed:
-        raise RuntimeError(f"profils non restaurés : {', '.join(failed)}")
+        raise RuntimeError(_('profils non restaurés : {v1}').format(v1=', '.join(failed)))
 
 
 # --------------------------------------------------------------------------
@@ -1592,24 +1598,22 @@ class SpaceCheck(NamedTuple):
         return not self.shortages
 
     def summary(self) -> str:
-        text = f"Taille estimée : {fmt_size(self.size)}"
+        text = _('Taille estimée : {v1}').format(v1=fmt_size(self.size))
         if self.free is not None:
-            text += f" · place libre à la destination : {fmt_size(self.free)}"
+            text += _(' · place libre à la destination : {v1}').format(v1=fmt_size(self.free))
         return text
 
     def message(self) -> str:
         """Ce qui manque, en une phrase par disque concerné."""
         lines = []
         for s in self.shortages:
-            figures = f"il faut environ {fmt_size(s.needed)}, il reste {fmt_size(s.free)}"
+            figures = _('il faut environ {v1}, il reste {v2}').format(v1=fmt_size(s.needed), v2=fmt_size(s.free))
             if s.kind == "partagé":
-                lines.append(f"Le disque de {s.path} doit contenir la copie de travail et l'archive "
-                             f"chiffrée : {figures}.")
+                lines.append(_("Le disque de {v1} doit contenir la copie de travail et l'archive chiffrée : {figures}.").format(v1=s.path, figures=figures))
             elif s.kind == "temporaire":
-                lines.append(f"Dossier de travail ({s.path}) : le chiffrement y prépare d'abord une "
-                             f"copie en clair, {figures}.")
+                lines.append(_("Dossier de travail ({v1}) : le chiffrement y prépare d'abord une copie en clair, {figures}.").format(v1=s.path, figures=figures))
             else:
-                lines.append(f"Destination ({s.path}) : {figures}.")
+                lines.append(_('Destination ({v1}) : {figures}.').format(v1=s.path, figures=figures))
         return "\n".join(lines)
 
 
@@ -1617,7 +1621,7 @@ class InsufficientSpace(RuntimeError):
     """La place libre ne suffit pas à la sauvegarde : rien n'a été écrit."""
 
     def __init__(self, check: SpaceCheck):
-        super().__init__(f"Espace disque insuffisant (taille estimée : {fmt_size(check.size)}). "
+        super().__init__(_('Espace disque insuffisant (taille estimée : {v1}). ').format(v1=fmt_size(check.size))
                          + check.message().replace("\n", " "))
         self.check = check
 
@@ -1730,7 +1734,7 @@ def check_space(dest: Path, selected: set[str], encrypted: bool,
     la sauvegarde que la bloquer à tort.
     """
     say = log or (lambda _line: None)
-    say("Estimation de la taille de la sauvegarde…")
+    say(_("Estimation de la taille de la sauvegarde…"))
     size = estimate_size(selected, profile_items)
     needed = size + max(size // 20, SPACE_MARGIN_MIN)
     shortages: list[Shortage] = []
@@ -1752,8 +1756,7 @@ def check_space(dest: Path, selected: set[str], encrypted: bool,
                 if work_free < needed:
                     shortages.append(Shortage("temporaire", work_at, needed, work_free))
     except OSError as exc:
-        say(f"Taille estimée : {fmt_size(size)} ; place libre non mesurable ({exc}) : "
-            "vérification ignorée.")
+        say(_('Taille estimée : {v1} ; place libre non mesurable ({exc}) : vérification ignorée.').format(v1=fmt_size(size), exc=exc))
         return SpaceCheck(size, needed, None, (), encrypted)
     check = SpaceCheck(size, needed, free, tuple(shortages), encrypted)
     say(check.summary())
@@ -1770,7 +1773,7 @@ BACKUP_STEPS = {
 def _do_backup(dest: Path, selected: set[str], log: Log, progress: Progress,
                profile_items: set[str] | None = None) -> list[str]:
     dest.mkdir(parents=True, exist_ok=True)
-    log(f"Destination : {dest}")
+    log(_('Destination : {dest}').format(dest=dest))
     steps = [c for c in COMPONENTS if c in selected]
     errors: list[str] = []
     for i, name in enumerate(steps):
@@ -1782,7 +1785,7 @@ def _do_backup(dest: Path, selected: set[str], log: Log, progress: Progress,
             else:
                 BACKUP_STEPS[name](dest, log)
         except Exception as exc:  # noqa: BLE001 - on continue avec les autres étapes
-            log(f"Erreur : {exc}")
+            log(_('Erreur : {exc}').format(exc=exc))
             errors.append(name)
     manifest = {
         "version": 1,
@@ -1818,7 +1821,7 @@ def backup(dest: Path, selected: set[str], log: Log, progress: Progress,
     déjà fait cette vérification (et l'utilisateur a choisi de continuer).
     """
     if cloud is not None and not passphrase:
-        raise ValueError("L'envoi vers le cloud exige une sauvegarde chiffrée.")
+        raise ValueError(_("L'envoi vers le cloud exige une sauvegarde chiffrée."))
     if not skip_space_check:
         space = check_space(dest, selected, bool(passphrase), profile_items, log)
         if not space.ok:
@@ -1832,11 +1835,11 @@ def backup(dest: Path, selected: set[str], log: Log, progress: Progress,
     try:
         upload_to_cloud(archive_path(dest), cloud[0], cloud[1], log)
     except Exception as exc:  # noqa: BLE001 - la copie locale reste valable
-        log(f"Erreur : {exc}")
+        log(_('Erreur : {exc}').format(exc=exc))
         errors.append("cloud")
-    progress(1.0, "Terminé")
-    log(f"Bilan : {report(count_steps(selected, True), errors)}.")
-    log("Sauvegarde terminée.")
+    progress(1.0, _("Terminé"))
+    log(_('Bilan : {v1}.').format(v1=report(count_steps(selected, True), errors)))
+    log(_("Sauvegarde terminée."))
     return errors
 
 
@@ -1846,17 +1849,17 @@ def _backup_local(dest: Path, selected: set[str], log: Log, progress: Progress,
     """Sauvegarde sur disque. `announce` : écrire le bilan et le message de fin."""
     if not passphrase:
         errors = _do_backup(dest, selected, log, lambda f, t: progress(f * 0.9, t), profile_items)
-        progress(0.9, "Somme de contrôle")
-        log("== Somme de contrôle (SHA-256)")
+        progress(0.9, _("Somme de contrôle"))
+        log(_("== Somme de contrôle (SHA-256)"))
         n = write_folder_sums(dest)
         status, msg = verify_folder(dest)
         if status != OK:
-            raise IntegrityError("La vérification de la sauvegarde a échoué : " + msg)
-        log(f"{n} fichiers protégés par {FOLDER_SUMS}.")
-        progress(1.0, "Terminé")
+            raise IntegrityError(_("La vérification de la sauvegarde a échoué : ") + msg)
+        log(_('{n} fichiers protégés par {FOLDER_SUMS}.').format(n=n, FOLDER_SUMS=FOLDER_SUMS))
+        progress(1.0, _("Terminé"))
         if announce:
-            log(f"Bilan : {report(count_steps(selected), errors)}.")
-            log("Sauvegarde terminée.")
+            log(_('Bilan : {v1}.').format(v1=report(count_steps(selected), errors)))
+            log(_("Sauvegarde terminée."))
         return errors
 
     out = archive_path(dest)
@@ -1865,14 +1868,14 @@ def _backup_local(dest: Path, selected: set[str], log: Log, progress: Progress,
         folder = work / dest.name
         errors = _do_backup(folder, selected, log, lambda f, t: progress(f * 0.8, t), profile_items)
         out.parent.mkdir(parents=True, exist_ok=True)
-        progress(0.8, "Chiffrement de l'archive")
-        log("== Chiffrement de l'archive (AES-256)")
+        progress(0.8, _("Chiffrement de l'archive"))
+        log(_("== Chiffrement de l'archive (AES-256)"))
         encrypt_directory(folder, out, passphrase)
-        progress(0.88, "Somme de contrôle")
-        log("== Somme de contrôle (SHA-256)")
+        progress(0.88, _("Somme de contrôle"))
+        log(_("== Somme de contrôle (SHA-256)"))
         write_checksum(out)
-        progress(0.93, "Vérification de l'archive")
-        log("== Vérification de l'archive")
+        progress(0.93, _("Vérification de l'archive"))
+        log(_("== Vérification de l'archive"))
         # Relecture complète depuis le disque : somme de contrôle, puis déchiffrement test
         status, err = verify_checksum(out)
         if status == OK:
@@ -1881,14 +1884,14 @@ def _backup_local(dest: Path, selected: set[str], log: Log, progress: Progress,
             ok = False
         if not ok:
             remove_backup(out)
-            raise IntegrityError("La vérification de l'archive a échoué : " + err)
-        log(f"Archive chiffrée créée : {out}")
+            raise IntegrityError(_("La vérification de l'archive a échoué : ") + err)
+        log(_('Archive chiffrée créée : {out}').format(out=out))
     finally:
         shutil.rmtree(work, ignore_errors=True)
-    progress(1.0, "Terminé")
+    progress(1.0, _("Terminé"))
     if announce:
-        log(f"Bilan : {report(count_steps(selected), errors)}.")
-        log("Sauvegarde terminée.")
+        log(_('Bilan : {v1}.').format(v1=report(count_steps(selected), errors)))
+        log(_("Sauvegarde terminée."))
     return errors
 
 
@@ -1900,11 +1903,11 @@ DEFAULT_CLOUD_PATH = "sauvegardes-bureau"
 # Services dont l'accès par rclone est jugé fragile : (type rclone) -> avertissement
 CLOUD_WARNINGS = {
     "protondrive": (
-        "Proton Drive : l'accès par rclone est en bêta et repose sur une API que Proton ne "
+        _("Proton Drive : l'accès par rclone est en bêta et repose sur une API que Proton ne "
         "documente pas. Il peut cesser de fonctionner sans préavis, la double authentification "
         "pose des problèmes à certains utilisateurs, et les clés de chiffrement doivent d'abord "
         "avoir été créées par une connexion via le navigateur. Ne vous y fiez pas comme seule "
-        "copie : la copie locale reste toujours faite en premier."
+        "copie : la copie locale reste toujours faite en premier.")
     ),
 }
 _REMOTE_RE = re.compile(r"[\w.@+][\w.@+ -]*")
@@ -1935,7 +1938,7 @@ def clean_cloud_path(path: str) -> str:
     path = path.strip().strip("/")
     parts = path.split("/")
     if not path or any(p in ("", ".", "..") for p in parts) or re.search(r"[\x00-\x1f]", path):
-        raise ValueError("dossier distant invalide (exemple : sauvegardes-bureau)")
+        raise ValueError(_("dossier distant invalide (exemple : sauvegardes-bureau)"))
     return path
 
 
@@ -1943,7 +1946,7 @@ def cloud_target(remote: str, path: str) -> tuple[str, str]:
     """Valide (remote, dossier) avant tout envoi. Lève ValueError si quelque chose cloche."""
     remote = remote.strip().removesuffix(":")
     if not _REMOTE_RE.fullmatch(remote):
-        raise ValueError(f"nom de service rclone invalide : {remote!r}")
+        raise ValueError(_('nom de service rclone invalide : {remote!r}').format(remote=remote))
     return remote, clean_cloud_path(path)
 
 
@@ -1971,29 +1974,28 @@ def upload_to_cloud(archive: Path, remote: str, path: str, log: Log) -> None:
     Lève RuntimeError au moindre doute : une copie cloud douteuse ne doit pas passer pour bonne."""
     remote, path = cloud_target(remote, path)
     if not has("rclone"):
-        raise RuntimeError("rclone n'est pas installé (paquet « rclone »).")
+        raise RuntimeError(_("rclone n'est pas installé (paquet « rclone »)."))
     if not archive.is_file():
-        raise RuntimeError(f"archive introuvable : {archive}")
+        raise RuntimeError(_('archive introuvable : {archive}').format(archive=archive))
     kind = rclone_remotes().get(remote)
     if kind is None:
-        raise RuntimeError(f"le service « {remote} » n'est pas configuré dans rclone "
-                           "(lancez « rclone config » dans un terminal).")
+        raise RuntimeError(_("le service « {remote} » n'est pas configuré dans rclone (lancez « rclone config » dans un terminal).").format(remote=remote))
     if kind in CLOUD_WARNINGS:
         log(CLOUD_WARNINGS[kind])
     files = [archive] + ([checksum_path(archive)] if checksum_path(archive).is_file() else [])
-    log(f"Envoi vers {remote}:{path} ({', '.join(_fmt_size(f.stat().st_size) for f in files)})")
+    log(_('Envoi vers {remote}:{path} ({v3})').format(remote=remote, path=path, v3=', '.join((_fmt_size(f.stat().st_size) for f in files))))
     for f in files:
         rc = _rclone(["copyto", f, f"{remote}:{path}/{f.name}", "-v",
                       "--stats", "15s", "--stats-one-line"], log)
         if rc != 0:
-            raise RuntimeError(f"rclone a échoué pour {f.name} (code {rc})")
+            raise RuntimeError(_('rclone a échoué pour {v1} (code {rc})').format(v1=f.name, rc=rc))
     sizes = _remote_sizes(f"{remote}:{path}")
     if sizes is None:
-        raise RuntimeError("envoi terminé, mais impossible de relire le dossier distant pour le contrôler")
+        raise RuntimeError(_("envoi terminé, mais impossible de relire le dossier distant pour le contrôler"))
     for f in files:
         if sizes.get(f.name) != f.stat().st_size:
-            raise RuntimeError(f"{f.name} : taille distante différente de la taille locale")
-    log(f"Copie cloud vérifiée (taille) : {remote}:{path}/{archive.name}")
+            raise RuntimeError(_('{v1} : taille distante différente de la taille locale').format(v1=f.name))
+    log(_('Copie cloud vérifiée (taille) : {remote}:{path}/{v3}').format(remote=remote, path=path, v3=archive.name))
 
 
 def cloud_rotate(remote: str, path: str, keep: int, pattern: re.Pattern, log: Log) -> None:
@@ -2003,16 +2005,16 @@ def cloud_rotate(remote: str, path: str, keep: int, pattern: re.Pattern, log: Lo
     remote, path = cloud_target(remote, path)
     sizes = _remote_sizes(f"{remote}:{path}")
     if sizes is None:
-        log("Rotation cloud ignorée : dossier distant illisible.")
+        log(_("Rotation cloud ignorée : dossier distant illisible."))
         return
     archives = sorted(n for n in sizes if n.endswith(".tar.gz.gpg") and pattern.match(n))
     for old in archives[:-keep] if keep > 0 else []:
         for name in (old, old + CHECKSUM_SUFFIX):
             if name in sizes:
                 if _rclone(["deletefile", f"{remote}:{path}/{name}"], log) != 0:
-                    log(f"Impossible de supprimer {name} sur le cloud.")
+                    log(_('Impossible de supprimer {name} sur le cloud.').format(name=name))
                 else:
-                    log(f"Ancienne sauvegarde cloud supprimée : {name}")
+                    log(_('Ancienne sauvegarde cloud supprimée : {name}').format(name=name))
 
 
 # --------------------------------------------------------------------------
@@ -2035,11 +2037,10 @@ def _check_remote(remote: str, path: str) -> tuple[str, str, str]:
     """Valide le service et le dossier. Renvoie (service, dossier, type rclone)."""
     remote, path = cloud_target(remote, path)
     if not has("rclone"):
-        raise RuntimeError("rclone n'est pas installé (paquet « rclone »).")
+        raise RuntimeError(_("rclone n'est pas installé (paquet « rclone »)."))
     kind = rclone_remotes().get(remote)
     if kind is None:
-        raise RuntimeError(f"le service « {remote} » n'est pas configuré dans rclone "
-                           "(lancez « rclone config » dans un terminal).")
+        raise RuntimeError(_("le service « {remote} » n'est pas configuré dans rclone (lancez « rclone config » dans un terminal).").format(remote=remote))
     return remote, path, kind
 
 
@@ -2053,14 +2054,14 @@ def list_cloud_backups(remote: str, path: str) -> list[CloudBackup]:
                             "--ask-password=false"],
                            capture_output=True, text=True, timeout=120, stdin=subprocess.DEVNULL)
     except subprocess.TimeoutExpired:
-        raise RuntimeError("le service cloud ne répond pas (délai dépassé)") from None
+        raise RuntimeError(_("le service cloud ne répond pas (délai dépassé)")) from None
     except OSError as exc:
-        raise RuntimeError(f"rclone n'a pas pu démarrer : {exc.strerror or exc}") from None
+        raise RuntimeError(_("rclone n'a pas pu démarrer : {v1}").format(v1=exc.strerror or exc)) from None
     if r.returncode == 3:  # code rclone « dossier introuvable »
-        raise RuntimeError(f"le dossier « {path} » n'existe pas sur {remote}")
+        raise RuntimeError(_("le dossier « {path} » n'existe pas sur {remote}").format(path=path, remote=remote))
     if r.returncode != 0:
         lines = [l.strip() for l in r.stderr.splitlines() if l.strip()]
-        raise RuntimeError(lines[-1][-300:] if lines else f"rclone a échoué (code {r.returncode})")
+        raise RuntimeError(lines[-1][-300:] if lines else _('rclone a échoué (code {v1})').format(v1=r.returncode))
     try:
         entries = json.loads(r.stdout)
         names = {str(e["Name"]) for e in entries}
@@ -2068,7 +2069,7 @@ def list_cloud_backups(remote: str, path: str) -> list[CloudBackup]:
                              str(e["Name"]) + CHECKSUM_SUFFIX in names)
                  for e in entries if _CLOUD_ARCHIVE_RE.fullmatch(str(e["Name"]))]
     except (ValueError, KeyError, TypeError):
-        raise RuntimeError("réponse de rclone illisible") from None
+        raise RuntimeError(_("réponse de rclone illisible")) from None
     return sorted(found, key=lambda b: (b.modified, b.name), reverse=True)
 
 
@@ -2079,26 +2080,26 @@ def download_from_cloud(remote: str, path: str, name: str, log: Log) -> tuple[Pa
     Renvoie (dossier temporaire à supprimer ensuite, archive, OK | MISSING).
     Lève IntegrityError si l'archive est abîmée, RuntimeError pour les autres échecs."""
     if not _CLOUD_ARCHIVE_RE.fullmatch(name):
-        raise ValueError(f"nom d'archive invalide : {name!r}")
+        raise ValueError(_("nom d'archive invalide : {name!r}").format(name=name))
     remote, path, kind = _check_remote(remote, path)
     if kind in CLOUD_WARNINGS:
         log(CLOUD_WARNINGS[kind])
     sizes = _remote_sizes(f"{remote}:{path}")
     if sizes is None:
-        raise RuntimeError("impossible de lire le dossier distant")
+        raise RuntimeError(_("impossible de lire le dossier distant"))
     if name not in sizes:
-        raise RuntimeError(f"« {name} » n'existe plus sur {remote}:{path}")
+        raise RuntimeError(_("« {name} » n'existe plus sur {remote}:{path}").format(name=name, remote=remote, path=path))
     names = [name] + ([name + CHECKSUM_SUFFIX] if name + CHECKSUM_SUFFIX in sizes else [])
     tmp = new_tempdir()
     try:
-        log(f"Téléchargement depuis {remote}:{path} ({', '.join(_fmt_size(sizes[n]) for n in names)})")
+        log(_('Téléchargement depuis {remote}:{path} ({v3})').format(remote=remote, path=path, v3=', '.join((_fmt_size(sizes[n]) for n in names))))
         for n in names:
             rc = _rclone(["copyto", f"{remote}:{path}/{n}", tmp / n, "-v",
                           "--stats", "5s", "--stats-one-line"], log)
             if rc != 0:
-                raise RuntimeError(f"rclone a échoué pour {n} (code {rc})")
+                raise RuntimeError(_('rclone a échoué pour {n} (code {rc})').format(n=n, rc=rc))
             if (tmp / n).stat().st_size != sizes[n]:
-                raise RuntimeError(f"{n} : taille reçue différente de la taille distante")
+                raise RuntimeError(_('{n} : taille reçue différente de la taille distante').format(n=n))
         archive = tmp / name
         os.chmod(archive, 0o600)
         status = check_archive(archive)  # IntegrityError si la somme ne correspond pas
@@ -2106,9 +2107,9 @@ def download_from_cloud(remote: str, path: str, name: str, log: Log) -> tuple[Pa
         shutil.rmtree(tmp, ignore_errors=True)
         raise
     if status == OK:
-        log(f"Intégrité vérifiée (SHA-256) : {name}")
+        log(_('Intégrité vérifiée (SHA-256) : {name}').format(name=name))
     else:
-        log(f"Pas de somme de contrôle pour {name} : intégrité non vérifiable.")
+        log(_('Pas de somme de contrôle pour {name} : intégrité non vérifiable.').format(name=name))
     return tmp, archive, status
 
 
@@ -2150,20 +2151,20 @@ def _cloud_files(remote: str, path: str) -> list[_CloudFile]:
                             "--ask-password=false"],
                            capture_output=True, text=True, timeout=600, stdin=subprocess.DEVNULL)
     except subprocess.TimeoutExpired:
-        raise RuntimeError("le service cloud ne répond pas (délai dépassé)") from None
+        raise RuntimeError(_("le service cloud ne répond pas (délai dépassé)")) from None
     except OSError as exc:
-        raise RuntimeError(f"rclone n'a pas pu démarrer : {exc.strerror or exc}") from None
+        raise RuntimeError(_("rclone n'a pas pu démarrer : {v1}").format(v1=exc.strerror or exc)) from None
     if r.returncode == 3:
-        raise RuntimeError(f"le dossier « {path} » n'existe pas sur {remote}")
+        raise RuntimeError(_("le dossier « {path} » n'existe pas sur {remote}").format(path=path, remote=remote))
     if r.returncode != 0:
         lines = [l.strip() for l in r.stderr.splitlines() if l.strip()]
-        raise RuntimeError(lines[-1][-300:] if lines else f"rclone a échoué (code {r.returncode})")
+        raise RuntimeError(lines[-1][-300:] if lines else _('rclone a échoué (code {v1})').format(v1=r.returncode))
     try:
         return [_CloudFile(str(e["Name"]), int(e["Size"]),
                            {str(k).lower(): str(v).lower() for k, v in (e.get("Hashes") or {}).items() if v})
                 for e in json.loads(r.stdout)]
     except (ValueError, KeyError, TypeError, AttributeError):
-        raise RuntimeError("réponse de rclone illisible") from None
+        raise RuntimeError(_("réponse de rclone illisible")) from None
 
 
 def _rclone_local_hash(path: Path, kind: str) -> str | None:
@@ -2175,7 +2176,7 @@ def _rclone_local_hash(path: Path, kind: str) -> str | None:
     except (OSError, subprocess.TimeoutExpired):
         return None
     for line in r.stdout.splitlines():
-        digest, _, name = line.partition("  ")
+        digest, _sep, name = line.partition("  ")
         if r.returncode == 0 and name.strip() == path.name and digest.strip():
             return digest.strip().lower()
     return None
@@ -2220,7 +2221,7 @@ def _remote_recorded_sha256(remote: str, path: str, name: str) -> str | None:
 
 def _check_cloud_file(remote: str, path: str, f: _CloudFile, local_folders: list[Path],
                       has_sums: bool) -> CloudCheck:
-    note = "" if has_sums else " · fichier .sha256 absent du cloud"
+    note = "" if has_sums else _(" · fichier .sha256 absent du cloud")
     local = next((c for d in local_folders if (c := d / f.name).is_file()), None)
     skipped = ""
     if local is not None:
@@ -2237,34 +2238,32 @@ def _check_cloud_file(remote: str, path: str, f: _CloudFile, local_folders: list
         if recorded is None or mine.get("sha256") == recorded:
             if local_size != f.size:
                 return CloudCheck(f.name, CLOUD_BAD,
-                                  f"taille cloud ({_fmt_size(f.size)}) différente de la copie locale "
-                                  f"({_fmt_size(local_size)})", f.size)
+                                  _('taille cloud ({v1}) différente de la copie locale ({v2})').format(v1=_fmt_size(f.size), v2=_fmt_size(local_size)), f.size)
             common = [k for k in f.hashes if k in mine]
             differ = [k for k in common if mine[k] != f.hashes[k]]
             if differ:
                 return CloudCheck(f.name, CLOUD_BAD,
-                                  f"empreinte {', '.join(differ)} différente de la copie locale : "
-                                  "la copie cloud est abîmée ou incomplète", f.size)
+                                  _('empreinte {v1} différente de la copie locale : la copie cloud est abîmée ou incomplète').format(v1=', '.join(differ)), f.size)
             if common:
                 return CloudCheck(f.name, CLOUD_OK,
-                                  f"identique à la copie locale (taille, {', '.join(common)})" + note, f.size)
+                                  _('identique à la copie locale (taille, {v1})').format(v1=', '.join(common)) + note, f.size)
             return CloudCheck(f.name, CLOUD_WEAK,
-                              "même taille que la copie locale, mais ce service ne fournit pas "
-                              "d'empreinte comparable : copie non confirmée" + note, f.size)
-        skipped = "copie locale abîmée, ignorée ; "
+                              _("même taille que la copie locale, mais ce service ne fournit pas "
+                              "d'empreinte comparable : copie non confirmée") + note, f.size)
+        skipped = _("copie locale abîmée, ignorée ; ")
     digest = _remote_recorded_sha256(remote, path, f.name) if has_sums else None
     cloud_sha = f.hashes.get("sha256")
     if digest and cloud_sha:
         if digest == cloud_sha:
             return CloudCheck(f.name, CLOUD_OK,
-                              skipped + "empreinte SHA-256 identique à celle notée à la création", f.size)
+                              skipped + _("empreinte SHA-256 identique à celle notée à la création"), f.size)
         return CloudCheck(f.name, CLOUD_BAD,
-                          skipped + "empreinte SHA-256 différente de celle notée à la création : "
-                          "la copie cloud est abîmée", f.size)
-    why = "copie locale abîmée, ignorée" if skipped else "pas de copie locale à comparer"
+                          skipped + _("empreinte SHA-256 différente de celle notée à la création : "
+                          "la copie cloud est abîmée"), f.size)
+    why = _("copie locale abîmée, ignorée") if skipped else _("pas de copie locale à comparer")
     return CloudCheck(f.name, CLOUD_NOREF,
-                      why + ("" if cloud_sha else " et ce service ne fournit pas SHA-256")
-                      + " : seule la taille est connue" + note, f.size)
+                      why + ("" if cloud_sha else _(" et ce service ne fournit pas SHA-256"))
+                      + _(" : seule la taille est connue") + note, f.size)
 
 
 def verify_cloud(remote: str, path: str, local_folders: list[Path] | None = None,
@@ -2291,7 +2290,7 @@ def verify_cloud(remote: str, path: str, local_folders: list[Path] | None = None
             results.append(_check_cloud_file(remote, path, f, list(local_folders or []),
                                              f.name + CHECKSUM_SUFFIX in names))
         except OSError as exc:
-            results.append(CloudCheck(f.name, CLOUD_NOREF, f"lecture impossible : {exc.strerror or exc}", f.size))
+            results.append(CloudCheck(f.name, CLOUD_NOREF, _('lecture impossible : {v1}').format(v1=exc.strerror or exc), f.size))
     if progress:
         progress(1.0, "")
     return results
@@ -2326,41 +2325,41 @@ def detect(src: Path) -> dict:
 # --------------------------------------------------------------------------
 
 NEW, SAME, CHANGE, SKIP = "new", "same", "change", "skip"
-STATUS_LABELS = {NEW: "À ajouter", SAME: "Déjà présent", CHANGE: "Sera modifié", SKIP: "Ignoré"}
+STATUS_LABELS = {NEW: _("À ajouter"), SAME: _("Déjà présent"), CHANGE: _("Sera modifié"), SKIP: _("Ignoré")}
 
 # Formulations du résumé de chaque composant : pour (à ajouter, à modifier, identique, ignoré),
 # la forme au singulier puis au pluriel
 PHRASES = {
-    "repos": (("à ajouter",) * 2, ("à remplacer",) * 2, ("identique", "identiques"), ("ignoré", "ignorés")),
-    "apt": (("à installer",) * 2, ("", ""), ("déjà installé", "déjà installés"),
-            ("introuvable", "introuvables")),
-    "snap": (("à installer",) * 2, ("", ""), ("déjà installé", "déjà installés"), ("ignoré", "ignorés")),
-    "flatpak": (("à installer",) * 2, ("", ""), ("déjà installé", "déjà installés"),
-                ("ignoré", "ignorés")),
-    "extensions": (("à installer",) * 2, ("à remplacer",) * 2, ("déjà installée", "déjà installées"),
-                   ("ignorée", "ignorées")),
-    "dconf": (("à ajouter",) * 2, ("à modifier",) * 2, ("identique", "identiques"), ("", "")),
-    "profiles": ((("à ajouter",) * 2), ("existant à fusionner", "existants à fusionner"),
-                 ("", ""), ("ignoré", "ignorés")),
-    "home": (("nouveau fichier", "nouveaux fichiers"), ("fichier à remplacer", "fichiers à remplacer"),
+    "repos": ((_("à ajouter"),) * 2, (_("à remplacer"),) * 2, (_("identique"), _("identiques")), (_("ignoré"), _("ignorés"))),
+    "apt": ((_("à installer"),) * 2, ("", ""), (_("déjà installé"), _("déjà installés")),
+            (_("introuvable"), _("introuvables"))),
+    "snap": ((_("à installer"),) * 2, ("", ""), (_("déjà installé"), _("déjà installés")), (_("ignoré"), _("ignorés"))),
+    "flatpak": ((_("à installer"),) * 2, ("", ""), (_("déjà installé"), _("déjà installés")),
+                (_("ignoré"), _("ignorés"))),
+    "extensions": ((_("à installer"),) * 2, (_("à remplacer"),) * 2, (_("déjà installée"), _("déjà installées")),
+                   (_("ignorée"), _("ignorées"))),
+    "dconf": ((_("à ajouter"),) * 2, (_("à modifier"),) * 2, (_("identique"), _("identiques")), ("", "")),
+    "profiles": (((_("à ajouter"),) * 2), (_("existant à fusionner"), _("existants à fusionner")),
+                 ("", ""), (_("ignoré"), _("ignorés"))),
+    "home": ((_("nouveau fichier"), _("nouveaux fichiers")), (_("fichier à remplacer"), _("fichiers à remplacer")),
              ("", ""), ("", "")),
 }
 
 
 def phrase(name: str, index: int, n: int) -> str:
     """Formulation du résumé (index : 0 ajouter, 1 modifier, 2 identique, 3 ignoré) accordée à n."""
-    return PHRASES[name][index][0 if n < 2 else 1]
+    return PHRASES[name][index][0 if (n < 2 if ZERO_IS_SINGULAR else n == 1) else 1]
 
 
 DCONF_LABELS = {
-    "org/gnome/desktop/interface": "Apparence et polices",
-    "org/gnome/desktop/background": "Fond d'écran",
-    "org/gnome/desktop/wm/keybindings": "Raccourcis des fenêtres",
-    "org/gnome/desktop/wm/preferences": "Fenêtres",
-    "org/gnome/settings-daemon/plugins/media-keys": "Raccourcis multimédia",
-    "org/gnome/shell": "Shell GNOME (favoris, extensions activées)",
-    "org/gnome/mutter": "Gestionnaire de fenêtres",
-    "org/gnome/terminal/legacy": "Terminal",
+    "org/gnome/desktop/interface": _("Apparence et polices"),
+    "org/gnome/desktop/background": _("Fond d'écran"),
+    "org/gnome/desktop/wm/keybindings": _("Raccourcis des fenêtres"),
+    "org/gnome/desktop/wm/preferences": _("Fenêtres"),
+    "org/gnome/settings-daemon/plugins/media-keys": _("Raccourcis multimédia"),
+    "org/gnome/shell": _("Shell GNOME (favoris, extensions activées)"),
+    "org/gnome/mutter": _("Gestionnaire de fenêtres"),
+    "org/gnome/terminal/legacy": _("Terminal"),
 }
 
 
@@ -2390,7 +2389,8 @@ class Preview:
 
 
 def plural(n: int, one: str, many: str) -> str:
-    return f"{n} {one if n < 2 else many}"
+    singular = n < 2 if ZERO_IS_SINGULAR else n == 1
+    return f"{n} {one if singular else many}"
 
 
 def count_steps(selected: set[str], cloud: bool = False) -> int:
@@ -2401,10 +2401,10 @@ def count_steps(selected: set[str], cloud: bool = False) -> int:
 
 def report(total: int, errors: list[str]) -> str:
     """Bilan en une ligne, par exemple « 3 étapes réussies, 1 en échec (Snaps) »."""
-    text = plural(max(total - len(errors), 0), "étape réussie", "étapes réussies")
+    text = plural(max(total - len(errors), 0), _("étape réussie"), _("étapes réussies"))
     if errors:
         names = ", ".join(LABELS.get(e, e) for e in errors)
-        text += f", {len(errors)} en échec ({names})"
+        text += _(', {v1} en échec ({names})').format(v1=len(errors), names=names)
     return text
 
 
@@ -2426,15 +2426,15 @@ def dconf_label(path: str) -> str:
         return DCONF_LABELS[path]
     prefix = "org/gnome/shell/extensions/"
     if path.startswith(prefix):
-        return "Extension " + path[len(prefix):]
+        return _("Extension ") + path[len(prefix):]
     return path
 
 
 def _preview_apt(src: Path) -> Preview:
     wanted = sorted(set(_read_lines(src / "apt-manual.txt")))
     installed = set()
-    for line in capture(["dpkg-query", "-W", "-f", r"${Package}\t${db:Status-Abbrev}\n"]).splitlines():
-        name, _, status = line.partition("\t")
+    for line in capture(["dpkg-query", "-W", "-f", _(r"${Package}\t${db:Status-Abbrev}\n")]).splitlines():
+        name, _sep, status = line.partition("\t")
         if status.startswith("ii"):
             installed.add(name)
     available = set(capture(["apt-cache", "pkgnames"]).split())
@@ -2448,16 +2448,16 @@ def _preview_apt(src: Path) -> Preview:
         elif base in available:
             p.items.append(Item(pkg, NEW))
         elif adds_repos:
-            p.items.append(Item(pkg, NEW, "inconnu pour l'instant : installé si un dépôt tiers "
-                                          "de la sauvegarde le fournit", warn=True))
+            p.items.append(Item(pkg, NEW, _("inconnu pour l'instant : installé si un dépôt tiers "
+                                          "de la sauvegarde le fournit"), warn=True))
         else:
-            p.items.append(Item(pkg, SKIP, "inconnu des dépôts de cette machine"))
+            p.items.append(Item(pkg, SKIP, _("inconnu des dépôts de cette machine")))
     if any(i.warn for i in p.items):
-        p.note = ("Les paquets marqués ⚠ ne sont pas connus de apt pour le moment. Ils seront "
+        p.note = (_("Les paquets marqués ⚠ ne sont pas connus de apt pour le moment. Ils seront "
                   "installés si les dépôts tiers de la sauvegarde (cochez « Dépôts tiers ») "
-                  "les fournissent, sinon ignorés.")
+                  "les fournissent, sinon ignorés."))
     elif p.count(SKIP):
-        p.note = "Les paquets introuvables seront ignorés : aucun dépôt de la sauvegarde ne les fournit."
+        p.note = _("Les paquets introuvables seront ignorés : aucun dépôt de la sauvegarde ne les fournit.")
     return p
 
 
@@ -2465,7 +2465,7 @@ def _preview_names(src: Path, listfile: str, tool: str, installed_cmd: list[str]
                    first_line_is_header: bool) -> Preview:
     wanted = sorted(set(_read_lines(src / listfile)))
     if not has(tool):
-        return Preview(items=[Item(n, SKIP, f"{tool} n'est pas installé sur cette machine") for n in wanted])
+        return Preview(items=[Item(n, SKIP, _("{tool} n'est pas installé sur cette machine").format(tool=tool)) for n in wanted])
     lines = _capture_or_empty(installed_cmd).splitlines()
     if first_line_is_header:
         lines = lines[1:]
@@ -2491,14 +2491,14 @@ def _preview_flatpak(src: Path) -> Preview:
 def _repo_summary(path: Path) -> str:
     """Adresse du dépôt décrit par un fichier .list / .sources (ou « clé de signature »)."""
     if path.suffix not in (".list", ".sources"):
-        return "clé de signature"
+        return _("clé de signature")
     try:
         text = path.read_text(errors="replace")
     except OSError:
         return ""
     for line in text.splitlines():
         line = line.strip()
-        if line.startswith(("deb ", "deb-src ", "URIs:")):
+        if line.startswith(("deb ", "deb-src ", _("URIs:"))):
             m = re.search(r"(?:https?|ftp)://[^\s\]]+", line)
             if m:
                 return m.group(0).split("://", 1)[1]
@@ -2522,7 +2522,7 @@ def _preview_repos(src: Path) -> Preview:
             if same:
                 p.same.append(label)
             else:
-                p.items.append(Item(label, CHANGE, "diffère du fichier actuel"
+                p.items.append(Item(label, CHANGE, _("diffère du fichier actuel")
                                     + (f" · {detail}" if detail else "")))
     return p
 
@@ -2572,22 +2572,22 @@ def _preview_extensions(src: Path) -> Preview:
         status, warn = NEW, False
         if e.get("ego") is False and not has_files:
             status = SKIP
-            parts.append("absente de extensions.gnome.org et sans copie")
+            parts.append(_("absente de extensions.gnome.org et sans copie"))
         elif e.get("ego") is False:
-            parts.append("hors extensions.gnome.org : fichiers copiés depuis la sauvegarde")
+            parts.append(_("hors extensions.gnome.org : fichiers copiés depuis la sauvegarde"))
         else:
-            parts.append("téléchargée depuis extensions.gnome.org"
-                         + (f" (version compatible avec GNOME {major})" if major else ""))
+            parts.append(_("téléchargée depuis extensions.gnome.org")
+                         + (_(' (version compatible avec GNOME {major})').format(major=major) if major else ""))
             if has_files:
-                parts.append("copie de secours disponible")
+                parts.append(_("copie de secours disponible"))
         if e.get("enabled"):
-            parts.append("activée dans la sauvegarde")
+            parts.append(_("activée dans la sauvegarde"))
         if name != uuid:
             parts.append(uuid)
         p.items.append(Item(name, status, " · ".join(parts), warn))
     if p.count(NEW):
-        p.note = ("Les extensions sont retéléchargées depuis extensions.gnome.org (connexion "
-                  "internet requise) : si aucune version ne convient à ce GNOME, elle est ignorée.")
+        p.note = (_("Les extensions sont retéléchargées depuis extensions.gnome.org (connexion "
+                  "internet requise) : si aucune version ne convient à ce GNOME, elle est ignorée."))
     return p
 
 
@@ -2615,12 +2615,12 @@ def _preview_extensions_files(src: Path) -> Preview:
             status = CHANGE
             parts.append(f"v{old} → v{new}")
         if uuid in enabled_in_backup:
-            parts.append("activée dans la sauvegarde")
+            parts.append(_("activée dans la sauvegarde"))
         warn = False
         versions = {str(v).split(".")[0] for v in meta.get("shell-version", []) or []}
         if major and versions and major not in versions:
             warn = True
-            parts.append(f"non déclarée compatible avec GNOME {major}")
+            parts.append(_('non déclarée compatible avec GNOME {major}').format(major=major))
         if name != uuid:
             parts.append(uuid)
         p.items.append(Item(name, status, " · ".join(parts), warn))
@@ -2637,14 +2637,14 @@ def _parse_dconf(text: str) -> dict[str, dict[str, str]]:
         if line.startswith("[") and line.endswith("]"):
             current = sections.setdefault(line[1:-1], {})
         elif current is not None and "=" in line:
-            key, _, value = line.partition("=")
+            key, _sep, value = line.partition("=")
             current[key.strip()] = value.strip()
     return sections
 
 
 def _preview_dconf(src: Path) -> Preview:
     if not has("dconf"):
-        raise RuntimeError("le paquet dconf-cli est requis")
+        raise RuntimeError(_("le paquet dconf-cli est requis"))
     wanted = _parse_dconf((src / "dconf-reglages.ini").read_text(errors="replace"))
     current = _parse_dconf(capture(["dconf", "dump", "/"]))
     p = Preview()
@@ -2659,14 +2659,14 @@ def _preview_dconf(src: Path) -> Preview:
             else:
                 p.same_count += 1
     if p.items:
-        p.note = "Les réglages absents de la sauvegarde restent tels quels."
+        p.note = _("Les réglages absents de la sauvegarde restent tels quels.")
     return p
 
 
 def _preview_home(src: Path) -> Preview:
     """Simulation (rsync -n) : compte les fichiers qui seraient créés ou remplacés."""
     if not has("rsync"):
-        raise RuntimeError("le paquet rsync est requis")
+        raise RuntimeError(_("le paquet rsync est requis"))
     proc = subprocess.Popen(
         ["rsync", "-a", "-n", "--out-format=%i|%n", f"{src / 'home'}/", f"{HOME}/"],
         stdout=subprocess.PIPE, stderr=subprocess.DEVNULL, text=True, errors="replace",
@@ -2674,7 +2674,7 @@ def _preview_home(src: Path) -> Preview:
     assert proc.stdout is not None
     counts: dict[str, list[int]] = {}  # chemin -> [nouveaux, remplacés]
     for line in proc.stdout:
-        flags, _, name = line.rstrip("\n").partition("|")
+        flags, _sep, name = line.rstrip("\n").partition("|")
         if flags[:1] not in (">", "c") or flags[1:2] not in ("f", "L"):
             continue  # dossiers et autres entrées : sans intérêt ici
         top = max((i for i in HOME_ITEMS if name == i or name.startswith(i + "/")),
@@ -2687,11 +2687,11 @@ def _preview_home(src: Path) -> Preview:
     for key in sorted(counts):
         new, changed = counts[key]
         detail = ", ".join(t for t in (
-            plural(new, "nouveau fichier", "nouveaux fichiers") if new else "",
-            plural(changed, "fichier remplacé", "fichiers remplacés") if changed else "") if t)
+            plural(new, _("nouveau fichier"), _("nouveaux fichiers")) if new else "",
+            plural(changed, _("fichier remplacé"), _("fichiers remplacés")) if changed else "") if t)
         p.items.append(Item(f"~/{key}", CHANGE if changed else NEW, detail))
     if p.items:
-        p.note = "Chaque fichier remplacé est conservé avec l'extension .avant-restauration."
+        p.note = _("Chaque fichier remplacé est conservé avec l'extension .avant-restauration.")
     return p
 
 
@@ -2718,13 +2718,13 @@ def preview_all(src: Path, names: list[str]) -> dict[str, Preview]:
 def summarize(name: str, preview: Preview) -> str:
     """Résumé d'une ligne : « 12 à installer · 148 déjà installés »."""
     if preview.error:
-        return f"Aperçu indisponible : {preview.error}"
+        return _('Aperçu indisponible : {v1}').format(v1=preview.error)
     new, change, skip = preview.count(NEW), preview.count(CHANGE), preview.count(SKIP)
     parts = [f"{n} {phrase(name, i, n)}" for i, n in enumerate((new, change, preview.n_same, skip))
              if n and phrase(name, i, n)]
     if not parts:
-        return "Rien à changer"
-    return ("Rien à changer · " if not (new or change) else "") + " · ".join(parts)
+        return _("Rien à changer")
+    return (_("Rien à changer · ") if not (new or change) else "") + " · ".join(parts)
 
 
 # --------------------------------------------------------------------------
@@ -2792,7 +2792,7 @@ def _diff_repos(old: dict[str, Path], new: dict[str, Path]) -> Diff:
             d.same_count += 1
         else:
             summary = _repo_summary(new[name])
-            d.changed.append((name, "contenu différent" + (f" · {summary}" if summary else "")))
+            d.changed.append((name, _("contenu différent") + (f" · {summary}" if summary else "")))
     return d
 
 
@@ -2813,7 +2813,7 @@ def _diff_extensions(old: dict[str, dict], new: dict[str, dict]) -> Diff:
         if str(a.get("version")) != str(b.get("version")):
             notes.append(f"v{a.get('version', '?')} → v{b.get('version', '?')}")
         if bool(a.get("enabled")) != bool(b.get("enabled")):
-            notes.append("activée" if b.get("enabled") else "désactivée")
+            notes.append(_("activée") if b.get("enabled") else _("désactivée"))
         if notes:
             d.changed.append((label(b), " · ".join(notes)))
         else:
@@ -2838,8 +2838,8 @@ def compare_backups(old: Path, new: Path) -> dict[str, Diff]:
             if a is None and b is None:
                 continue  # composant absent des deux : rien à dire
             if a is None or b is None:
-                side = "l'ancienne" if a is None else "la récente"
-                result[name] = Diff(error=f"Absent de {side} sauvegarde : comparaison impossible")
+                side = _("l'ancienne") if a is None else _("la récente")
+                result[name] = Diff(error=_('Absent de {side} sauvegarde : comparaison impossible').format(side=side))
             elif name == "extensions":
                 result[name] = _diff_extensions(a, b)
             elif name == "repos":
@@ -2857,15 +2857,15 @@ def diff_summary(d: Diff) -> str:
         return d.error
     parts = []
     if d.added:
-        parts.append(plural(len(d.added), "ajouté", "ajoutés"))
+        parts.append(plural(len(d.added), _("ajouté"), _("ajoutés")))
     if d.removed:
-        parts.append(plural(len(d.removed), "retiré", "retirés"))
+        parts.append(plural(len(d.removed), _("retiré"), _("retirés")))
     if d.changed:
-        parts.append(plural(len(d.changed), "modifié", "modifiés"))
+        parts.append(plural(len(d.changed), _("modifié"), _("modifiés")))
     if not parts:
-        return "Aucun changement" + (f" ({d.same_count} identiques)" if d.same_count else "")
+        return _("Aucun changement") + (_(' ({v1} identiques)').format(v1=d.same_count) if d.same_count else "")
     if d.same_count:
-        parts.append(plural(d.same_count, "inchangé", "inchangés"))
+        parts.append(plural(d.same_count, _("inchangé"), _("inchangés")))
     return " · ".join(parts)
 
 
@@ -2890,7 +2890,7 @@ def restore_overview(previews: dict[str, Preview], selected: set[str],
             continue
         if only and n in only:
             total = len(installable(previews[n], n))
-            lines.append(f"• {LABELS[n]} : {len(only[n])} choisis sur {total} à installer")
+            lines.append(_('• {v1} : {v2} choisis sur {total} à installer').format(v1=LABELS[n], v2=len(only[n]), total=total))
         else:
             lines.append(f"• {LABELS[n]} : {summarize(n, previews[n])}")
     return "\n".join(lines)
@@ -2906,27 +2906,26 @@ def _restore_root(src: Path, parts: list[str], log: Log, on_marker: Callable[[st
     runtime = os.environ.get("XDG_RUNTIME_DIR")
     tmp = Path(tempfile.mkdtemp(prefix="sauvegarde-bureau-", dir=runtime if runtime else None))
     try:
-        lines = ["#!/bin/bash", "export DEBIAN_FRONTEND=noninteractive"]
+        lines = ["#!/bin/bash", _("export DEBIAN_FRONTEND=noninteractive")]
 
         if "repos" in parts:
-            lines.append("echo '== repos'")
+            lines.append(_("echo '== repos'"))
             for sub in REPO_DIRS:
                 for f in _repo_files(src, sub):
                     staged = tmp / sub / f.name  # copie locale : root ne lit pas toujours un disque externe
                     staged.parent.mkdir(exist_ok=True)
                     shutil.copy2(f, staged)
                     lines.append(
-                        f"install -D -m 644 {shlex.quote(str(staged))} "
-                        f"{shlex.quote(str(APT_DIR / sub / f.name))}"
+                        _('install -D -m 644 {v1} {v2}').format(v1=shlex.quote(str(staged)), v2=shlex.quote(str(APT_DIR / sub / f.name)))
                     )
-            lines.append("apt-get update || echo 'apt update a signalé des erreurs "
-                         "(un dépôt n'\\''est peut-être pas compatible avec cette version)'")
+            lines.append(_("apt-get update || echo 'apt update a signalé des erreurs "
+                         "(un dépôt n'\\''est peut-être pas compatible avec cette version)'"))
 
         if "apt" in parts:
             wanted = _read_lines(src / "apt-manual.txt")
             if "apt" in only:
                 wanted = [p for p in wanted if p in only["apt"]]
-                log(f"Restauration sélective : {len(wanted)} paquets choisis")
+                log(_('Restauration sélective : {v1} paquets choisis').format(v1=len(wanted)))
             wanted_file, avail_file, ok_file = tmp / "apt-voulus.txt", tmp / "apt-dispo.txt", tmp / "apt.txt"
             wanted_file.write_text("\n".join(wanted) + "\n")
             w, a, q = (shlex.quote(str(f)) for f in (wanted_file, avail_file, ok_file))
@@ -2934,18 +2933,14 @@ def _restore_root(src: Path, parts: list[str], log: Log, on_marker: Callable[[st
             # et « apt-get update » exécuté : un paquet fourni par un PPA de la sauvegarde
             # est donc bien installé, et seuls les paquets réellement introuvables sont ignorés.
             lines += [
-                "echo '== apt'",
-                f"apt-cache pkgnames | sort -u > {a}",
-                "awk 'NR==FNR { known[$1] = 1; next } "
-                "{ name = $0; sub(/:.*/, \"\", name); "
-                "if (name in known) print $0; "
-                "else print \"Paquet introuvable sur ce système (ignoré) : \" $0 }' "
-                f"{a} {w} > {q}.tmp",
-                f"grep -v '^Paquet introuvable' {q}.tmp > {q}",
-                f"grep '^Paquet introuvable' {q}.tmp || true",
-                f"if ! xargs -r -a {q} apt-get install -y; then",
-                "  echo 'Installation groupée échouée, essai paquet par paquet…'",
-                f"  while read -r p; do apt-get install -y \"$p\" || echo \"Échec apt : $p\"; done < {q}",
+                _("echo '== apt'"),
+                _('apt-cache pkgnames | sort -u > {a}').format(a=a),
+                _('awk \'NR==FNR {{ known[$1] = 1; next }} {{ name = $0; sub(/:.*/, "", name); if (name in known) print $0; else print "Paquet introuvable sur ce système (ignoré) : " $0 }}\' {a} {w} > {q}.tmp').format(a=a, w=w, q=q),
+                _("grep -v '^Paquet introuvable' {q}.tmp > {q}").format(q=q),
+                _("grep '^Paquet introuvable' {q}.tmp || true").format(q=q),
+                _('if ! xargs -r -a {q} apt-get install -y; then').format(q=q),
+                _("  echo 'Installation groupée échouée, essai paquet par paquet…'"),
+                _('  while read -r p; do apt-get install -y "$p" || echo "Échec apt : $p"; done < {q}').format(q=q),
                 "fi",
             ]
 
@@ -2953,14 +2948,13 @@ def _restore_root(src: Path, parts: list[str], log: Log, on_marker: Callable[[st
             snaps = _read_lines(src / "snap.txt")
             if "snap" in only:
                 snaps = [n for n in snaps if n in only["snap"]]
-                log(f"Restauration sélective : {len(snaps)} snaps choisis")
+                log(_('Restauration sélective : {v1} snaps choisis').format(v1=len(snaps)))
             snap_list = tmp / "snap.txt"
             snap_list.write_text("\n".join(snaps) + "\n")
             q = shlex.quote(str(snap_list))
             lines += [
-                "echo '== snap'",
-                f"while read -r s; do [ -n \"$s\" ] || continue; "
-                f"snap install \"$s\" || snap install --classic \"$s\" || echo \"Échec snap : $s\"; done < {q}",
+                _("echo '== snap'"),
+                _('while read -r s; do [ -n "$s" ] || continue; snap install "$s" || snap install --classic "$s" || echo "Échec snap : $s"; done < {q}').format(q=q),
             ]
 
         script = tmp / "restauration.sh"
@@ -2970,12 +2964,12 @@ def _restore_root(src: Path, parts: list[str], log: Log, on_marker: Callable[[st
             if line.startswith("== "):
                 on_marker(line[3:].strip())
 
-        log("Demande des droits administrateur…")
+        log(_("Demande des droits administrateur…"))
         rc = run(["pkexec", "/bin/bash", script], log, on_line=marker)
         if rc in (126, 127) and not has("pkexec"):
-            log("pkexec est introuvable.")
+            log(_("pkexec est introuvable."))
         elif rc in (126, 127):
-            log("Authentification refusée ou annulée : dépôts, paquets et snaps non restaurés.")
+            log(_("Authentification refusée ou annulée : dépôts, paquets et snaps non restaurés."))
         return rc == 0
     finally:
         shutil.rmtree(tmp, ignore_errors=True)
@@ -2983,17 +2977,17 @@ def _restore_root(src: Path, parts: list[str], log: Log, on_marker: Callable[[st
 
 def _restore_flatpak(src: Path, log: Log, only: dict[str, set[str]] | None = None) -> None:
     if not has("flatpak"):
-        log("Flatpak n'est pas installé : étape ignorée (installez le paquet « flatpak » puis relancez).")
+        log(_("Flatpak n'est pas installé : étape ignorée (installez le paquet « flatpak » puis relancez)."))
         return
     run(["flatpak", "remote-add", "--if-not-exists", "flathub",
          "https://dl.flathub.org/repo/flathub.flatpakrepo"], log)
     apps = _read_lines(src / "flatpak.txt")
     if only and "flatpak" in only:
         apps = [a for a in apps if a in only["flatpak"]]
-        log(f"Restauration sélective : {len(apps)} flatpaks choisis")
+        log(_('Restauration sélective : {v1} flatpaks choisis').format(v1=len(apps)))
     for app in apps:
         if run(["flatpak", "install", "-y", "--noninteractive", "flathub", app], log) != 0:
-            log(f"Échec flatpak : {app}")
+            log(_('Échec flatpak : {app}').format(app=app))
 
 
 def _shell_version() -> str | None:
@@ -3011,17 +3005,17 @@ def _unpack_extension(zip_path: Path, uuid: str, log: Log) -> None:
     with zipfile.ZipFile(zip_path) as zf:
         names = zf.namelist()
         if any(n.startswith("/") or ".." in Path(n).parts for n in names):
-            raise ValueError("archive invalide (chemins suspects)")
+            raise ValueError(_("archive invalide (chemins suspects)"))
         try:
             meta = json.loads(zf.read("metadata.json"))
         except (KeyError, ValueError) as exc:
-            raise ValueError("archive sans metadata.json valide") from exc
+            raise ValueError(_("archive sans metadata.json valide")) from exc
         if meta.get("uuid") != uuid:
-            raise ValueError(f"l'archive contient « {meta.get('uuid')} », pas « {uuid} »")
+            raise ValueError(_("l'archive contient « {v1} », pas « {uuid} »").format(v1=meta.get('uuid'), uuid=uuid))
         if has("gnome-extensions"):
             if run(["gnome-extensions", "install", "--force", zip_path], log) == 0:
                 return
-            log("gnome-extensions install a échoué : extraction directe.")
+            log(_("gnome-extensions install a échoué : extraction directe."))
         target = EXT_DIR / uuid
         shutil.rmtree(target, ignore_errors=True)
         target.mkdir(parents=True)
@@ -3039,8 +3033,8 @@ def _install_from_ego(uuid: str, shell: str | None, log: Log, pk=None) -> str:
         return "absent" if _ego_info(uuid, None, pk) is None else "incompatible"
     url = urllib.parse.urljoin(EGO_URL + "/", str(info["download_url"]))
     if urllib.parse.urlparse(url).netloc != urllib.parse.urlparse(EGO_URL).netloc:
-        raise ValueError("adresse de téléchargement inattendue")
-    log(f"Téléchargement de {uuid} (v{info.get('version', '?')})…")
+        raise ValueError(_("adresse de téléchargement inattendue"))
+    log(_('Téléchargement de {uuid} (v{v2})…').format(uuid=uuid, v2=info.get('version', '?')))
     try:
         data = _ego_get(url, EGO_MAX_ZIP)
     except (urllib.error.URLError, TimeoutError, OSError) as exc:
@@ -3061,7 +3055,7 @@ def _enable_extension(uuid: str, log: Log) -> None:
     if has("gnome-extensions") and run(["gnome-extensions", "enable", uuid], log) == 0:
         return
     if not has("gsettings"):
-        log(f"{uuid} : activation impossible (gsettings absent), elle sera appliquée par les réglages.")
+        log(_('{uuid} : activation impossible (gsettings absent), elle sera appliquée par les réglages.').format(uuid=uuid))
         return
     try:
         raw = capture(["gsettings", "get", "org.gnome.shell", "enabled-extensions"]).strip()
@@ -3069,9 +3063,9 @@ def _enable_extension(uuid: str, log: Log) -> None:
         if uuid not in current:
             current.append(uuid)
             capture(["gsettings", "set", "org.gnome.shell", "enabled-extensions", repr(current)])
-        log(f"{uuid} : activée au prochain démarrage de la session.")
+        log(_('{uuid} : activée au prochain démarrage de la session.').format(uuid=uuid))
     except (subprocess.CalledProcessError, OSError, ValueError, SyntaxError) as exc:
-        log(f"{uuid} : activation impossible ({exc}).")
+        log(_('{uuid} : activation impossible ({exc}).').format(uuid=uuid, exc=exc))
 
 
 def _restore_extensions(src: Path, log: Log, only: dict | None = None) -> None:
@@ -3079,8 +3073,8 @@ def _restore_extensions(src: Path, log: Log, only: dict | None = None) -> None:
     if entries is None:  # ancienne sauvegarde : les fichiers ont été copiés
         EXT_DIR.mkdir(parents=True, exist_ok=True)
         shutil.copytree(src / "extensions", EXT_DIR, symlinks=True, dirs_exist_ok=True)
-        log("Extensions copiées (sauvegarde ancien format). Une extension conçue pour une "
-            "autre version de GNOME peut ne pas fonctionner.")
+        log(_("Extensions copiées (sauvegarde ancien format). Une extension conçue pour une "
+            "autre version de GNOME peut ne pas fonctionner."))
         return
 
     shell = _shell_version()
@@ -3089,11 +3083,11 @@ def _restore_extensions(src: Path, log: Log, only: dict | None = None) -> None:
     for e in entries:
         uuid, name = str(e["uuid"]), str(e.get("name") or e["uuid"])
         if not re.fullmatch(r"[\w.@+-]+", uuid):
-            log(f"Identifiant d'extension ignoré (caractères inattendus) : {uuid!r}")
+            log(_("Identifiant d'extension ignoré (caractères inattendus) : {uuid!r}").format(uuid=uuid))
             failed.append(name)
             continue
         if (EXT_DIR / uuid).is_dir():
-            log(f"{name} : déjà installée")
+            log(_('{name} : déjà installée').format(name=name))
         else:
             result = "absent" if e.get("ego") is False else "offline"
             if e.get("ego") is not False and not offline:
@@ -3101,47 +3095,46 @@ def _restore_extensions(src: Path, log: Log, only: dict | None = None) -> None:
                     result = _install_from_ego(uuid, shell, log, e.get("pk"))
                 except _Offline as exc:
                     offline, result = True, "offline"
-                    log(f"extensions.gnome.org injoignable ({exc}).")
+                    log(_('extensions.gnome.org injoignable ({exc}).').format(exc=exc))
                 except (ValueError, OSError, zipfile.BadZipFile) as exc:
                     result = "error"
-                    log(f"{name} : installation échouée ({exc}).")
+                    log(_('{name} : installation échouée ({exc}).').format(name=name, exc=exc))
             if result == "ok":
-                log(f"{name} : installée depuis extensions.gnome.org")
+                log(_('{name} : installée depuis extensions.gnome.org').format(name=name))
             else:
                 saved = src / "extensions" / uuid
                 if saved.is_dir():
                     shutil.copytree(saved, EXT_DIR / uuid, symlinks=True, dirs_exist_ok=True)
-                    why = {"incompatible": "aucune version compatible avec GNOME " + str(shell),
-                           "offline": "pas de connexion", "error": "erreur de téléchargement",
-                           "absent": "hors extensions.gnome.org"}[result]
-                    log(f"{name} : fichiers de la sauvegarde copiés ({why}) ; "
-                        "elle peut ne pas fonctionner avec cette version de GNOME.")
+                    why = {"incompatible": _("aucune version compatible avec GNOME ") + str(shell),
+                           "offline": _("pas de connexion"), "error": _("erreur de téléchargement"),
+                           "absent": _("hors extensions.gnome.org")}[result]
+                    log(_('{name} : fichiers de la sauvegarde copiés ({why}) ; elle peut ne pas fonctionner avec cette version de GNOME.').format(name=name, why=why))
                 else:
-                    reason = {"incompatible": f"aucune version compatible avec GNOME {shell}",
-                              "absent": "inconnue de extensions.gnome.org et sans copie",
-                              "offline": "pas de connexion à extensions.gnome.org",
-                              "error": "erreur d'installation"}[result]
-                    log(f"{name} : non restaurée ({reason})."
-                        + (f" Page de l'extension : {e['url']}" if e.get("url") else ""))
+                    reason = {"incompatible": _('aucune version compatible avec GNOME {shell}').format(shell=shell),
+                              "absent": _("inconnue de extensions.gnome.org et sans copie"),
+                              "offline": _("pas de connexion à extensions.gnome.org"),
+                              "error": _("erreur d'installation")}[result]
+                    log(_('{name} : non restaurée ({reason}).').format(name=name, reason=reason)
+                        + (_(" Page de l'extension : {v1}").format(v1=e['url']) if e.get("url") else ""))
                     failed.append(name)
                     continue
         if e.get("enabled"):
             _enable_extension(uuid, log)
     if failed:
-        raise RuntimeError(f"{len(failed)} extension(s) non restaurée(s) : {', '.join(failed)}")
+        raise RuntimeError(_('{v1} extension(s) non restaurée(s) : {v2}').format(v1=len(failed), v2=', '.join(failed)))
 
 
 def _restore_dconf(src: Path, log: Log, only: dict | None = None) -> None:
     with open(src / "dconf-reglages.ini") as f:
         if run(["dconf", "load", "/"], log, stdin=f) != 0:
-            raise RuntimeError("dconf load a échoué")
+            raise RuntimeError(_("dconf load a échoué"))
 
 
 def _restore_home(src: Path, log: Log, only: dict | None = None) -> None:
     rc = run(["rsync", "-a", "--backup", "--suffix=.avant-restauration",
               f"{src / 'home'}/", f"{HOME}/"], log)
     if rc not in (0, 23, 24):
-        raise RuntimeError(f"rsync a échoué (code {rc})")
+        raise RuntimeError(_('rsync a échoué (code {rc})').format(rc=rc))
 
 
 RESTORE_STEPS = {
@@ -3185,13 +3178,13 @@ def restore(src: Path, selected: set[str], log: Log, progress: Progress,
         try:
             RESTORE_STEPS[name](src, log, only)
         except Exception as exc:  # noqa: BLE001
-            log(f"Erreur : {exc}")
+            log(_('Erreur : {exc}').format(exc=exc))
             errors.append(name)
 
-    progress(1.0, "Terminé")
-    log(f"Bilan : {report(len(steps), errors)}.")
+    progress(1.0, _("Terminé"))
+    log(_('Bilan : {v1}.').format(v1=report(len(steps), errors)))
     if notice:
-        log("Restauration terminée. Déconnectez-vous puis reconnectez-vous pour appliquer extensions et réglages.")
+        log(_("Restauration terminée. Déconnectez-vous puis reconnectez-vous pour appliquer extensions et réglages."))
     return errors
 
 
@@ -3210,35 +3203,35 @@ class WizardStep(NamedTuple):
 # avant les extensions, les extensions avant les réglages qui les concernent.
 WIZARD_STEPS = (
     WizardStep(
-        "repos", "Dépôts tiers",
-        "Ajoute d'abord vos dépôts (PPA) et leurs clés de signature, pour que les applications "
+        "repos", _("Dépôts tiers"),
+        _("Ajoute d'abord vos dépôts (PPA) et leurs clés de signature, pour que les applications "
         "qui en dépendent soient trouvées à l'étape suivante. Votre mot de passe administrateur "
-        "sera demandé (ici, puis à l'étape des applications).",
+        "sera demandé (ici, puis à l'étape des applications)."),
         ("repos",),
     ),
     WizardStep(
-        "apps", "Applications",
-        "Installe vos applications apt, snap et flatpak. Cette étape peut durer plusieurs "
-        "minutes. Votre mot de passe administrateur sera demandé pour apt et snap.",
+        "apps", _("Applications"),
+        _("Installe vos applications apt, snap et flatpak. Cette étape peut durer plusieurs "
+        "minutes. Votre mot de passe administrateur sera demandé pour apt et snap."),
         ("apt", "snap", "flatpak"),
     ),
     WizardStep(
-        "extensions", "Extensions GNOME",
-        "Télécharge vos extensions depuis extensions.gnome.org et les active. Elles ne "
-        "apparaîtront qu'à la prochaine ouverture de session.",
+        "extensions", _("Extensions GNOME"),
+        _("Télécharge vos extensions depuis extensions.gnome.org et les active. Elles ne "
+        "apparaîtront qu'à la prochaine ouverture de session."),
         ("extensions",),
     ),
     WizardStep(
-        "settings", "Réglages du bureau",
-        "Applique vos réglages : apparence, dock, raccourcis, fond d'écran… Cette étape vient "
-        "après les extensions, pour que les réglages qui les concernent trouvent leur place.",
+        "settings", _("Réglages du bureau"),
+        _("Applique vos réglages : apparence, dock, raccourcis, fond d'écran… Cette étape vient "
+        "après les extensions, pour que les réglages qui les concernent trouvent leur place."),
         ("dconf",),
     ),
     WizardStep(
-        "files", "Navigateurs et fichiers personnels",
-        "Restaure vos profils (Firefox, Thunderbird…) et vos configurations personnelles. "
+        "files", _("Navigateurs et fichiers personnels"),
+        _("Restaure vos profils (Firefox, Thunderbird…) et vos configurations personnelles. "
         "Fermez d'abord ces applications. Les fichiers remplacés sont conservés avec "
-        "l'extension .avant-restauration. Ces éléments sont décochés par défaut.",
+        "l'extension .avant-restauration. Ces éléments sont décochés par défaut."),
         ("profiles", "home"),
     ),
 )
@@ -3262,5 +3255,5 @@ def restart_session(log: Log) -> bool:
         return run(["gdbus", "call", "--session", "--dest", "org.gnome.SessionManager",
                     "--object-path", "/org/gnome/SessionManager",
                     "--method", "org.gnome.SessionManager.Logout", "0"], log) == 0
-    log("Ni gnome-session-quit ni gdbus ne sont disponibles.")
+    log(_("Ni gnome-session-quit ni gdbus ne sont disponibles."))
     return False

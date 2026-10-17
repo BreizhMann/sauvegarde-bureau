@@ -1,0 +1,3420 @@
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: sauvegarde-bureau\n"
+"POT-Creation-Date: 2026-10-16 00:00+0000\n"
+"PO-Revision-Date: 2026-10-16 00:00+0000\n"
+"Last-Translator: BreizhMann\n"
+"Language-Team: English\n"
+"Language: en\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+msgid ""
+"\n"
+"\n"
+"Attention : le dossier temporaire n'a pas pu être supprimé en entier. Il contient des données en clair : effacez le contenu de ~/.cache/sauvegarde-bureau."
+msgstr ""
+"\n"
+"\n"
+"Warning: the temporary folder could not be fully deleted. It contains unencrypted data: delete the contents of ~/.cache/sauvegarde-bureau."
+
+msgid ""
+"\n"
+"\n"
+"Certaines étapes ont signalé des erreurs : vous pouvez les relancer depuis la page « Restaurer »."
+msgstr ""
+"\n"
+"\n"
+"Some steps reported errors: you can run them again from the \"Restore\" page."
+
+msgid ""
+"\n"
+"\n"
+"Comparaison faite chez le service : rien n'a été téléchargé."
+msgstr ""
+"\n"
+"\n"
+"The comparison was done on the service's side: nothing was downloaded."
+
+msgid ""
+"\n"
+"\n"
+"Extensions, réglages et nouvelles applications ne sont pleinement pris en compte qu'à la prochaine ouverture de session. Enregistrez vos documents ouverts avant de fermer la session."
+msgstr ""
+"\n"
+"\n"
+"Extensions, settings and new applications are only fully applied the next time you log in. Save your open documents before closing the session."
+
+msgid ""
+"\n"
+"\n"
+"L'estimation est prudente : l'archive est compressée et pourrait occuper moins de place. Sans assez de place, la sauvegarde risque pourtant d'échouer en cours de route."
+msgstr ""
+"\n"
+"\n"
+"The estimate is conservative: the archive is compressed and may take up less space. Without enough space, the backup may still fail partway through."
+
+msgid ""
+"\n"
+"\n"
+"Le fichier n'a pas été modifié ni abîmé. Le mot de passe, lui, n'est pas encore testé : le bouton « Tester le mot de passe… » le vérifie sans rien restaurer."
+msgstr ""
+"\n"
+"\n"
+"The file has not been modified or damaged. The password, however, has not been tested yet: the \"Test password…\" button checks it without restoring anything."
+
+msgid ""
+"\n"
+"\n"
+"Le mot de passe des archives n'est pas testé : activez « Tester aussi le mot de passe » pour le vérifier sans rien restaurer."
+msgstr ""
+"\n"
+"\n"
+"The archives' password has not been tested: turn on \"Also test the password\" to check it without restoring anything."
+
+msgid ""
+"\n"
+"\n"
+"Libérez de la place, choisissez un autre emplacement ou décochez un élément volumineux."
+msgstr ""
+"\n"
+"\n"
+"Free up some space, choose another location or untick a large item."
+
+msgid ""
+"\n"
+"\n"
+"Mot de passe correct pour {n} archive (le début a été déchiffré, rien n'a été restauré)."
+msgid_plural ""
+"\n"
+"\n"
+"Mot de passe correct pour {n} archives (le début a été déchiffré, rien n'a été restauré)."
+msgstr[0] ""
+"\n"
+"\n"
+"Correct password for {n} archive (the beginning was decrypted, nothing was restored)."
+msgstr[1] ""
+"\n"
+"\n"
+"Correct password for {n} archives (the beginning was decrypted, nothing was restored)."
+
+msgid ""
+"\n"
+"\n"
+"Sans assez de place, la sauvegarde échouera en cours de route."
+msgstr ""
+"\n"
+"\n"
+"Without enough space, the backup will fail partway through."
+
+msgid ""
+"\n"
+"\n"
+"Vérifiez que le dossier n'est pas protégé en écriture ni utilisé par un autre programme."
+msgstr ""
+"\n"
+"\n"
+"Check that the folder is not write-protected or in use by another program."
+
+msgid ""
+"\n"
+"… et {v1} autres"
+msgstr ""
+"\n"
+"… and {v1} more"
+
+msgid "  echo 'Installation groupée échouée, essai paquet par paquet…'"
+msgstr "  echo 'Bulk install failed, trying package by package…'"
+
+msgid ""
+"  while read -r p; do apt-get install -y \"$p\" || echo \"Échec apt : $p\"; "
+"done < {q}"
+msgstr ""
+"  while read -r p; do apt-get install -y \"$p\" || echo \"apt failed: $p\"; "
+"done < {q}"
+
+msgid " (il reste {v1})."
+msgstr " ({v1} left)."
+
+msgid " (version compatible avec GNOME {major})"
+msgstr " (version compatible with GNOME {major})"
+
+msgid " ({v1} identiques)"
+msgstr " ({v1} identical)"
+
+msgid " : seule la taille est connue"
+msgstr " : only the size is known"
+
+msgid " ; mot de passe correct"
+msgstr " ; correct password"
+
+msgid " Le dossier de sauvegarde est-il accessible (disque branché) ?"
+msgstr " Is the backup folder accessible (drive plugged in)?"
+
+msgid " Page de l'extension : {v1}"
+msgstr " Extension page: {v1}"
+
+msgid " et ce service ne fournit pas SHA-256"
+msgstr " and this service does not provide SHA-256"
+
+msgid " et {v1} autre(s)"
+msgstr " and {v1} more"
+
+msgid " · fichier .sha256 absent du cloud"
+msgstr " · .sha256 file missing from the cloud"
+
+msgid " · mot de passe correct"
+msgstr " · correct password"
+
+msgid " · place libre à la destination : {v1}"
+msgstr " · free space at the destination: {v1}"
+
+msgid " · restauration à blanc réussie {reh_age}"
+msgstr " · dry-run restore succeeded {reh_age}"
+
+msgid " · restauration à blanc sans comparaison possible {reh_age}"
+msgstr " · dry-run restore without possible comparison {reh_age}"
+
+msgid " · restauration à blanc ÉCHOUÉE {reh_age}"
+msgstr " · dry-run restore FAILED {reh_age}"
+
+msgid " · sans somme de contrôle"
+msgstr " · no checksum"
+
+msgid " · volumineux"
+msgstr " · large"
+
+msgid " · {n} sauvegarde pas encore contrôlée"
+msgid_plural " · {n} sauvegardes pas encore contrôlées"
+msgstr[0] " · {n} backup not yet checked"
+msgstr[1] " · {n} backups not yet checked"
+
+msgid " · {v1} choisis"
+msgstr " · {v1} selected"
+
+msgid ", {failed} en échec"
+msgstr ", {failed} failed"
+
+msgid ", {v1} en échec ({names})"
+msgstr ", {v1} failed ({names})"
+
+msgid "--label=Sauvegarde du bureau"
+msgstr "--label=Desktop Backup"
+
+msgid ". Rien n'a été restauré"
+msgstr ". Nothing was restored"
+
+msgid "== Chiffrement de l'archive (AES-256)"
+msgstr "== Archive encryption (AES-256)"
+
+msgid "== Somme de contrôle (SHA-256)"
+msgstr "== Checksum (SHA-256)"
+
+msgid "== Vérification de l'archive"
+msgstr "== Archive verification"
+
+msgid "=== Début de la sauvegarde automatique ==="
+msgstr "=== Automatic backup started ==="
+
+msgid "ALERTE : copie cloud {v1} : {v2}"
+msgstr "ALERT: cloud copy {v1}: {v2}"
+
+msgid "ALERTE : le mot de passe du trousseau n'ouvre pas {v1} ({v2})."
+msgstr "ALERT: the keyring password does not open {v1} ({v2})."
+
+msgid "ALERTE : {v1} est abîmée ({msg})."
+msgstr "ALERT: {v1} is damaged ({msg})."
+
+msgid "ALERTE : {v1} est abîmée ({v2})."
+msgstr "ALERT: {v1} is damaged ({v2})."
+
+msgid "Absent de cette sauvegarde"
+msgstr "Not in this backup"
+
+msgid "Absent de {side} sauvegarde : comparaison impossible"
+msgstr "Missing from {side} backup: cannot compare"
+
+msgid "Abîmée · vérifiée {age}"
+msgstr "Damaged · checked {age}"
+
+msgid "Activer les sauvegardes automatiques"
+msgstr "Turn on automatic backups"
+
+msgid "Activez au moins un élément, ou passez l'étape."
+msgstr "Turn on at least one item, or skip this step."
+
+msgid "Actualiser l'aperçu"
+msgstr "Refresh the preview"
+
+msgid "Actualiser la liste"
+msgstr "Refresh the list"
+
+msgid "Afficher ce dossier"
+msgstr "Show this folder"
+
+msgid "Afficher dans les fichiers"
+msgstr "Show in Files"
+
+msgid "Afficher le menu"
+msgstr "Show menu"
+
+msgid "Afficher les sauvegardes d'un autre dossier"
+msgstr "Show the backups from another folder"
+
+msgid ""
+"Ajoute d'abord vos dépôts (PPA) et leurs clés de signature, pour que les "
+"applications qui en dépendent soient trouvées à l'étape suivante. Votre mot "
+"de passe administrateur sera demandé (ici, puis à l'étape des applications)."
+msgstr ""
+"First adds your repositories (PPAs) and their signing keys, so that the "
+"applications that depend on them are found in the next step. Your "
+"administrator password will be requested (here, then at the applications "
+"step)."
+
+msgid "Ajouté"
+msgstr "Added"
+
+msgid "Alerte"
+msgstr "Alert"
+
+msgid "Alerter après (jours)"
+msgstr "Alert after (days)"
+
+msgid "Analyse de la sauvegarde en cours…"
+msgstr "Analyzing the backup…"
+
+msgid "Ancienne sauvegarde"
+msgstr "Old backup"
+
+msgid "Ancienne sauvegarde cloud supprimée : {name}"
+msgstr "Old cloud backup deleted: {name}"
+
+msgid "Ancienne sauvegarde supprimée : {v1}"
+msgstr "Old backup deleted: {v1}"
+
+msgid "Annuler"
+msgstr "Cancel"
+
+msgid "Aperçu avant restauration"
+msgstr "Preview before restoring"
+
+msgid "Aperçu indisponible : {v1}"
+msgstr "Preview unavailable: {v1}"
+
+msgid "Apparence et polices"
+msgstr "Appearance and fonts"
+
+msgid "Applications"
+msgstr "Applications"
+
+msgid "Applications (apt)"
+msgstr "Applications (apt)"
+
+msgid "Applications installées avec Flatpak"
+msgstr "Applications installed with Flatpak"
+
+msgid "Applications installées avec snap"
+msgstr "Applications installed with snap"
+
+msgid "Applications à installer"
+msgstr "Applications to install"
+
+msgid "Applique dock, thème, raccourcis, fond d'écran et extensions activées"
+msgstr "Applies dock, theme, shortcuts, wallpaper and enabled extensions"
+
+msgid ""
+"Applique vos réglages : apparence, dock, raccourcis, fond d'écran… Cette "
+"étape vient après les extensions, pour que les réglages qui les concernent "
+"trouvent leur place."
+msgstr ""
+"Applies your settings: appearance, dock, shortcuts, wallpaper… This step "
+"comes after the extensions, so that the settings that concern them find "
+"their place."
+
+msgid "Appliquer"
+msgstr "Apply"
+
+msgid "Appliquer la rotation maintenant"
+msgstr "Apply rotation now"
+
+msgid "Archive chiffrée"
+msgstr "Encrypted archive"
+
+msgid "Archive chiffrée (.gpg)…"
+msgstr "Encrypted archive (.gpg)…"
+
+msgid "Archive chiffrée créée : {out}"
+msgstr "Encrypted archive created: {out}"
+
+msgid "Archive unique protégée par mot de passe (AES-256)"
+msgstr "Single archive protected by a password (AES-256)"
+
+msgid "Archives chiffrées (*.gpg)"
+msgstr "Encrypted archives (*.gpg)"
+
+msgid "Arrêter"
+msgstr "Stop"
+
+msgid "Arrêt…"
+msgstr "Stopping…"
+
+msgid "Assistant en cours"
+msgstr "Wizard in progress"
+
+msgid ""
+"Assistant interrompu. Rouvrez votre session pour appliquer ce qui a été "
+"restauré."
+msgstr "Wizard interrupted. Log in again to apply what was restored."
+
+msgid "Attendez la fin de l'opération avant de fermer l'application."
+msgstr "Wait for the operation to finish before closing the application."
+
+msgid "Attendez qu'elle soit terminée avant de déposer quoi que ce soit."
+msgstr "Wait until it has finished before dropping anything."
+
+msgid ""
+"Attention : {v1} est ouvert. Fermez-le avant de restaurer un fichier de son "
+"profil, sinon il risque d'écraser le résultat."
+msgstr ""
+"Warning: {v1} is open. Close it before restoring a file from its profile, "
+"otherwise it may overwrite the result."
+
+msgid ""
+"Attention : {v1} ouvert : la copie peut être incohérente. Fermez "
+"l'application puis recommencez pour une sauvegarde fiable."
+msgstr ""
+"Warning: {v1} is open: the copy may be inconsistent. Close the application "
+"and start again for a reliable backup."
+
+msgid "Aucun changement"
+msgstr "No changes"
+
+msgid "Aucun dossier choisi"
+msgstr "No folder chosen"
+
+msgid "Aucun dossier de sauvegarde connu"
+msgstr "No known backup folder"
+
+msgid ""
+"Aucun dossier de sauvegarde connu : choisissez-en un avec « Autre dossier… »"
+msgstr "No known backup folder: choose one with \"Other folder…\""
+
+msgid "Aucun dossier de sauvegarde connu : choisissez-en un avec « Changer… »"
+msgstr "No known backup folder: choose one with \"Change…\""
+
+msgid "Aucun fichier personnel"
+msgstr "No personal files"
+
+msgid "Aucun navigateur ni client mail détecté"
+msgstr "No browser or mail client detected"
+
+msgid "Aucun profil choisi : navigateurs et courrier ignorés."
+msgstr "No profile chosen: browsers and mail are skipped."
+
+msgid "Aucun profil de navigateur ou de client mail trouvé"
+msgstr "No browser or mail client profile found"
+
+msgid "Aucun résultat"
+msgstr "No results"
+
+msgid ""
+"Aucun service cloud choisi : réglez l'envoi dans « Sauvegarder » ou « "
+"Automatique »."
+msgstr "No cloud service chosen: set up uploading in \"Back up\" or \"Automatic\"."
+
+msgid ""
+"Aucun service configuré : lancez « rclone config » dans un terminal, puis "
+"actualisez."
+msgstr "No service configured: run \"rclone config\" in a terminal, then refresh."
+
+msgid ""
+"Aucun service rclone configuré : lancez « rclone config » dans un terminal."
+msgstr "No rclone service configured: run \"rclone config\" in a terminal."
+
+msgid "Aucun élément choisi, ignoré : {names}"
+msgstr "No item chosen, skipped: {names}"
+
+msgid "Aucun élément à sauvegarder n'est sélectionné."
+msgstr "No item to back up is selected."
+
+msgid "Aucune archive chiffrée trouvée"
+msgstr "No encrypted archive found"
+
+msgid "Aucune archive sur le cloud"
+msgstr "No archive in the cloud"
+
+msgid "Aucune copie abîmée"
+msgstr "No damaged copy"
+
+msgid ""
+"Aucune des archives testées ne s'ouvre avec ce mot de passe. Vérifiez la "
+"saisie (majuscules, clavier) et recommencez. Les fichiers eux-mêmes ne sont "
+"pas abîmés."
+msgstr ""
+"None of the tested archives opens with this password. Check what you typed "
+"(capital letters, keyboard) and try again. The files themselves are not "
+"damaged."
+
+msgid "Aucune extension installée par l'utilisateur"
+msgstr "No user-installed extensions"
+
+msgid "Aucune pour le moment"
+msgstr "None yet"
+
+msgid "Aucune sauvegarde abîmée"
+msgstr "No damaged backup"
+
+msgid "Aucune sauvegarde automatique dans ce dossier."
+msgstr "No automatic backup in this folder."
+
+msgid "Aucune sauvegarde dans ce dossier"
+msgstr "No backup in this folder"
+
+msgid "Aucune sauvegarde dans {folder}"
+msgstr "No backup in {folder}"
+
+msgid "Aucune sauvegarde n'a eu le temps d'être contrôlée."
+msgstr "No backup had time to be checked."
+
+msgid "Aucune sauvegarde sélectionnée"
+msgstr "No backup selected"
+
+msgid "Aucune sauvegarde trouvée"
+msgstr "No backup found"
+
+msgid ""
+"Authentification refusée ou annulée : dépôts, paquets et snaps non "
+"restaurés."
+msgstr ""
+"Authentication refused or cancelled: repositories, packages and snaps were "
+"not restored."
+
+msgid "Automatique"
+msgstr "Automatic"
+
+msgid "Autre dossier…"
+msgstr "Other folder…"
+
+msgid "Bilan : {v1}."
+msgstr "Summary: {v1}."
+
+msgid "C'est volumineux : vérifiez que la place disque est suffisante."
+msgstr "It is large: make sure there is enough disk space."
+
+msgid "C'est votre sauvegarde la plus récente."
+msgstr "This is your most recent backup."
+
+msgid "C'est votre seule sauvegarde dans ce dossier."
+msgstr "This is your only backup in this folder."
+
+msgid "Ce dossier contient des archives"
+msgstr "This folder contains archives"
+
+msgid "Ce dossier contient des archives chiffrées"
+msgstr "This folder contains encrypted archives"
+
+msgid "Ce dossier est vide"
+msgstr "This folder is empty"
+
+msgid "Ce dossier n'est pas une sauvegarde"
+msgstr "This folder is not a backup"
+
+msgid "Ce dossier ne contient ni dépôts, ni applications, ni extensions."
+msgstr "This folder contains no repositories, applications or extensions."
+
+msgid "Ce dossier ne ressemble pas à une sauvegarde."
+msgstr "This folder does not look like a backup."
+
+msgid ""
+"Ce mot de passe ne déchiffre pas {name} ({v2}). La répétition n'a pas "
+"commencé : rien n'a été écrit sur le disque."
+msgstr ""
+"This password does not decrypt {name} ({v2}). The replay has not started: "
+"nothing was written to the disk."
+
+msgid ""
+"Ce mot de passe ne déchiffre pas « {v1} » ({msg}).\n"
+"\n"
+"Vérifiez la saisie (majuscules, clavier). Si vous l'avez oublié, cette archive ne pourra plus être ouverte : refaites une sauvegarde tant que vous le pouvez."
+msgstr ""
+"This password does not decrypt \"{v1}\" ({msg}).\n"
+"\n"
+"Check what you typed (capital letters, keyboard). If you have forgotten it, this archive can no longer be opened: make a new backup while you still can."
+
+msgid ""
+"Ce qui va changer sur cette machine :\n"
+"{overview}\n"
+"\n"
+"{body}"
+msgstr ""
+"What will change on this machine:\n"
+"{overview}\n"
+"\n"
+"{body}"
+
+msgid ""
+"Ces sauvegardes ne contiennent ni dépôts, ni applications, ni extensions."
+msgstr "These backups contain no repositories, applications or extensions."
+
+msgid ""
+"Cet assistant restaure votre sauvegarde pas à pas, dans le bon ordre : "
+"dépôts, applications, extensions, puis réglages. Vous validez chaque étape, "
+"et il vous propose de rouvrir votre session à la fin."
+msgstr ""
+"This wizard restores your backup step by step, in the right order: "
+"repositories, applications, extensions, then settings. You confirm each "
+"step, and it offers to log you out and back in at the end."
+
+msgid ""
+"Cet emplacement n'est pas sur l'ordinateur : copiez-le d'abord sur le "
+"disque."
+msgstr "This location is not on the computer: copy it to the disk first."
+
+msgid ""
+"Cette sauvegarde n'a pas de somme de contrôle : le contenu n'a pas pu être "
+"comparé."
+msgstr "This backup has no checksum: its contents could not be compared."
+
+msgid "Cette sauvegarde ne contient rien à restaurer."
+msgstr "This backup contains nothing to restore."
+
+msgid "Changements"
+msgstr "Changes"
+
+msgid "Changer…"
+msgstr "Change…"
+
+msgid ""
+"Chaque fichier a été comparé à sa somme de contrôle avant d'être remis."
+msgstr "Each file was compared with its checksum before being put back."
+
+msgid ""
+"Chaque fichier remplacé est conservé avec l'extension .avant-restauration."
+msgstr "Each replaced file is kept with the .avant-restauration extension."
+
+msgid "Chaque semaine : le lundi. Chaque mois : le 1er."
+msgstr "Weekly: on Mondays. Monthly: on the 1st."
+
+msgid "Chercher un fichier ou un dossier par son nom…"
+msgstr "Search for a file or folder by name…"
+
+msgid "Chiffrement de l'archive"
+msgstr "Archive encryption"
+
+msgid "Chiffrer la sauvegarde"
+msgstr "Encrypt the backup"
+
+msgid "Chiffrer les sauvegardes"
+msgstr "Encrypt the backups"
+
+msgid "Choisir ce dossier comme emplacement"
+msgstr "Use this folder as the location"
+
+msgid "Choisir l'archive chiffrée"
+msgstr "Choose the encrypted archive"
+
+msgid "Choisir l'archive chiffrée qui contient le fichier"
+msgstr "Choose the encrypted archive that contains the file"
+
+msgid "Choisir l'emplacement de la sauvegarde"
+msgstr "Choose the backup location"
+
+msgid "Choisir la destination des sauvegardes automatiques"
+msgstr "Choose the destination of automatic backups"
+
+msgid "Choisir la sauvegarde à ouvrir"
+msgstr "Choose the backup to open"
+
+msgid "Choisir le dossier de sauvegarde"
+msgstr "Choose the backup folder"
+
+msgid "Choisir le dossier de sauvegarde qui contient le fichier"
+msgstr "Choose the backup folder that contains the file"
+
+msgid "Choisir le dossier qui contient vos sauvegardes"
+msgstr "Choose the folder that contains your backups"
+
+msgid "Choisir le nombre de sauvegardes à conserver (onglet « Automatique »)"
+msgstr "Choose how many backups to keep (\"Automatic\" tab)"
+
+msgid "Choisir précisément ce qui sera installé"
+msgstr "Choose exactly what will be installed"
+
+msgid "Choisir précisément les profils à sauvegarder"
+msgstr "Choose exactly which profiles to back up"
+
+msgid "Choisir un autre dossier…"
+msgstr "Choose another folder…"
+
+msgid "Choisir une archive…"
+msgstr "Choose an archive…"
+
+msgid "Choisir une autre…"
+msgstr "Choose another…"
+
+msgid "Choisir…"
+msgstr "Choose…"
+
+msgid "Choisissez d'abord un dossier de sauvegarde."
+msgstr "Choose a backup folder first."
+
+msgid "Choisissez d'abord une sauvegarde"
+msgstr "Choose a backup first"
+
+msgid ""
+"Choisissez l'archive chiffrée (.gpg), une archive du cloud, ou un dossier « "
+"sauvegarde-ubuntu-… » déjà déchiffré (ou glissez-le sur la fenêtre). "
+"Prévoyez une connexion Internet et le secteur : l'installation des "
+"applications peut durer longtemps."
+msgstr ""
+"Choose the encrypted archive (.gpg), an archive from the cloud, or an "
+"already-decrypted \"sauvegarde-ubuntu-…\" folder (or drop it on the window)."
+" Make sure you have an Internet connection and are plugged in: installing "
+"the applications can take a long time."
+
+msgid ""
+"Choisissez l'archive chiffrée (.gpg), une archive à télécharger depuis le "
+"cloud, ou un dossier « sauvegarde-ubuntu-… » déjà déchiffré. Vous pouvez "
+"aussi glisser l'archive ou le dossier sur la fenêtre."
+msgstr ""
+"Choose the encrypted archive (.gpg), an archive to download from the cloud, "
+"or an already-decrypted \"sauvegarde-ubuntu-…\" folder. You can also drop "
+"the archive or the folder on the window."
+
+msgid "Choisissez la sauvegarde à contrôler"
+msgstr "Choose the backup to check"
+
+msgid ""
+"Choisissez une sauvegarde (archive chiffrée ou dossier déchiffré), puis le "
+"fichier ou le dossier à remettre."
+msgstr ""
+"Choose a backup (encrypted archive or decrypted folder), then the file or "
+"folder to put back."
+
+msgid "Cliquez sur « Rechercher » pour lister le dossier distant."
+msgstr "Click \"Search\" to list the remote folder."
+
+msgid "Commande introuvable : {v1}"
+msgstr "Command not found: {v1}"
+
+msgid "Commencer"
+msgstr "Start"
+
+msgid "Comparaison en cours…"
+msgstr "Comparing…"
+
+msgid "Comparaison impossible"
+msgstr "Comparison failed"
+
+msgid "Compare les empreintes chez le service, sans rien télécharger."
+msgstr ""
+"Compares the checksums on the service's side, without downloading anything."
+
+msgid "Comparer"
+msgstr "Compare"
+
+msgid "Comparer : {side}"
+msgstr "Compare: {side}"
+
+msgid "Compris"
+msgstr "Got it"
+
+msgid "Configurations personnelles"
+msgstr "Personal configurations"
+
+msgid "Configurer une nouvelle machine"
+msgstr "Set up a new machine"
+
+msgid "Confirmer le mot de passe"
+msgstr "Confirm the password"
+
+msgid "Contenu de l'étape"
+msgstr "Step contents"
+
+msgid ""
+"Contenu de la sauvegarde comparé à cette machine, pour les éléments cochés "
+"ci-dessus. Rien n'est modifié avant que vous lanciez la restauration."
+msgstr ""
+"Contents of the backup compared with this machine, for the items ticked "
+"above. Nothing is changed until you start the restore."
+
+msgid "Continuer quand même"
+msgstr "Continue anyway"
+
+msgid "Contrôle des copies cloud ignoré : {exc}"
+msgstr "Cloud copy check skipped: {exc}"
+
+msgid "Contrôle des sommes de contrôle"
+msgstr "Checking the checksums"
+
+msgid "Contrôle des sommes de contrôle internes"
+msgstr "Checking the internal checksums"
+
+msgid "Contrôle impossible"
+msgstr "Check failed"
+
+msgid "Contrôle interrompu"
+msgstr "Check interrupted"
+
+msgid ""
+"Contrôle que vos sauvegardes ne sont pas abîmées, sans rien restaurer. Le "
+"mot de passe n'est nécessaire que si vous choisissez de le tester."
+msgstr ""
+"Checks that your backups are not damaged, without restoring anything. The "
+"password is only needed if you choose to test it."
+
+msgid "Contrôler les sauvegardes d'un autre dossier"
+msgstr "Check the backups of another folder"
+
+msgid "Copie cloud vérifiée (taille) : {remote}:{path}/{v3}"
+msgstr "Cloud copy verified (size): {remote}:{path}/{v3}"
+
+msgid "Copie cloud {v1} : {v2}"
+msgstr "Cloud copy {v1}: {v2}"
+
+msgid "Copie dans le cloud (rclone)"
+msgstr "Copy to the cloud (rclone)"
+
+msgid "Copie de ~/{item}"
+msgstr "Copying ~/{item}"
+
+msgid "Copie de ~/{rel}"
+msgstr "Copying ~/{rel}"
+
+msgid "Copiez d'abord l'élément sur cet ordinateur."
+msgstr "Copy the item to this computer first."
+
+msgid ""
+"Crée une archive unique protégée par mot de passe (AES-256). Recommandé avec"
+" les configurations personnelles."
+msgstr ""
+"Creates a single archive protected by a password (AES-256). Recommended with"
+" personal configurations."
+
+msgid "Créée le {date} sur « {v2} » ({v3})"
+msgstr "Created on {date} on \"{v2}\" ({v3})"
+
+msgid "D'accord"
+msgstr "OK"
+
+msgid "Dans un autre dossier…"
+msgstr "In another folder…"
+
+msgid "Demande des droits administrateur…"
+msgstr "Requesting administrator rights…"
+
+msgid "Depuis le cloud…"
+msgstr "From the cloud…"
+
+msgid "Dernière sauvegarde automatique"
+msgstr "Latest automatic backup"
+
+msgid "Dernière vérification"
+msgstr "Last check"
+
+msgid ""
+"Des paquets seront installés et les réglages du bureau remplacés. Cette "
+"opération peut durer plusieurs minutes."
+msgstr ""
+"Packages will be installed and the desktop settings replaced. This may take "
+"several minutes."
+
+msgid "Destination"
+msgstr "Destination"
+
+msgid "Destination ({v1}) : {figures}."
+msgstr "Destination ({v1}): {figures}."
+
+msgid "Destination : {dest}"
+msgstr "Destination: {dest}"
+
+msgid "Destination automatique"
+msgstr "Automatic destination"
+
+msgid ""
+"Destination automatique : « {v1} ». Cliquez sur « Enregistrer » pour "
+"l'appliquer."
+msgstr "Automatic destination: \"{v1}\". Click \"Save\" to apply it."
+
+msgid "Destination introuvable : {parent} (disque non branché ?)"
+msgstr "Destination not found: {parent} (drive not plugged in?)"
+
+msgid "Dock, thème, raccourcis, fond d'écran"
+msgstr "Dock, theme, shortcuts, wallpaper"
+
+msgid "Dock, thème, raccourcis, fond d'écran, réglages des extensions"
+msgstr "Dock, theme, shortcuts, wallpaper, extension settings"
+
+msgid "Dossier"
+msgstr "Folder"
+
+msgid ""
+"Dossier de travail ({v1}) : le chiffrement y prépare d'abord une copie en "
+"clair, {figures}."
+msgstr ""
+"Working folder ({v1}): encryption first prepares a plain copy there, "
+"{figures}."
+
+msgid "Dossier distant"
+msgstr "Remote folder"
+
+msgid "Dossier déjà déchiffré…"
+msgstr "Already-decrypted folder…"
+
+msgid "Dossier parent"
+msgstr "Parent folder"
+
+msgid "Dossier personnel (~)"
+msgstr "Home folder (~)"
+
+msgid "Déchiffrement en cours…"
+msgstr "Decrypting…"
+
+msgid "Déchiffrement et extraction de toute l'archive"
+msgstr "Decrypting and extracting the whole archive"
+
+msgid "Déchiffrer"
+msgstr "Decrypt"
+
+msgid "Décochez ce que vous ne voulez pas inclure."
+msgstr "Untick what you do not want to include."
+
+msgid "Déjà présent"
+msgstr "Already present"
+
+msgid "Déposez ici"
+msgstr "Drop here"
+
+msgid "Déposez un seul élément à la fois."
+msgstr "Drop only one item at a time."
+
+msgid "Déposez une archive .gpg ou un dossier, pas plusieurs."
+msgstr "Drop one .gpg archive or one folder, not several."
+
+msgid "Dépôts tiers"
+msgstr "Third-party repositories"
+
+msgid "Dépôts tiers, applications (apt, snap, flatpak) et extensions GNOME."
+msgstr ""
+"Third-party repositories, applications (apt, snap, flatpak) and GNOME "
+"extensions."
+
+msgid "Désactivées"
+msgstr "Disabled"
+
+msgid "Détails"
+msgstr "Details"
+
+msgid ""
+"Elle a été arrêtée avant la fin : aucune conclusion sur l'archive. Rien n'a "
+"été laissé sur le disque."
+msgstr ""
+"It was stopped before the end: no conclusion about the archive. Nothing was "
+"left on the disk."
+
+msgid "Emplacement"
+msgstr "Location"
+
+msgid "Emplacement de la sauvegarde"
+msgstr "Backup location"
+
+msgid "Emplacement non pris en charge"
+msgstr "Unsupported location"
+
+msgid "En cours"
+msgstr "In progress"
+
+msgid "Enregistrer"
+msgstr "Save"
+
+msgid "Enregistrez d'abord les réglages."
+msgstr "Save the settings first."
+
+msgid "Envoi cloud"
+msgstr "Cloud upload"
+
+msgid "Envoi cloud : {exc}."
+msgstr "Cloud upload: {exc}."
+
+msgid "Envoi cloud mal configuré : {exc}. Sauvegarde annulée."
+msgstr "Cloud upload badly configured: {exc}. Backup cancelled."
+
+msgid "Envoi vers {remote}:{path} ({v3})"
+msgstr "Uploading to {remote}:{path} ({v3})"
+
+msgid ""
+"Envoie aussi l'archive chiffrée vers un service déjà configuré dans rclone. "
+"La copie locale est toujours faite en premier ; un échec de l'envoi ne "
+"l'annule pas."
+msgstr ""
+"Also sends the encrypted archive to a service already set up in rclone. The "
+"local copy is always made first; a failed upload does not cancel it."
+
+msgid "Envoyer une copie dans le cloud"
+msgstr "Send a copy to the cloud"
+
+msgid "Erreur : {exc}"
+msgstr "Error: {exc}"
+
+msgid "Erreur : {failure}"
+msgstr "Error: {failure}"
+
+msgid "Espace disque insuffisant"
+msgstr "Not enough disk space"
+
+msgid "Espace disque insuffisant (taille estimée : {v1}). "
+msgstr "Not enough disk space (estimated size: {v1}). "
+
+msgid "Essayez une partie plus courte du nom."
+msgstr "Try a shorter part of the name."
+
+msgid "Estimation de la taille de la sauvegarde…"
+msgstr "Estimating the size of the backup…"
+
+msgid "Exige le chiffrement (contient clés SSH et données d'applications)"
+msgstr "Requires encryption (contains SSH keys and application data)"
+
+msgid "Exige le chiffrement : rien n'est jamais envoyé en clair"
+msgstr "Requires encryption: nothing is ever sent unencrypted"
+
+msgid "Extension "
+msgstr "Extension "
+
+msgid "Extensions GNOME"
+msgstr "GNOME extensions"
+
+msgid ""
+"Extensions copiées (sauvegarde ancien format). Une extension conçue pour une"
+" autre version de GNOME peut ne pas fonctionner."
+msgstr ""
+"Extensions copied (old backup format). An extension designed for another "
+"version of GNOME may not work."
+
+msgid ""
+"Facultatif. Déchiffre toute l'archive dans un dossier temporaire, l'extrait "
+"et contrôle ses sommes de contrôle internes, puis supprime tout. Demande de "
+"la place disque et du temps."
+msgstr ""
+"Optional. Decrypts the whole archive into a temporary folder, extracts it "
+"and checks its internal checksums, then deletes everything. Takes disk space"
+" and time."
+
+msgid ""
+"Facultatif. Il est demandé une fois, puis essayé sur chaque archive "
+"chiffrée, sans rien restaurer ni écrire sur le disque."
+msgstr ""
+"Optional. It is asked for once, then tried on each encrypted archive, "
+"without restoring anything or writing to the disk."
+
+msgid "Fenêtres"
+msgstr "Windows"
+
+msgid "Fermer"
+msgstr "Close"
+
+msgid "Fermer la session maintenant"
+msgstr "Log out now"
+
+msgid "Fermez d'abord {v1} : son profil serait corrompu."
+msgstr "Close {v1} first: its profile would be corrupted."
+
+msgid "Fermez d'abord {v1} pour copier son profil sans risque."
+msgstr "Close {v1} first to copy its profile safely."
+
+msgid "Filtrer par nom…"
+msgstr "Filter by name…"
+
+msgid "Flatpak n'est pas installé : étape ignorée"
+msgstr "Flatpak is not installed: step skipped"
+
+msgid ""
+"Flatpak n'est pas installé : étape ignorée (installez le paquet « flatpak » "
+"puis relancez)."
+msgstr ""
+"Flatpak is not installed: step skipped (install the \"flatpak\" package, "
+"then try again)."
+
+msgid "Flatpaks"
+msgstr "Flatpaks"
+
+msgid "Flatpaks à installer"
+msgstr "Flatpaks to install"
+
+msgid "Fond d'écran"
+msgstr "Wallpaper"
+
+msgid "Fréquence"
+msgstr "Frequency"
+
+msgid "Garde les {keep} plus récentes : {v2}."
+msgstr "Keeps the {keep} most recent: {v2}."
+
+msgid "Gestionnaire de fenêtres"
+msgstr "Window manager"
+
+msgid ""
+"Glissez ici un dossier pour afficher ses sauvegardes, ou une archive (.gpg) "
+"ou un dossier de sauvegarde pour l'ouvrir dans « Restaurer »."
+msgstr ""
+"Drop a folder here to show its backups, or an archive (.gpg) or a backup "
+"folder to open it in \"Restore\"."
+
+msgid "HTTP {v1}"
+msgstr "HTTP {v1}"
+
+msgid "Heure"
+msgstr "Time"
+
+msgid "Identifiant d'extension ignoré (caractères inattendus) : {uuid!r}"
+msgstr "Extension identifier ignored (unexpected characters): {uuid!r}"
+
+msgid "Ignoré"
+msgstr "Ignored"
+
+msgid "Il y a d'autres résultats : précisez la recherche."
+msgstr "There are more results: refine your search."
+
+msgid "Impossible d'enregistrer le mot de passe dans le trousseau."
+msgstr "Could not save the password in the keyring."
+
+msgid "Impossible d'ouvrir l'archive : {error}"
+msgstr "Could not open the archive: {error}"
+
+msgid "Impossible d'écrire dans « {v1} » : choisissez un autre dossier."
+msgstr "Could not write to \"{v1}\": choose another folder."
+
+msgid "Impossible de copier {f} : {exc}"
+msgstr "Could not copy {f}: {exc}"
+
+msgid "Impossible de copier {v1} : {exc}"
+msgstr "Could not copy {v1}: {exc}"
+
+msgid ""
+"Impossible de fermer la session automatiquement : utilisez le menu système "
+"(en haut à droite)."
+msgstr "Could not log out automatically: use the system menu (top right)."
+
+msgid "Impossible de lancer : {message}"
+msgstr "Could not start: {message}"
+
+msgid "Impossible de lire la sauvegarde"
+msgstr "Could not read the backup"
+
+msgid "Impossible de lire le dossier : {message}"
+msgstr "Could not read the folder: {message}"
+
+msgid "Impossible de restaurer {rel} : {exc}"
+msgstr "Could not restore {rel}: {exc}"
+
+msgid "Impossible de supprimer :\n"
+msgstr "Could not delete:\n"
+
+msgid "Impossible de supprimer {name} sur le cloud."
+msgstr "Could not delete {name} from the cloud."
+
+msgid "Impossible de supprimer {v1} : {exc}"
+msgstr "Could not delete {v1}: {exc}"
+
+msgid "Informations"
+msgstr "Information"
+
+msgid ""
+"Installe vos applications apt, snap et flatpak. Cette étape peut durer "
+"plusieurs minutes. Votre mot de passe administrateur sera demandé pour apt "
+"et snap."
+msgstr ""
+"Installs your apt, snap and flatpak applications. This step can take several"
+" minutes. Your administrator password will be requested for apt and snap."
+
+msgid ""
+"Installez et lancez une première fois l'application avant de restaurer son "
+"profil si possible. Un profil créé avec une version récente peut être refusé"
+" par une version plus ancienne."
+msgstr ""
+"If possible, install and launch the application once before restoring its "
+"profile. A profile created with a recent version may be refused by an older "
+"version."
+
+msgid "Intacte"
+msgstr "Intact"
+
+msgid "Intacte · vérifiée {age}"
+msgstr "Intact · checked {age}"
+
+msgid ""
+"Intégrité non vérifiable : cette sauvegarde n'a pas de somme de contrôle "
+"(ancienne version ?)."
+msgstr ""
+"Integrity cannot be verified: this backup has no checksum (older version?)."
+
+msgid "Intégrité vérifiée (SHA-256) : {name}"
+msgstr "Integrity verified (SHA-256): {name}"
+
+msgid "Intégrité vérifiée : la sauvegarde est intacte."
+msgstr "Integrity verified: the backup is intact."
+
+msgid "Intégrité vérifiée : {v1}"
+msgstr "Integrity verified: {v1}"
+
+msgid "Inverser ancienne et récente"
+msgstr "Swap old and recent"
+
+msgid "Irrécupérable ? Vérifiée {age}{reh_text}"
+msgstr "Unrecoverable? Checked {age}{reh_text}"
+
+msgid "Jamais vérifiée"
+msgstr "Never checked"
+
+msgid "Jamais vérifiées"
+msgstr "Never checked"
+
+msgid ""
+"L'archive va être relue en entier, ce qui peut prendre quelques minutes."
+msgstr "The archive will be read in full, which may take a few minutes."
+
+msgid "L'envoi vers le cloud exige de chiffrer la sauvegarde."
+msgstr "Uploading to the cloud requires encrypting the backup."
+
+msgid "L'envoi vers le cloud exige le chiffrement : sauvegarde annulée."
+msgstr "Uploading to the cloud requires encryption: backup cancelled."
+
+msgid "L'envoi vers le cloud exige le chiffrement."
+msgstr "Uploading to the cloud requires encryption."
+
+msgid "L'envoi vers le cloud exige une sauvegarde chiffrée."
+msgstr "Uploading to the cloud requires an encrypted backup."
+
+msgid ""
+"La répétition n'a pas pu aller au bout : {v1}. Libérez de la place ou "
+"changez de dossier de travail (XDG_CACHE_HOME), puis recommencez. Rien n'a "
+"été laissé sur le disque et l'archive n'est pas mise en cause."
+msgstr ""
+"The dry run could not finish: {v1}. Free up some space or change the working"
+" folder (XDG_CACHE_HOME), then try again. Nothing was left on the disk and "
+"the archive is not at fault."
+
+msgid ""
+"La sauvegarde s'exécute en arrière-plan quand votre session est ouverte. Si "
+"l'ordinateur était éteint à l'heure prévue, elle est rattrapée à l'ouverture"
+" de la session suivante."
+msgstr ""
+"The backup runs in the background while you are logged in. If the computer "
+"was off at the scheduled time, it catches up the next time you log in."
+
+msgid "La vérification de l'archive a échoué : "
+msgstr "Archive verification failed: "
+
+msgid "La vérification de la sauvegarde a échoué : "
+msgstr "Backup verification failed: "
+
+msgid "Lancer cette étape"
+msgstr "Run this step"
+
+msgid "Lancer la restauration"
+msgstr "Start the restore"
+
+msgid "Lancer la restauration ?"
+msgstr "Start the restore?"
+
+msgid "Lancer la répétition"
+msgstr "Start the dry run"
+
+msgid "Lancer la sauvegarde"
+msgstr "Start the backup"
+
+msgid "Lancer maintenant"
+msgstr "Run now"
+
+msgid "Le chiffrement a échoué : "
+msgstr "Encryption failed: "
+
+msgid ""
+"Le disque de {v1} doit contenir la copie de travail et l'archive chiffrée : "
+"{figures}."
+msgstr ""
+"The disk of {v1} must hold the working copy and the encrypted archive: "
+"{figures}."
+
+msgid "Le dossier de destination n'existe pas."
+msgstr "The destination folder does not exist."
+
+msgid "Le dossier « {path} » de {remote} n'en contient pas."
+msgstr "The folder \"{path}\" on {remote} contains none."
+
+msgid "Le dossier « {path} » de {remote} ne contient pas d'archive chiffrée."
+msgstr "The folder \"{path}\" on {remote} contains no encrypted archive."
+
+msgid "Le fichier « sauvegarde-ubuntu-….tar.gz.gpg » créé par l'application"
+msgstr "The \"sauvegarde-ubuntu-….tar.gz.gpg\" file created by the application"
+
+msgid ""
+"Le fichier « {v1} », qui doit se trouver à côté de « {v2} », est introuvable : il a peut-être été déplacé ou supprimé, ou l'archive vient d'une ancienne version de l'application.\n"
+"\n"
+"L'archive n'est pas forcément abîmée, mais on ne peut pas le confirmer. Refaites une sauvegarde pour être protégé."
+msgstr ""
+"The file \"{v1}\", which should be next to \"{v2}\", cannot be found: it may have been moved or deleted, or the archive comes from an older version of the application.\n"
+"\n"
+"The archive is not necessarily damaged, but this cannot be confirmed. Make a new backup to be protected."
+
+msgid "Le mot de passe doit faire au moins 8 caractères."
+msgstr "The password must be at least 8 characters long."
+
+msgid ""
+"Le mot de passe est conservé dans le trousseau GNOME pour pouvoir chiffrer "
+"sans vous le demander. Si vous le changez, les anciennes sauvegardes restent"
+" protégées par l'ancien : conservez-le. Si le mot de passe est introuvable, "
+"la sauvegarde est annulée, jamais faite en clair."
+msgstr ""
+"The password is kept in the GNOME keyring so that it can encrypt without "
+"asking you. If you change it, older backups stay protected by the old one: "
+"keep it. If the password cannot be found, the backup is cancelled, never "
+"made unencrypted."
+
+msgid "Le paquet dconf-cli est requis"
+msgstr "The dconf-cli package is required"
+
+msgid "Le paquet gnupg est requis"
+msgstr "The gnupg package is required"
+
+msgid "Le paquet rclone est requis"
+msgstr "The rclone package is required"
+
+msgid "Le paquet rclone est requis."
+msgstr "The rclone package is required."
+
+msgid "Le paquet rsync est requis"
+msgstr "The rsync package is required"
+
+msgid "Lecture de l'archive et extraction de l'élément choisi"
+msgstr "Reading the archive and extracting the chosen item"
+
+msgid "Lecture de {remote}:{path}…"
+msgstr "Reading {remote}:{path}…"
+
+msgid "Lecture de « {v1} » : {text}…"
+msgstr "Reading \"{v1}\": {text}…"
+
+msgid "Lecture de « {v1} »…"
+msgstr "Reading \"{v1}\"…"
+
+msgid "Lecture interrompue."
+msgstr "Reading interrupted."
+
+msgid ""
+"Les autres s'ouvrent avec ce mot de passe. Ces archives ont sans doute été "
+"chiffrées avec un autre mot de passe : retrouvez-le avant d'en avoir besoin."
+msgstr ""
+"The others open with this password. These archives were probably encrypted "
+"with another password: find it before you need it."
+
+msgid ""
+"Les configurations personnelles exigent le chiffrement : sauvegarde annulée."
+msgstr "Personal configurations require encryption: backup cancelled."
+
+msgid "Les configurations personnelles exigent le chiffrement."
+msgstr "Personal configurations require encryption."
+
+msgid "Les deux mots de passe sont différents."
+msgstr "The two passwords are different."
+
+msgid ""
+"Les extensions sont retéléchargées depuis extensions.gnome.org (connexion "
+"internet requise) : si aucune version ne convient à ce GNOME, elle est "
+"ignorée."
+msgstr ""
+"Extensions are downloaded again from extensions.gnome.org (Internet "
+"connection required): if no version suits this GNOME, it is skipped."
+
+msgid ""
+"Les fichiers existants sont conservés avec l'extension .avant-restauration"
+msgstr "Existing files are kept with the .avant-restauration extension"
+
+msgid "Les paquets gnupg et libsecret-tools sont requis"
+msgstr "The gnupg and libsecret-tools packages are required"
+
+msgid ""
+"Les paquets introuvables seront ignorés : aucun dépôt de la sauvegarde ne "
+"les fournit."
+msgstr ""
+"Packages that cannot be found will be skipped: no repository in the backup "
+"provides them."
+
+msgid ""
+"Les paquets marqués ⚠ ne sont pas connus de apt pour le moment. Ils seront "
+"installés si les dépôts tiers de la sauvegarde (cochez « Dépôts tiers ») les"
+" fournissent, sinon ignorés."
+msgstr ""
+"Packages marked ⚠ are not known to apt at the moment. They will be installed"
+" if the backup's third-party repositories (tick \"Third-party "
+"repositories\") provide them, otherwise skipped."
+
+msgid ""
+"Les plus anciennes sauvegardes automatiques sont supprimées. Vos sauvegardes"
+" manuelles ne sont jamais touchées."
+msgstr ""
+"The oldest automatic backups are deleted. Your manual backups are never "
+"touched."
+
+msgid ""
+"Les plus récentes d'abord. L'archive est téléchargée, son intégrité "
+"contrôlée, puis le mot de passe vous est demandé."
+msgstr ""
+"Most recent first. The archive is downloaded and its integrity checked, then"
+" you are asked for the password."
+
+msgid "Les réglages absents de la sauvegarde restent tels quels."
+msgstr "Settings missing from the backup are left as they are."
+
+msgid "Les sauvegardes automatiques iront dans « {v1} »."
+msgstr "Automatic backups will go to \"{v1}\"."
+
+msgid "Les sauvegardes de « {v1} » seront listées sur cette page."
+msgstr "The backups in \"{v1}\" will be listed on this page."
+
+msgid "Les sauvegardes seront créées dans « {v1} »."
+msgstr "Backups will be created in \"{v1}\"."
+
+msgid "Les sauvegardes sont cherchées dans le dossier où l'envoi les dépose."
+msgstr "Backups are searched for in the folder where the upload puts them."
+
+msgid "Liste des extensions et état d'activation"
+msgstr "List of extensions and whether they are enabled"
+
+msgid ""
+"Liste les archives de votre service cloud (rclone), en télécharge une puis "
+"l'ouvre"
+msgstr ""
+"Lists the archives on your cloud service (rclone), downloads one and opens "
+"it"
+
+msgid ""
+"Mais une sauvegarde n'a pas de somme de contrôle (ancienne version de "
+"l'application, ou fichier .sha256 déplacé) : on ne peut pas confirmer "
+"qu'elle est intacte."
+msgstr ""
+"But one backup has no checksum (older version of the application, or .sha256"
+" file moved): it cannot be confirmed to be intact."
+
+msgid ""
+"Mais {n} copie n'a pas pu être confirmée : seule la taille a pu être "
+"comparée (pas d'empreinte commune avec ce service, ou pas de copie locale)."
+msgid_plural ""
+"Mais {n} copies n'ont pas pu être confirmées : seule la taille a pu être "
+"comparée (pas d'empreinte commune avec ce service, ou pas de copie locale)."
+msgstr[0] ""
+"But {n} copy could not be confirmed: only the size could be compared (no "
+"checksum in common with this service, or no local copy)."
+msgstr[1] ""
+"But {n} copies could not be confirmed: only the size could be compared (no "
+"checksum in common with this service, or no local copy)."
+
+msgid ""
+"Mais {v1} sauvegardes n'ont pas de somme de contrôle (ancienne version de "
+"l'application, ou fichiers .sha256 déplacés) : on ne peut pas confirmer "
+"qu'elles sont intactes."
+msgstr ""
+"But {v1} backups have no checksum (older version of the application, or "
+".sha256 files moved): it cannot be confirmed that they are intact."
+
+msgid "Mes sauvegardes"
+msgstr "My backups"
+
+msgid "Modifié"
+msgstr "Modified"
+
+msgid "Mot de passe (8 caractères minimum)"
+msgstr "Password (8 characters minimum)"
+
+msgid "Mot de passe correct"
+msgstr "Correct password"
+
+msgid ""
+"Mot de passe introuvable dans le trousseau : sauvegarde annulée (elle n'est "
+"jamais faite en clair si le chiffrement est demandé)."
+msgstr ""
+"Password not found in the keyring: backup cancelled (it is never made "
+"unencrypted if encryption is requested)."
+
+msgid "Mot de passe refusé"
+msgstr "Password rejected"
+
+msgid "Mot de passe refusé : "
+msgstr "Password rejected: "
+
+msgid "Mot de passe refusé par {n} archive"
+msgid_plural "Mot de passe refusé par {n} archives"
+msgstr[0] "Password rejected by {n} archive"
+msgstr[1] "Password rejected by {n} archives"
+
+msgid "Mot de passe refusé · vérifiée {age}"
+msgstr "Password rejected · checked {age}"
+
+msgid "Navigateurs et courrier"
+msgstr "Browsers and mail"
+
+msgid "Navigateurs et courrier à sauvegarder"
+msgstr "Browsers and mail to back up"
+
+msgid "Navigateurs et fichiers personnels"
+msgstr "Browsers and personal files"
+
+msgid ""
+"Ne comptez pas sur elle : refaites une sauvegarde avec envoi cloud. Rien n'a"
+" été supprimé ni modifié."
+msgid_plural ""
+"Ne comptez pas sur elles : refaites une sauvegarde avec envoi cloud. Rien "
+"n'a été supprimé ni modifié."
+msgstr[0] ""
+"Do not rely on it: make a new backup with cloud upload. Nothing was deleted "
+"or modified."
+msgstr[1] ""
+"Do not rely on them: make a new backup with cloud upload. Nothing was "
+"deleted or modified."
+
+msgid ""
+"Ne comptez pas sur elle : refaites une sauvegarde dès que possible. Rien n'a"
+" été supprimé ni modifié."
+msgid_plural ""
+"Ne comptez pas sur elles : refaites une sauvegarde dès que possible. Rien "
+"n'a été supprimé ni modifié."
+msgstr[0] ""
+"Do not rely on it: make a new backup as soon as possible. Nothing was "
+"deleted or modified."
+msgstr[1] ""
+"Do not rely on them: make a new backup as soon as possible. Nothing was "
+"deleted or modified."
+
+msgid "Ni gnome-session-quit ni gdbus ne sont disponibles."
+msgstr "Neither gnome-session-quit nor gdbus is available."
+
+msgid "Non installé sur ce système"
+msgstr "Not installed on this system"
+
+msgid "Nouveau PC"
+msgstr "New PC"
+
+msgid ""
+"On voit ce qui a été ajouté ou retiré dans la sauvegarde récente par rapport"
+" à l'ancienne. Aucune des deux n'est modifiée. Glissez une archive ou un "
+"dossier sur la fenêtre pour remplir le premier emplacement libre."
+msgstr ""
+"Shows what was added or removed in the recent backup compared with the old "
+"one. Neither is modified. Drop an archive or a folder on the window to fill "
+"the first free slot."
+
+msgid "Opération en cours"
+msgstr "Operation in progress"
+
+msgid "Ouvrir"
+msgstr "Open"
+
+msgid "Ouvrir cette archive"
+msgstr "Open this archive"
+
+msgid "Ouvrir cette sauvegarde"
+msgstr "Open this backup"
+
+msgid "Ouvrir dans « Restaurer »"
+msgstr "Open in \"Restore\""
+
+msgid "Ouvrir la plus récente"
+msgstr "Open the most recent"
+
+msgid "Ouvrir le dossier"
+msgstr "Open the folder"
+
+msgid "Ouvrir le dossier dans le gestionnaire de fichiers"
+msgstr "Open the folder in the file manager"
+
+msgid "Ouvrir une sauvegarde du cloud"
+msgstr "Open a backup from the cloud"
+
+msgid "Ouvrir…"
+msgstr "Open…"
+
+msgid "Où copier « {v1} » ?"
+msgstr "Where to copy \"{v1}\"?"
+
+msgid "PPA et clés de signature"
+msgstr "PPAs and signing keys"
+
+msgid "PPA et clés de signature (hors dépôts Ubuntu)"
+msgstr "PPAs and signing keys (excluding Ubuntu repositories)"
+
+msgid "Paquets installés avec apt"
+msgstr "Packages installed with apt"
+
+msgid "Pas assez de place"
+msgstr "Not enough space"
+
+msgid "Pas de somme de contrôle pour {name} : intégrité non vérifiable."
+msgstr "No checksum for {name}: integrity cannot be verified."
+
+msgid "Passer cette étape"
+msgstr "Skip this step"
+
+msgid "Passée"
+msgstr "Skipped"
+
+msgid "Pensez à fermer votre session pour appliquer extensions et réglages."
+msgstr "Remember to log out to apply extensions and settings."
+
+msgid "Planification"
+msgstr "Schedule"
+
+msgid "Planification impossible : {message}"
+msgstr "Scheduling failed: {message}"
+
+msgid "Planifiée"
+msgstr "Scheduled"
+
+msgid "Plus tard"
+msgstr "Later"
+
+msgid ""
+"Pour en ajouter un, lancez « rclone config » dans un terminal, puis "
+"actualisez."
+msgstr "To add one, run \"rclone config\" in a terminal, then refresh."
+
+msgid ""
+"Pour n'en garder que les {keep} plus récentes, ces sauvegardes automatiques seront supprimées définitivement :\n"
+"\n"
+"{names}\n"
+"\n"
+"Vos sauvegardes manuelles ne sont pas touchées."
+msgstr ""
+"To keep only the {keep} most recent, these automatic backups will be permanently deleted:\n"
+"\n"
+"{names}\n"
+"\n"
+"Your manual backups are not touched."
+
+msgid ""
+"Pour ne pas remplir le disque, les plus anciennes sauvegardes automatiques "
+"sont supprimées au fil du temps. Vos sauvegardes manuelles ne sont jamais "
+"touchées."
+msgstr ""
+"To avoid filling the disk, the oldest automatic backups are deleted over "
+"time. Your manual backups are never touched."
+
+msgid "Presque terminé"
+msgstr "Almost done"
+
+msgid "Prochaine sauvegarde"
+msgstr "Next backup"
+
+msgid ""
+"Profils Firefox, Thunderbird, Chrome… (fichiers remplacés gardés en .avant-"
+"restauration)"
+msgstr ""
+"Firefox, Thunderbird, Chrome profiles… (replaced files are kept as .avant-"
+"restauration)"
+
+msgid "Profils à restaurer"
+msgstr "Profiles to restore"
+
+msgid "Progression"
+msgstr "Progress"
+
+msgid "Protection"
+msgstr "Protection"
+
+msgid ""
+"Proton Drive : l'accès par rclone est en bêta et repose sur une API que "
+"Proton ne documente pas. Il peut cesser de fonctionner sans préavis, la "
+"double authentification pose des problèmes à certains utilisateurs, et les "
+"clés de chiffrement doivent d'abord avoir été créées par une connexion via "
+"le navigateur. Ne vous y fiez pas comme seule copie : la copie locale reste "
+"toujours faite en premier."
+msgstr ""
+"Proton Drive: access through rclone is in beta and relies on an API that "
+"Proton does not document. It may stop working without notice, two-factor "
+"authentication causes problems for some users, and the encryption keys must "
+"first have been created by logging in through the browser. Do not rely on it"
+" as your only copy: the local copy is always made first."
+
+msgid "Préparation de « {v1} »…"
+msgstr "Preparing \"{v1}\"…"
+
+msgid "Préparation…"
+msgstr "Preparing…"
+
+msgid "Prévoyez environ {v1} de place temporaire"
+msgstr "Allow about {v1} of temporary space"
+
+msgid "Que restaurer ?"
+msgstr "What to restore?"
+
+msgid "Que sauvegarder ?"
+msgstr "What to back up?"
+
+msgid "Quitter l'assistant"
+msgstr "Quit the wizard"
+
+msgid "Raccourcis des fenêtres"
+msgstr "Window shortcuts"
+
+msgid "Raccourcis multimédia"
+msgstr "Media shortcuts"
+
+msgid "Recherche des sauvegardes…"
+msgstr "Searching for backups…"
+
+msgid "Recherche en cours…"
+msgstr "Searching…"
+
+msgid "Recherche impossible"
+msgstr "Search failed"
+
+msgid "Rechercher"
+msgstr "Search"
+
+msgid "Recherche…"
+msgstr "Searching…"
+
+msgid ""
+"Recontrôle les sauvegardes automatiques conservées. Avec le chiffrement, le "
+"mot de passe du trousseau est aussi testé, sans rien demander. Les copies "
+"cloud sont comparées par empreinte, sans téléchargement. Une notification "
+"vous prévient en cas de problème."
+msgstr ""
+"Re-checks the automatic backups that are kept. With encryption, the keyring "
+"password is also tested, without asking for anything. Cloud copies are "
+"compared by checksum, without downloading. A notification warns you if there"
+" is a problem."
+
+msgid "Relire les services rclone"
+msgstr "Reload rclone services"
+
+msgid "Remettre cet élément dans le dossier personnel"
+msgstr "Put this item back in the home folder"
+
+msgid "Remise en place"
+msgstr "Putting back"
+
+msgid "Restauration ({v1}) terminée"
+msgstr "Restore ({v1}) finished"
+
+msgid "Restauration de ~/{rel}"
+msgstr "Restoring ~/{rel}"
+
+msgid "Restauration de « {v1} »…"
+msgstr "Restoring \"{v1}\"…"
+
+msgid "Restauration impossible"
+msgstr "Could not restore"
+
+msgid "Restauration interrompue : rien n'a été modifié."
+msgstr "Restore interrupted: nothing was changed."
+
+msgid "Restauration interrompue."
+msgstr "Restore interrupted."
+
+msgid "Restauration sélective : {v1} flatpaks choisis"
+msgstr "Selective restore: {v1} flatpaks chosen"
+
+msgid "Restauration sélective : {v1} paquets choisis"
+msgstr "Selective restore: {v1} packages chosen"
+
+msgid "Restauration sélective : {v1} snaps choisis"
+msgstr "Selective restore: {v1} snaps chosen"
+
+msgid "Restauration terminée"
+msgstr "Restore finished"
+
+msgid ""
+"Restauration terminée. Déconnectez-vous puis reconnectez-vous pour appliquer"
+" extensions et réglages."
+msgstr ""
+"Restore finished. Log out and back in to apply extensions and settings."
+
+msgid ""
+"Restaure vos profils (Firefox, Thunderbird…) et vos configurations "
+"personnelles. Fermez d'abord ces applications. Les fichiers remplacés sont "
+"conservés avec l'extension .avant-restauration. Ces éléments sont décochés "
+"par défaut."
+msgstr ""
+"Restores your profiles (Firefox, Thunderbird…) and your personal "
+"configurations. Close these applications first. Replaced files are kept with"
+" the .avant-restauration extension. These items are unticked by default."
+
+msgid "Restaurer"
+msgstr "Restore"
+
+msgid "Restaurer ici"
+msgstr "Restore here"
+
+msgid "Restaurer un fichier ou un dossier"
+msgstr "Restore a file or folder"
+
+msgid "Restaurer un seul fichier ou dossier"
+msgstr "Restore a single file or folder"
+
+msgid "Restaurer {v1}"
+msgstr "Restore {v1}"
+
+msgid "Restaurer « {v1} » ?"
+msgstr "Restore \"{v1}\"?"
+
+msgid "Restauré"
+msgstr "Restored"
+
+msgid "Retiré"
+msgstr "Removed"
+
+msgid "Retrouver un fichier"
+msgstr "Find a file"
+
+msgid "Retrouver un fichier ou un dossier"
+msgstr "Find a file or folder"
+
+msgid "Retrouver un fichier ou un dossier…"
+msgstr "Find a file or folder…"
+
+msgid "Rien n'existe à cet emplacement : rien ne sera remplacé."
+msgstr "Nothing exists at this location: nothing will be replaced."
+
+msgid "Rien à changer"
+msgstr "Nothing to change"
+
+msgid "Rien à changer · "
+msgstr "Nothing to change · "
+
+msgid "Rien à comparer"
+msgstr "Nothing to compare"
+
+msgid "Rien à comparer dans « {v1} »."
+msgstr "Nothing to compare in \"{v1}\"."
+
+msgid ""
+"Rien à supprimer : vos sauvegardes automatiques tiennent dans les {keep} "
+"conservées."
+msgstr "Nothing to delete: your automatic backups fit within the {keep} kept."
+
+msgid "Rien à supprimer : {v1} pour {keep} conservées."
+msgstr "Nothing to delete: {v1} for {keep} kept."
+
+msgid "Rotation"
+msgstr "Rotation"
+
+msgid "Rotation cloud ignorée : dossier distant illisible."
+msgstr "Cloud rotation skipped: remote folder unreadable."
+
+msgid "Rotation cloud ignorée : {exc}"
+msgstr "Cloud rotation skipped: {exc}"
+
+msgid "Récupérable, contenu non comparé"
+msgstr "Recoverable, contents not compared"
+
+msgid "Réessayer"
+msgstr "Try again"
+
+msgid "Réglages du bureau"
+msgstr "Desktop settings"
+
+msgid "Régler…"
+msgstr "Set…"
+
+msgid "Réinstalle les extensions depuis extensions.gnome.org"
+msgstr "Reinstalls the extensions from extensions.gnome.org"
+
+msgid "Réinstalle les flatpaks depuis Flathub"
+msgstr "Reinstalls the flatpaks from Flathub"
+
+msgid "Réinstalle les paquets apt (ceux déjà présents sont ignorés)"
+msgstr "Reinstalls the apt packages (those already present are skipped)"
+
+msgid "Réinstalle les snaps"
+msgstr "Reinstalls the snaps"
+
+msgid "Répétition de restauration : choisir l'archive chiffrée"
+msgstr "Restore dry run: choose the encrypted archive"
+
+msgid "Répétition de restauration à blanc"
+msgstr "Dry-run restore"
+
+msgid "Répétition de restauration à blanc (facultatif)"
+msgstr "Dry-run restore (optional)"
+
+msgid "Répétition de restauration…"
+msgstr "Dry-run restore…"
+
+msgid "Répétition interrompue"
+msgstr "Dry run interrupted"
+
+msgid "Répétition interrompue."
+msgstr "Dry run interrupted."
+
+msgid "Répétition sur « {v1} »…"
+msgstr "Dry run on \"{v1}\"…"
+
+msgid "Résultats pour « {text} »"
+msgstr "Results for \"{text}\""
+
+msgid "Réussie"
+msgstr "Succeeded"
+
+msgid ""
+"Saisissez le mot de passe de vos archives. Il sera essayé sur {n} archive "
+"chiffrée ; rien n'est restauré ni écrit sur le disque."
+msgid_plural ""
+"Saisissez le mot de passe de vos archives. Il sera essayé sur {n} archives "
+"chiffrées ; rien n'est restauré ni écrit sur le disque."
+msgstr[0] ""
+"Enter the password of your archives. It will be tried on {n} encrypted "
+"archive; nothing is restored or written to the disk."
+msgstr[1] ""
+"Enter the password of your archives. It will be tried on {n} encrypted "
+"archives; nothing is restored or written to the disk."
+
+msgid "Saisissez le mot de passe de « {v1} »."
+msgstr "Enter the password of \"{v1}\"."
+
+msgid ""
+"Saisissez le mot de passe de « {v1} ».\n"
+"\n"
+"L'archive sera lue une fois en entier pour afficher son contenu : cela peut prendre quelques minutes. Rien n'est écrit sur le disque."
+msgstr ""
+"Enter the password of \"{v1}\".\n"
+"\n"
+"The archive will be read in full once to show its contents: this may take a few minutes. Nothing is written to the disk."
+
+msgid ""
+"Saisissez le mot de passe de « {v1} ». Rien n'est restauré ni écrit sur le "
+"disque."
+msgstr ""
+"Enter the password of \"{v1}\". Nothing is restored or written to the disk."
+
+msgid "Saisissez un mot de passe d'au moins 8 caractères."
+msgstr "Enter a password of at least 8 characters."
+
+msgid "Saisissez un mot de passe pour lancer la répétition."
+msgstr "Enter a password to start the dry run."
+
+msgid "Saisissez un mot de passe pour le tester."
+msgstr "Enter a password to test it."
+
+msgid "Saisissez un mot de passe pour ouvrir l'archive."
+msgstr "Enter a password to open the archive."
+
+msgid "Saisissez un mot de passe, ou désactivez le test du mot de passe."
+msgstr "Enter a password, or turn off the password test."
+
+msgid ""
+"Sans le mot de passe, une sauvegarde chiffrée est définitivement illisible. "
+"Notez-le dans un gestionnaire de mots de passe."
+msgstr ""
+"Without the password, an encrypted backup is permanently unreadable. Write "
+"it down in a password manager."
+
+msgid "Sans somme de contrôle · vérifiée {age}{reh_text}"
+msgstr "No checksum · checked {age}{reh_text}"
+
+msgid "Sauvegarde"
+msgstr "Backup"
+
+msgid "Sauvegarde abîmée"
+msgstr "Damaged backup"
+
+msgid ""
+"Sauvegarde annulée : espace disque insuffisant (taille estimée : {v1}). {v2}"
+" Libérez de la place, choisissez une autre destination ou allégez la "
+"sélection."
+msgstr ""
+"Backup cancelled: not enough disk space (estimated size: {v1}). {v2} Free up"
+" some space, choose another destination or lighten the selection."
+
+msgid "Sauvegarde du bureau"
+msgstr "Desktop Backup"
+
+msgid "Sauvegarde du bureau : espace insuffisant"
+msgstr "Desktop Backup: not enough space"
+
+msgid "Sauvegarde du bureau : problème détecté"
+msgstr "Desktop Backup: problem detected"
+
+msgid "Sauvegarde du bureau : échec"
+msgstr "Desktop Backup: failed"
+
+msgid ""
+"Sauvegarde et restaure vos applications, extensions GNOME et réglages du bureau.\n"
+"\n"
+"Dernière mise à jour : {date_text}"
+msgstr ""
+"Backs up and restores your applications, GNOME extensions and desktop settings.\n"
+"\n"
+"Last updated: {date_text}"
+
+msgid ""
+"Sauvegarde incomplète : {v1}. Les anciennes sauvegardes sont conservées."
+msgstr "Backup incomplete: {v1}. Older backups are kept."
+
+msgid "Sauvegarde intacte"
+msgstr "Intact backup"
+
+msgid "Sauvegarde lancée en arrière-plan : vous serez notifié à la fin."
+msgstr ""
+"Backup started in the background: you will be notified when it is done."
+
+msgid ""
+"Sauvegarde locale terminée ({v1}), mais l'envoi cloud a échoué : {v2}. Voir "
+"le journal."
+msgstr ""
+"Local backup finished ({v1}), but the cloud upload failed: {v2}. See the "
+"log."
+
+msgid "Sauvegarde non récupérable"
+msgstr "Unrecoverable backup"
+
+msgid "Sauvegarde récente"
+msgstr "Recent backup"
+
+msgid "Sauvegarde récupérable"
+msgstr "Recoverable backup"
+
+msgid "Sauvegarde supprimée : « {v1} »"
+msgstr "Backup deleted: \"{v1}\""
+
+msgid "Sauvegarde terminée"
+msgstr "Backup finished"
+
+msgid "Sauvegarde terminée ({v1}, {v2}), mais ATTENTION : {problem}."
+msgstr "Backup finished ({v1}, {v2}), but WARNING: {problem}."
+
+msgid "Sauvegarde terminée : {v1} ({v2})"
+msgstr "Backup finished: {v1} ({v2})"
+
+msgid "Sauvegarde terminée."
+msgstr "Backup finished."
+
+msgid "Sauvegarde à restaurer"
+msgstr "Backup to restore"
+
+msgid "Sauvegarder"
+msgstr "Back up"
+
+msgid "Sauvegarder maintenant"
+msgstr "Back up now"
+
+msgid "Sauvegarder quand même"
+msgstr "Back up anyway"
+
+msgid "Sauvegardes"
+msgstr "Backups"
+
+msgid "Sauvegardes automatiques activées."
+msgstr "Automatic backups turned on."
+
+msgid "Sauvegardes automatiques désactivées : rien à faire."
+msgstr "Automatic backups turned off: nothing to do."
+
+msgid "Sauvegardes automatiques désactivées."
+msgstr "Automatic backups turned off."
+
+msgid "Sauvegardes disponibles"
+msgstr "Available backups"
+
+msgid "Sauvegardes à comparer"
+msgstr "Backups to compare"
+
+msgid "Sauvegardes à conserver"
+msgstr "Backups to keep"
+
+msgid "Sera modifié"
+msgstr "Will be changed"
+
+msgid "Service"
+msgstr "Service"
+
+msgid "Service cloud"
+msgstr "Cloud service"
+
+msgid "Service ou dossier invalide"
+msgstr "Invalid service or folder"
+
+msgid ""
+"Seuls les fichiers personnels de la sauvegarde sont listés (configurations, "
+"profils de navigateurs et de courrier)."
+msgstr ""
+"Only the personal files of the backup are listed (configurations, browser "
+"and mail profiles)."
+
+msgid "Seuls une archive chiffrée (.gpg) et un dossier sont acceptés."
+msgstr "Only an encrypted archive (.gpg) and a folder are accepted."
+
+msgid "Shell GNOME (favoris, extensions activées)"
+msgstr "GNOME Shell (favorites, enabled extensions)"
+
+msgid "Snap n'est pas installé : étape ignorée"
+msgstr "Snap is not installed: step skipped"
+
+msgid "Snaps"
+msgstr "Snaps"
+
+msgid "Snaps à installer"
+msgstr "Snaps to install"
+
+msgid "Somme de contrôle"
+msgstr "Checksum"
+
+msgid "Suppression du dossier temporaire"
+msgstr "Deleting the temporary folder"
+
+msgid "Suppression impossible"
+msgstr "Could not delete"
+
+msgid "Suppression incomplète"
+msgstr "Incomplete deletion"
+
+msgid "Supprimer"
+msgstr "Delete"
+
+msgid "Supprimer cette sauvegarde"
+msgstr "Delete this backup"
+
+msgid "Supprimer cette sauvegarde ?"
+msgstr "Delete this backup?"
+
+msgid "Supprimer {v1} ?"
+msgstr "Delete {v1}?"
+
+msgid "Sélectionnez au moins un élément à sauvegarder."
+msgstr "Select at least one item to back up."
+
+msgid "Sélectionnez au moins un élément."
+msgstr "Select at least one item."
+
+msgid "Taille estimée : {v1}"
+msgstr "Estimated size: {v1}"
+
+msgid ""
+"Taille estimée : {v1} ; place libre non mesurable ({exc}) : vérification "
+"ignorée."
+msgstr ""
+"Estimated size: {v1}; free space cannot be measured ({exc}): check skipped."
+
+msgid ""
+"Taille estimée de la sauvegarde : {v1}.\n"
+"\n"
+"{v2}"
+msgstr ""
+"Estimated backup size: {v1}.\n"
+"\n"
+"{v2}"
+
+msgid "Terminal"
+msgstr "Terminal"
+
+msgid "Terminer"
+msgstr "Finish"
+
+msgid "Terminez l'assistant avant de changer de sauvegarde."
+msgstr "Finish the wizard before changing backup."
+
+msgid "Terminé"
+msgstr "Done"
+
+msgid "Terminé avec des erreurs : {bilan}"
+msgstr "Finished with errors: {bilan}"
+
+msgid "Terminé avec des erreurs — {bilan}"
+msgstr "Finished with errors — {bilan}"
+
+msgid "Terminée"
+msgstr "Finished"
+
+msgid "Terminée avec des erreurs"
+msgstr "Finished with errors"
+
+msgid "Test du mot de passe"
+msgstr "Password test"
+
+msgid "Test du mot de passe de « {v1} »…"
+msgstr "Testing the password of \"{v1}\"…"
+
+msgid "Tester"
+msgstr "Test"
+
+msgid "Tester aussi le mot de passe"
+msgstr "Also test the password"
+
+msgid "Tester le mot de passe"
+msgstr "Test the password"
+
+msgid "Tester le mot de passe…"
+msgstr "Test the password…"
+
+msgid "Thunderbird (comptes et réglages)"
+msgstr "Thunderbird (accounts and settings)"
+
+msgid "Thunderbird (courriers téléchargés)"
+msgstr "Thunderbird (downloaded mail)"
+
+msgid "Tous les jours"
+msgstr "Every day"
+
+msgid "Tous les mois"
+msgstr "Every month"
+
+msgid "Tout cocher"
+msgstr "Tick all"
+
+msgid "Tout décocher"
+msgstr "Untick all"
+
+msgid ""
+"Tout le contenu de votre dossier de sauvegarde, avec la date, la taille et "
+"le résultat de la dernière vérification. Chaque sauvegarde peut être "
+"ouverte, vérifiée ou supprimée d'ici."
+msgstr ""
+"All the contents of your backup folder, with the date, size and result of "
+"the last check. Each backup can be opened, checked or deleted from here."
+
+msgid "Tout s'est bien passé."
+msgstr "Everything went fine."
+
+msgid "Tout vérifier"
+msgstr "Check all"
+
+msgid "Toutes les copies cloud sont identiques"
+msgstr "All cloud copies are identical"
+
+msgid "Toutes les semaines"
+msgstr "Every week"
+
+msgid "Toutes vos sauvegardes sont intactes"
+msgstr "All your backups are intact"
+
+msgid ""
+"Télécharge vos extensions depuis extensions.gnome.org et les active. Elles "
+"ne apparaîtront qu'à la prochaine ouverture de session."
+msgstr ""
+"Downloads your extensions from extensions.gnome.org and enables them. They "
+"will only appear the next time you log in."
+
+msgid "Téléchargement de {uuid} (v{v2})…"
+msgstr "Downloading {uuid} (v{v2})…"
+
+msgid "Téléchargement de « {v1} »…"
+msgstr "Downloading \"{v1}\"…"
+
+msgid "Téléchargement depuis {remote}:{path} ({v3})"
+msgstr "Downloading from {remote}:{path} ({v3})"
+
+msgid "Téléchargement impossible : {error}"
+msgstr "Download failed: {error}"
+
+msgid "Téléchargement… "
+msgstr "Downloading… "
+
+msgid ""
+"Un dossier « sauvegarde-ubuntu-AAAA-MM-JJ » sera créé à cet endroit. "
+"Choisissez de préférence un disque externe."
+msgstr ""
+"A \"sauvegarde-ubuntu-YYYY-MM-DD\" folder will be created at this location. "
+"Preferably choose an external drive."
+
+msgid ""
+"Un dossier « sauvegarde-ubuntu-… » non chiffré, déchiffré à la main ou "
+"ancien"
+msgstr "An unencrypted \"sauvegarde-ubuntu-…\" folder, decrypted by hand or older"
+
+msgid "Un seul élément à la fois"
+msgstr "One item at a time"
+
+msgid "Une archive chiffrée (.gpg) ou un dossier de sauvegarde."
+msgstr "An encrypted archive (.gpg) or a backup folder."
+
+msgid ""
+"Une bannière s'affiche en haut de la fenêtre quand votre dernière sauvegarde"
+" (manuelle ou automatique) est plus vieille que ce délai. Elle fonctionne "
+"aussi sans sauvegardes automatiques."
+msgstr ""
+"A banner appears at the top of the window when your latest backup (manual or"
+" automatic) is older than this delay. It also works without automatic "
+"backups."
+
+msgid "Une opération est en cours : attendez qu'elle soit terminée."
+msgstr "An operation is in progress: wait until it has finished."
+
+msgid ""
+"Une sauvegarde par semaine laisse quelques jours de marge avec 10 jours."
+msgstr "One backup per week leaves a few days of margin with 10 days."
+
+msgid "Valider"
+msgstr "Confirm"
+
+msgid "Votre dernière sauvegarde date d'{v1} (alerte au-delà de {v2})."
+msgstr "Your last backup is {v1} (alert after {v2})."
+
+msgid ""
+"Votre mot de passe administrateur sera demandé pour les dépôts, les paquets "
+"et les snaps."
+msgstr ""
+"Your administrator password will be requested for repositories, packages and"
+" snaps."
+
+msgid "Votre nouvelle machine est prête"
+msgstr "Your new machine is ready"
+
+msgid ""
+"Vous avez supprimé ou abîmé un fichier ? Parcourez ou cherchez dans une "
+"sauvegarde et ne remettez que celui-là, sans tout restaurer. Seuls les "
+"fichiers personnels de la sauvegarde sont concernés (configurations, profils"
+" de navigateurs et de courrier) : vos documents (Documents, Images…) ne sont"
+" pas sauvegardés par l'application."
+msgstr ""
+"Did you delete or damage a file? Browse or search a backup and put back only"
+" that one, without restoring everything. Only the personal files in the "
+"backup are concerned (configurations, browser and mail profiles): your "
+"documents (Documents, Pictures…) are not backed up by the application."
+
+msgid ""
+"Vous choisirez de les ouvrir ou d'utiliser le dossier comme emplacement."
+msgstr ""
+"You will choose whether to open them or use the folder as the location."
+
+msgid "Vérification de l'archive"
+msgstr "Verifying the archive"
+
+msgid "Vérification de l'intégrité…"
+msgstr "Checking integrity…"
+
+msgid "Vérification de {n} sauvegarde…"
+msgid_plural "Vérification de {n} sauvegardes…"
+msgstr[0] "Checking {n} backup…"
+msgstr[1] "Checking {n} backups…"
+
+msgid "Vérification de « {v1} »…"
+msgstr "Checking \"{v1}\"…"
+
+msgid "Vérification et déchiffrement en cours…"
+msgstr "Checking and decrypting…"
+
+msgid "Vérification ignorée : {exc}"
+msgstr "Verification skipped: {exc}"
+
+msgid "Vérification impossible"
+msgstr "Verification failed"
+
+msgid "Vérification {text}…"
+msgstr "Checking {text}…"
+
+msgid "Vérifier"
+msgstr "Check"
+
+msgid "Vérifier : choisir l'archive chiffrée"
+msgstr "Check: choose the encrypted archive"
+
+msgid "Vérifier : choisir le dossier de sauvegarde"
+msgstr "Check: choose the backup folder"
+
+msgid "Vérifier : choisir le dossier qui contient les sauvegardes"
+msgstr "Check: choose the folder that contains the backups"
+
+msgid "Vérifier après chaque sauvegarde"
+msgstr "Check after each backup"
+
+msgid "Vérifier cette sauvegarde"
+msgstr "Check this backup"
+
+msgid "Vérifier l'intégrité"
+msgstr "Check integrity"
+
+msgid "Vérifier les copies cloud"
+msgstr "Check cloud copies"
+
+msgid "Vérifier toutes mes sauvegardes"
+msgstr "Check all my backups"
+
+msgid "Vérifier une seule sauvegarde"
+msgstr "Check a single backup"
+
+msgid "Vérifiée {age} : mot de passe refusé par {v2}"
+msgstr "Checked {age}: password rejected by {v2}"
+
+msgid "Vérifiée {age} : restauration à blanc échouée pour {v2}"
+msgstr "Checked {age}: dry-run restore failed for {v2}"
+
+msgid "Vérifiée {age} : tout est intact"
+msgstr "Checked {age}: everything is intact"
+
+msgid "Vérifiée {age} : {v2}"
+msgstr "Checked {age}: {v2}"
+
+msgid "Vérifiée {age} : {v2} sans somme de contrôle"
+msgstr "Checked {age}: {v2} without checksum"
+
+msgid "Vérifiées {age} : toutes identiques à vos copies locales"
+msgstr "Checked {age}: all identical to your local copies"
+
+msgid "Vérifiées {age} : {n} copie non confirmée (taille seulement)"
+msgid_plural "Vérifiées {age} : {n} copies non confirmées (taille seulement)"
+msgstr[0] "Checked {age}: {n} copy could not be confirmed (size only)"
+msgstr[1] "Checked {age}: {n} copies could not be confirmed (size only)"
+
+msgid "Vérifiées {age} : {v2}"
+msgstr "Checked {age}: {v2}"
+
+msgid "absente de extensions.gnome.org et sans copie"
+msgstr "missing from extensions.gnome.org and no copy"
+
+msgid "activée"
+msgstr "enabled"
+
+msgid "activée dans la sauvegarde"
+msgstr "enabled in the backup"
+
+msgid "adresse de téléchargement inattendue"
+msgstr "unexpected download address"
+
+msgid "ajouté"
+msgstr "added"
+
+msgid "ajoutés"
+msgstr "added"
+
+msgid "ancienne sauvegarde"
+msgstr "old backup"
+
+msgid "anciennes sauvegardes"
+msgstr "old backups"
+
+msgid ""
+"apt-get update || echo 'apt update a signalé des erreurs (un dépôt n'\\''est"
+" peut-être pas compatible avec cette version)'"
+msgstr ""
+"apt-get update || echo 'apt update reported errors (a repository may not be "
+"compatible with this version)'"
+
+msgid "archive"
+msgstr "archive"
+
+msgid "archive chiffrée"
+msgstr "encrypted archive"
+
+msgid "archive corrompue"
+msgstr "corrupted archive"
+
+msgid "archive introuvable"
+msgstr "archive not found"
+
+msgid "archive introuvable : {archive}"
+msgstr "archive not found: {archive}"
+
+msgid "archive invalide (chemins suspects)"
+msgstr "invalid archive (suspicious paths)"
+
+msgid "archive sans metadata.json valide"
+msgstr "archive without valid metadata.json"
+
+msgid "archives"
+msgstr "archives"
+
+msgid "aucun profil à restaurer"
+msgstr "no profile to restore"
+
+msgid "aucune version compatible avec GNOME "
+msgstr "no version compatible with GNOME "
+
+msgid "aucune version compatible avec GNOME {shell}"
+msgstr "no version compatible with GNOME {shell}"
+
+msgid "automatique"
+msgstr "automatic"
+
+msgid "autre élément"
+msgstr "other item"
+
+msgid "autres éléments"
+msgstr "other items"
+
+msgid ""
+"awk 'NR==FNR {{ known[$1] = 1; next }} {{ name = $0; sub(/:.*/, \"\", name);"
+" if (name in known) print $0; else print \"Paquet introuvable sur ce système"
+" (ignoré) : \" $0 }}' {a} {w} > {q}.tmp"
+msgstr ""
+"awk 'NR==FNR {{ known[$1] = 1; next }} {{ name = $0; sub(/:.*/, \"\", name);"
+" if (name in known) print $0; else print \"Package not found on this system "
+"(ignored): \" $0 }}' {a} {w} > {q}.tmp"
+
+msgid ""
+"choisissez un service rclone (ou configurez-en un avec « rclone config »)"
+msgstr "choose an rclone service (or set one up with \"rclone config\")"
+
+msgid "clé de signature"
+msgstr "signing key"
+
+msgid "contenu différent"
+msgstr "different content"
+
+msgid "contenu extrait différent des sommes de contrôle : "
+msgstr "extracted content differs from the checksums: "
+
+msgid "copie cloud abîmée"
+msgstr "damaged cloud copy"
+
+msgid "copie de secours disponible"
+msgstr "backup copy available"
+
+msgid "copie locale abîmée, ignorée"
+msgstr "damaged local copy, ignored"
+
+msgid "copie locale abîmée, ignorée ; "
+msgstr "damaged local copy, ignored; "
+
+msgid "copie(s) cloud abîmée(s) : {v1}"
+msgstr "damaged cloud copies: {v1}"
+
+msgid "copies cloud abîmées"
+msgstr "damaged cloud copies"
+
+msgid "date inconnue"
+msgstr "unknown date"
+
+msgid "dconf load a échoué"
+msgstr "dconf load failed"
+
+msgid "diffère du fichier actuel"
+msgstr "differs from the current file"
+
+msgid "dossier distant invalide (exemple : sauvegardes-bureau)"
+msgstr "invalid remote folder (example: sauvegardes-bureau)"
+
+msgid "dossier manquant"
+msgstr "missing folder"
+
+msgid "dossier non chiffré"
+msgstr "unencrypted folder"
+
+msgid "déjà installé"
+msgstr "already installed"
+
+msgid "déjà installée"
+msgstr "already installed"
+
+msgid "déjà installées"
+msgstr "already installed"
+
+msgid "déjà installés"
+msgstr "already installed"
+
+msgid "désactivée"
+msgstr "disabled"
+
+msgid ""
+"empreinte SHA-256 différente de celle notée à la création : la copie cloud "
+"est abîmée"
+msgstr ""
+"SHA-256 checksum differs from the one noted at creation: the cloud copy is "
+"damaged"
+
+msgid "empreinte SHA-256 identique à celle notée à la création"
+msgstr "SHA-256 checksum identical to the one noted at creation"
+
+msgid ""
+"empreinte {v1} différente de la copie locale : la copie cloud est abîmée ou "
+"incomplète"
+msgstr ""
+"{v1} checksum differs from the local copy: the cloud copy is damaged or "
+"incomplete"
+
+msgid ""
+"envoi terminé, mais impossible de relire le dossier distant pour le "
+"contrôler"
+msgstr ""
+"upload finished, but the remote folder cannot be read back to check it"
+
+msgid "erreur d'installation"
+msgstr "installation error"
+
+msgid "erreur de téléchargement"
+msgstr "download error"
+
+msgid "existant à fusionner"
+msgstr "existing, to merge"
+
+msgid "existants à fusionner"
+msgstr "existing, to merge"
+
+msgid ""
+"extensions.gnome.org injoignable ({exc}) : les fichiers des extensions "
+"seront copiés par précaution."
+msgstr ""
+"extensions.gnome.org is unreachable ({exc}): the extension files will be "
+"copied as a precaution."
+
+msgid "extensions.gnome.org injoignable ({exc})."
+msgstr "extensions.gnome.org is unreachable ({exc})."
+
+msgid "fichier"
+msgstr "file"
+
+msgid "fichier .sha256 introuvable à côté de l'archive"
+msgstr ".sha256 file not found next to the archive"
+
+msgid "fichier SHA256SUMS absent du dossier"
+msgstr "SHA256SUMS file missing from the folder"
+
+msgid "fichier existant a été remplacé"
+msgstr "existing file was replaced"
+
+msgid "fichier remis"
+msgstr "file put back"
+
+msgid "fichier remplacé"
+msgstr "file replaced"
+
+msgid "fichier à remplacer"
+msgstr "file to replace"
+
+msgid "fichiers"
+msgstr "files"
+
+msgid "fichiers abîmés : "
+msgstr "damaged files: "
+
+msgid "fichiers abîmés dans la sauvegarde : "
+msgstr "damaged files in the backup: "
+
+msgid "fichiers existants ont été remplacés"
+msgstr "existing files were replaced"
+
+msgid "fichiers remis"
+msgstr "files put back"
+
+msgid "fichiers remplacés"
+msgstr "files replaced"
+
+msgid "fichiers à remplacer"
+msgstr "files to replace"
+
+msgid ""
+"fusionné avec le profil actuel (fichiers remplacés gardés en .avant-"
+"restauration)"
+msgstr ""
+"merged with the current profile (replaced files kept as .avant-restauration)"
+
+msgid "gnome-extensions install a échoué : extraction directe."
+msgstr "gnome-extensions install failed: copying directly."
+
+msgid "gpg est introuvable ou inutilisable : {v1}"
+msgstr "gpg cannot be found or used: {v1}"
+
+msgid "gpg ou tar est inutilisable : {v1}"
+msgstr "gpg or tar cannot be used: {v1}"
+
+msgid "grep '^Paquet introuvable' {q}.tmp || true"
+msgstr "grep '^Package not found' {q}.tmp || true"
+
+msgid "grep -v '^Paquet introuvable' {q}.tmp > {q}"
+msgstr "grep -v '^Package not found' {q}.tmp > {q}"
+
+msgid "heure"
+msgstr "hour"
+
+msgid "heures"
+msgstr "hours"
+
+msgid "hors extensions.gnome.org"
+msgstr "outside extensions.gnome.org"
+
+msgid "hors extensions.gnome.org : fichiers copiés depuis la sauvegarde"
+msgstr "outside extensions.gnome.org: files copied from the backup"
+
+msgid "identique"
+msgstr "identical"
+
+msgid "identique à la copie locale (taille, {v1})"
+msgstr "identical to the local copy (size, {v1})"
+
+msgid "identiques"
+msgstr "identical"
+
+msgid "ignoré"
+msgstr "ignored"
+
+msgid "ignorée"
+msgstr "ignored"
+
+msgid "ignorées"
+msgstr "ignored"
+
+msgid "ignorés"
+msgstr "ignored"
+
+msgid "il faut environ {v1} de place temporaire dans {v2}, il reste {v3}"
+msgstr "about {v1} of temporary space is needed in {v2}, {v3} left"
+
+msgid "il faut environ {v1}, il reste {v2}"
+msgstr "about {v1} is needed, {v2} left"
+
+msgid "il y a {n}"
+msgstr "{n} ago"
+
+msgid "il y a {n} mois"
+msgid_plural "il y a {n} mois"
+msgstr[0] "{n} month ago"
+msgstr[1] "{n} months ago"
+
+msgid "impossible de lire le dossier distant"
+msgstr "cannot read the remote folder"
+
+msgid "inchangé"
+msgstr "unchanged"
+
+msgid "inchangés"
+msgstr "unchanged"
+
+msgid "inconnu des dépôts de cette machine"
+msgstr "unknown to this machine's repositories"
+
+msgid ""
+"inconnu pour l'instant : installé si un dépôt tiers de la sauvegarde le "
+"fournit"
+msgstr ""
+"unknown for now: installed if a third-party repository of the backup "
+"provides it"
+
+msgid "inconnue de extensions.gnome.org et sans copie"
+msgstr "unknown to extensions.gnome.org and no copy"
+
+msgid "installation apt ou locale"
+msgstr "apt or local installation"
+
+msgid "introuvable"
+msgstr "not found"
+
+msgid "introuvables"
+msgstr "not found"
+
+msgid "jour"
+msgstr "day"
+
+msgid "jours"
+msgstr "days"
+
+msgid "l'ancienne"
+msgstr "the old"
+
+msgid "l'archive contient « {v1} », pas « {uuid} »"
+msgstr "the archive contains \"{v1}\", not \"{uuid}\""
+
+msgid "l'archive est abîmée ou tronquée : impossible de la lire en entier"
+msgstr "the archive is damaged or truncated: it cannot be read in full"
+
+msgid ""
+"l'archive est tronquée ou a été modifiée : le déchiffrement s'est arrêté "
+"avant la fin"
+msgstr ""
+"the archive is truncated or has been modified: decryption stopped before the"
+" end"
+
+msgid ""
+"l'archive se déchiffre et s'extrait entièrement, mais elle ne contient pas "
+"de SHA256SUMS : le contenu n'est pas comparé"
+msgstr ""
+"the archive decrypts and extracts completely, but it contains no SHA256SUMS:"
+" the contents are not compared"
+
+msgid "l'extraction a échoué : "
+msgstr "extraction failed: "
+
+msgid "la place disque a manqué pendant l'extraction"
+msgstr "disk space ran out during extraction"
+
+msgid "la récente"
+msgstr "the recent"
+
+msgid ""
+"la somme de contrôle ne correspond plus : l'archive est corrompue ou a été "
+"modifiée depuis sa création"
+msgstr ""
+"the checksum no longer matches: the archive is corrupted or has been "
+"modified since it was created"
+
+msgid "le dossier « {path} » n'existe pas sur {remote}"
+msgstr "the folder \"{path}\" does not exist on {remote}"
+
+msgid ""
+"le déchiffrement s'est arrêté avant la fin : l'archive est tronquée ou "
+"abîmée"
+msgstr ""
+"decryption stopped before the end: the archive is truncated or damaged"
+
+msgid "le paquet dconf-cli est requis"
+msgstr "the dconf-cli package is required"
+
+msgid "le paquet rsync est requis"
+msgstr "the rsync package is required"
+
+msgid "le service cloud ne répond pas (délai dépassé)"
+msgstr "the cloud service is not responding (timed out)"
+
+msgid ""
+"le service « {remote} » n'est pas configuré dans rclone (lancez « rclone "
+"config » dans un terminal)."
+msgstr ""
+"the service \"{remote}\" is not configured in rclone (run \"rclone config\" "
+"in a terminal)."
+
+msgid "lecture impossible : {v1}"
+msgstr "cannot read: {v1}"
+
+msgid "lecture ou écriture impossible : {v1}"
+msgstr "cannot read or write: {v1}"
+
+msgid "liste des profils absente ou illisible"
+msgstr "profile list missing or unreadable"
+
+msgid "manuelle"
+msgstr "manual"
+
+msgid "minutes"
+msgstr "minutes"
+
+msgid "modifié"
+msgstr "modified"
+
+msgid "modifiés"
+msgstr "modified"
+
+msgid ""
+"mot de passe actuel refusé par : {v1} (chiffrées avec un ancien mot de passe"
+" ? retrouvez-le avant d'en avoir besoin)"
+msgstr ""
+"current password rejected by: {v1} (encrypted with an old password? find it "
+"before you need it)"
+
+msgid "mot de passe incorrect ou archive illisible"
+msgstr "incorrect password or unreadable archive"
+
+msgid "mot de passe requis"
+msgstr "password required"
+
+msgid ""
+"même taille que la copie locale, mais ce service ne fournit pas d'empreinte "
+"comparable : copie non confirmée"
+msgstr ""
+"same size as the local copy, but this service provides no comparable "
+"checksum: copy not confirmed"
+
+msgid "nom d'archive invalide : {name!r}"
+msgstr "invalid archive name: {name!r}"
+
+msgid "nom de service rclone invalide : {remote!r}"
+msgstr "invalid rclone service name: {remote!r}"
+
+msgid "non déclarée compatible avec GNOME {major}"
+msgstr "not declared compatible with GNOME {major}"
+
+msgid "nouveau fichier"
+msgstr "new file"
+
+msgid "nouveaux fichiers"
+msgstr "new files"
+
+msgid "pas de connexion"
+msgstr "no connection"
+
+msgid "pas de connexion à extensions.gnome.org"
+msgstr "no connection to extensions.gnome.org"
+
+msgid "pas de copie locale à comparer"
+msgstr "no local copy to compare"
+
+msgid "passée"
+msgstr "skipped"
+
+msgid "pkexec est introuvable."
+msgstr "pkexec cannot be found."
+
+msgid "place temporaire insuffisante dans {v1} : il faut {v2}, il reste {v3}"
+msgstr "not enough temporary space in {v1}: {v2} needed, {v3} left"
+
+msgid "profils non restaurés : {v1}"
+msgstr "profiles not restored: {v1}"
+
+msgid "rclone a échoué (code {v1})"
+msgstr "rclone failed (code {v1})"
+
+msgid "rclone a échoué pour {n} (code {rc})"
+msgstr "rclone failed for {n} (code {rc})"
+
+msgid "rclone a échoué pour {v1} (code {rc})"
+msgstr "rclone failed for {v1} (code {rc})"
+
+msgid "rclone n'a pas pu démarrer : {v1}"
+msgstr "rclone could not start: {v1}"
+
+msgid "rclone n'est pas installé (paquet « rclone »)."
+msgstr "rclone is not installed (\"rclone\" package)."
+
+msgid "retiré"
+msgstr "removed"
+
+msgid "retirés"
+msgstr "removed"
+
+msgid "rsync a échoué (code {rc})"
+msgstr "rsync failed (code {rc})"
+
+msgid "rsync a échoué pour ~/{item} (code {rc})"
+msgstr "rsync failed for ~/{item} (code {rc})"
+
+msgid "réglage"
+msgstr "setting"
+
+msgid "réglages"
+msgstr "settings"
+
+msgid "réponse de rclone illisible"
+msgstr "unreadable rclone response"
+
+msgid "réponse trop volumineuse"
+msgstr "response too large"
+
+msgid "sauvegarde"
+msgstr "backup"
+
+msgid "sauvegarde abîmée"
+msgstr "damaged backup"
+
+msgid "sauvegarde automatique"
+msgstr "automatic backup"
+
+msgid "sauvegarde automatique serait supprimée"
+msgstr "automatic backup would be deleted"
+
+msgid "sauvegarde(s) abîmée(s) : {v1}"
+msgstr "damaged backup(s): {v1}"
+
+msgid "sauvegardes"
+msgstr "backups"
+
+msgid "sauvegardes abîmées"
+msgstr "damaged backups"
+
+msgid "sauvegardes automatiques"
+msgstr "automatic backups"
+
+msgid "sauvegardes automatiques seraient supprimées"
+msgstr "automatic backups would be deleted"
+
+msgid "systemctl {v1} a échoué"
+msgstr "systemctl {v1} failed"
+
+msgid "systemd est introuvable sur ce système"
+msgstr "systemd cannot be found on this system"
+
+msgid "système inconnu"
+msgstr "unknown system"
+
+msgid "taille cloud ({v1}) différente de la copie locale ({v2})"
+msgstr "cloud size ({v1}) differs from the local copy ({v2})"
+
+msgid "taille inconnue"
+msgstr "unknown size"
+
+msgid "terminée"
+msgstr "finished"
+
+msgid "terminée avec des erreurs"
+msgstr "finished with errors"
+
+msgid "téléchargée depuis extensions.gnome.org"
+msgstr "downloaded from extensions.gnome.org"
+
+msgid ""
+"while read -r s; do [ -n \"$s\" ] || continue; snap install \"$s\" || snap "
+"install --classic \"$s\" || echo \"Échec snap : $s\"; done < {q}"
+msgstr ""
+"while read -r s; do [ -n \"$s\" ] || continue; snap install \"$s\" || snap "
+"install --classic \"$s\" || echo \"snap failed: $s\"; done < {q}"
+
+msgid "{FOLDER_SUMS} est vide ou illisible"
+msgstr "{FOLDER_SUMS} is empty or unreadable"
+
+msgid "{FOLDER_SUMS} illisible : {v2}"
+msgstr "{FOLDER_SUMS} unreadable: {v2}"
+
+msgid "{__author__} · version {__version__}"
+msgstr "{__author__} · version {__version__}"
+
+msgid "{archive} (déchiffrée)"
+msgstr "{archive} (decrypted)"
+
+msgid "{count} fichiers de dépôts/clés copiés (dépôts système Ubuntu exclus)"
+msgstr ""
+"{count} repository/key files copied (Ubuntu system repositories excluded)"
+
+msgid "{done_text} avec des erreurs"
+msgstr "{done_text} with errors"
+
+msgid ""
+"{error}.\n"
+"\n"
+"Rien n'a été modifié dans votre dossier personnel."
+msgstr ""
+"{error}.\n"
+"\n"
+"Nothing was changed in your home folder."
+
+msgid ""
+"{error}.\n"
+"\n"
+"Utilisez une autre sauvegarde pour cet élément."
+msgstr ""
+"{error}.\n"
+"\n"
+"Use another backup for this item."
+
+msgid "{failed} fichier(s) non restauré(s)"
+msgstr "{failed} file(s) not restored"
+
+msgid ""
+"{label} : application ouverte, profil non restauré (fermez-la puis "
+"recommencez)."
+msgstr ""
+"{label}: application is open, profile not restored (close it, then try "
+"again)."
+
+msgid "{label} : dossier absent de la sauvegarde."
+msgstr "{label}: folder missing from the backup."
+
+msgid "{label} : {copied} fichiers restaurés, {same} déjà identiques"
+msgstr "{label}: {copied} files restored, {same} already identical"
+
+msgid "{mark} le {when} : {v3}"
+msgstr "{mark} on {when}: {v3}"
+
+msgid "{name} : déjà installée"
+msgstr "{name}: already installed"
+
+msgid ""
+"{name} : fichiers de la sauvegarde copiés ({why}) ; elle peut ne pas "
+"fonctionner avec cette version de GNOME."
+msgstr ""
+"{name}: files from the backup copied ({why}); it may not work with this "
+"version of GNOME."
+
+msgid "{name} : installation échouée ({exc})."
+msgstr "{name}: installation failed ({exc})."
+
+msgid "{name} : installée depuis extensions.gnome.org"
+msgstr "{name}: installed from extensions.gnome.org"
+
+msgid "{name} : non restaurée ({reason})."
+msgstr "{name}: not restored ({reason})."
+
+msgid ""
+"{name} : {v2}.\n"
+"\n"
+"Ne comptez pas sur cette archive : refaites une sauvegarde dès que possible."
+msgstr ""
+"{name}: {v2}.\n"
+"\n"
+"Do not rely on this archive: make a new backup as soon as possible."
+
+msgid ""
+"{name} : {v2}. Refaites une sauvegarde avec cette version pour en avoir une."
+msgstr "{name}: {v2}. Make a new backup with this version to have one."
+
+msgid ""
+"{name} a été déchiffrée en entier, extraite, et {n} fichier ({size}) "
+"correspond à ses sommes de contrôle internes. C'est la preuve que cette "
+"sauvegarde peut être restaurée. Tout ce qui avait été extrait a été "
+"supprimé."
+msgid_plural ""
+"{name} a été déchiffrée en entier, extraite, et {n} fichiers ({size}) "
+"correspondent à leurs sommes de contrôle internes. C'est la preuve que cette"
+" sauvegarde peut être restaurée. Tout ce qui avait été extrait a été "
+"supprimé."
+msgstr[0] ""
+"{name} was fully decrypted and extracted, and {n} file ({size}) matches its "
+"internal checksums. This proves that this backup can be restored. Everything"
+" that was extracted has been deleted."
+msgstr[1] ""
+"{name} was fully decrypted and extracted, and {n} files ({size}) match their"
+" internal checksums. This proves that this backup can be restored. "
+"Everything that was extracted has been deleted."
+
+msgid "{n} : taille reçue différente de la taille distante"
+msgstr "{n}: received size differs from the remote size"
+
+msgid "{n} archive de {remote}:{path} comparée à vos copies locales."
+msgid_plural "{n} archives de {remote}:{path} comparées à vos copies locales."
+msgstr[0] "{n} archive of {remote}:{path} compared with your local copies."
+msgstr[1] "{n} archives of {remote}:{path} compared with your local copies."
+
+msgid "{n} copie cloud abîmée"
+msgid_plural "{n} copies cloud abîmées"
+msgstr[0] "{n} damaged cloud copy"
+msgstr[1] "{n} damaged cloud copies"
+
+msgid ""
+"{n} fichier existe déjà à cet endroit et sera remplacé par la version de la "
+"sauvegarde. L'ancienne version est conservée à côté, avec l'extension "
+"{suffix}."
+msgid_plural ""
+"{n} fichiers existent déjà à cet endroit et seront remplacés par la version "
+"de la sauvegarde. L'ancienne version est conservée à côté, avec l'extension "
+"{suffix}."
+msgstr[0] ""
+"{n} file already exists at this location and will be replaced by the version"
+" from the backup. The old version is kept next to it, with the {suffix} "
+"extension."
+msgstr[1] ""
+"{n} files already exist at this location and will be replaced by the "
+"versions from the backup. The old versions are kept next to them, with the "
+"{suffix} extension."
+
+msgid "{n} fichiers protégés par {FOLDER_SUMS}."
+msgstr "{n} files protected by {FOLDER_SUMS}."
+
+msgid "{n} sauvegarde abîmée"
+msgid_plural "{n} sauvegardes abîmées"
+msgstr[0] "{n} damaged backup"
+msgstr[1] "{n} damaged backups"
+
+msgid "{n} sauvegarde contrôlée dans « {folder} »."
+msgid_plural "{n} sauvegardes contrôlées dans « {folder} »."
+msgstr[0] "{n} backup checked in \"{folder}\"."
+msgstr[1] "{n} backups checked in \"{folder}\"."
+
+msgid "{n} sauvegarde dans {folder}"
+msgid_plural "{n} sauvegardes dans {folder}"
+msgstr[0] "{n} backup in {folder}"
+msgstr[1] "{n} backups in {folder}"
+
+msgid "{n} sauvegarde sur {total} contrôlée. "
+msgid_plural "{n} sauvegardes sur {total} contrôlées. "
+msgstr[0] "{n} backup out of {total} checked. "
+msgstr[1] "{n} backups out of {total} checked. "
+
+msgid "{n} sur {v2} choisis"
+msgstr "{n} of {v2} selected"
+
+msgid "{profile_apps} : profils, signets, extensions, comptes"
+msgstr "{profile_apps}: profiles, bookmarks, extensions, accounts"
+
+msgid "{rel} (illisible)"
+msgstr "{rel} (unreadable)"
+
+msgid "{rel} (manquant)"
+msgstr "{rel} (missing)"
+
+msgid "{rel} (modifié)"
+msgstr "{rel} (modified)"
+
+msgid ""
+"{remote}:{path} : {error}.\n"
+"\n"
+"Rien n'a été téléchargé ni modifié."
+msgstr ""
+"{remote}:{path}: {error}.\n"
+"\n"
+"Nothing was downloaded or modified."
+
+msgid "{remote}:{path}/{v3} (déchiffrée)"
+msgstr "{remote}:{path}/{v3} (decrypted)"
+
+msgid "{seen} éléments lus"
+msgstr "{seen} items read"
+
+msgid "{tool} n'est pas installé sur cette machine"
+msgstr "{tool} is not installed on this machine"
+
+msgid ""
+"{uuid} : activation impossible (gsettings absent), elle sera appliquée par "
+"les réglages."
+msgstr ""
+"{uuid}: cannot enable (gsettings missing), it will be applied by the "
+"settings."
+
+msgid "{uuid} : activation impossible ({exc})."
+msgstr "{uuid}: cannot enable ({exc})."
+
+msgid "{uuid} : activée au prochain démarrage de la session."
+msgstr "{uuid}: enabled at the next session start."
+
+msgid "{v1} (illisible)"
+msgstr "{v1} (unreadable)"
+
+msgid "{v1} (modifié)"
+msgstr "{v1} (modified)"
+
+msgid "{v1} (sans somme de contrôle)"
+msgstr "{v1} (no checksum)"
+
+msgid "{v1} ({v2}) dans {v3}."
+msgstr "{v1} ({v2}) in {v3}."
+
+msgid "{v1} : choisir l'archive chiffrée"
+msgstr "{v1}: choose the encrypted archive"
+
+msgid "{v1} : choisir le dossier"
+msgstr "{v1}: choose the folder"
+
+msgid "{v1} : introuvable sur cette machine, ignoré"
+msgstr "{v1}: not found on this machine, skipped"
+
+msgid "{v1} : l'ancienne version est conservée à côté, avec l'extension {v2}."
+msgstr "{v1}: the old version is kept next to it, with the {v2} extension."
+
+msgid "{v1} : taille distante différente de la taille locale"
+msgstr "{v1}: remote size differs from the local size"
+
+msgid "{v1} : utilisez la recherche."
+msgstr "{v1}: use the search."
+
+msgid "{v1} : {copied} fichiers copiés"
+msgstr "{v1}: {copied} files copied"
+
+msgid "{v1} : {failed} fichier(s) non copiés"
+msgstr "{v1}: {failed} file(s) not copied"
+
+msgid "{v1} : échec"
+msgstr "{v1}: failed"
+
+msgid "{v1} est illisible"
+msgstr "{v1} is unreadable"
+
+msgid "{v1} est ouvert : fermez-le avant de restaurer"
+msgstr "{v1} is open: close it before restoring"
+
+msgid "{v1} extension(s) non restaurée(s) : {v2}"
+msgstr "{v1} extension(s) not restored: {v2}"
+
+msgid ""
+"{v1} extensions enregistrées : {online} seront retéléchargées depuis "
+"extensions.gnome.org, {v3} copiées en fichiers"
+msgstr ""
+"{v1} extensions saved: {online} will be downloaded again from "
+"extensions.gnome.org, {v3} copied as files"
+
+msgid "{v1} flatpaks enregistrés"
+msgstr "{v1} flatpaks saved"
+
+msgid "{v1} lignes de réglages enregistrées"
+msgstr "{v1} settings lines saved"
+
+msgid "{v1} n'est pas installé sur cette machine"
+msgstr "{v1} is not installed on this machine"
+
+msgid "{v1} paquets apt enregistrés"
+msgstr "{v1} apt packages saved"
+
+msgid "{v1} sauvegardes plus anciennes ne sont pas affichées"
+msgstr "{v1} older backups are not shown"
+
+msgid "{v1} sauvegardes supprimées"
+msgstr "{v1} backups deleted"
+
+msgid "{v1} snaps enregistrés"
+msgstr "{v1} snaps saved"
+
+msgid "{v1} sur {total}"
+msgstr "{v1} of {total}"
+
+msgid "{v1} sur {v2}"
+msgstr "{v1} of {v2}"
+
+msgid "{v1} · créée le {date}"
+msgstr "{v1} · created on {date}"
+
+msgid "{v1} · modifié le {v2}"
+msgstr "{v1} · modified on {v2}"
+
+msgid "{v1} · {v2} au total"
+msgstr "{v1} · {v2} in total"
+
+msgid "{v1} · {v2} · modifié le {v3}"
+msgstr "{v1} · {v2} · modified on {v3}"
+
+msgid "~/.config, ~/.ssh, données des applications… peut être volumineux"
+msgstr "~/.config, ~/.ssh, application data… can be large"
+
+msgid ""
+"« {folder} » ne contient ni archive chiffrée (.tar.gz.gpg) ni dossier « sauvegarde-ubuntu-… ».\n"
+"\n"
+"Choisissez le dossier où vos sauvegardes sont rangées."
+msgstr ""
+"\"{folder}\" contains neither an encrypted archive (.tar.gz.gpg) nor a \"sauvegarde-ubuntu-…\" folder.\n"
+"\n"
+"Choose the folder where your backups are stored."
+
+msgid "« {name} » n'existe plus sur {remote}:{path}"
+msgstr "\"{name}\" no longer exists on {remote}:{path}"
+
+msgid "« {target} » n'existe pas dans cette sauvegarde"
+msgstr "\"{target}\" does not exist in this backup"
+
+msgid "« {v1} » ({what}) sera remis dans ~/{v1}."
+msgstr "\"{v1}\" ({what}) will be put back in ~/{v1}."
+
+msgid ""
+"« {v1} » : {msg}.\n"
+"\n"
+"Ne comptez pas sur elle : refaites une sauvegarde dès que possible."
+msgstr ""
+"\"{v1}\": {msg}.\n"
+"\n"
+"Do not rely on it: make a new backup as soon as possible."
+
+msgid "« {v1} » correspond à sa somme de contrôle."
+msgstr "\"{v1}\" matches its checksum."
+
+msgid "« {v1} » n'est ni une archive chiffrée (.gpg) ni un dossier."
+msgstr "\"{v1}\" is neither an encrypted archive (.gpg) nor a folder."
+
+msgid "« {v1} » ne contient aucune sauvegarde à comparer."
+msgstr "\"{v1}\" contains no backup to compare."
+
+msgid ""
+"« {v1} » ne contient pas de configurations personnelles ni de profils : elle"
+" a sans doute été faite sans ces éléments. Il n'y a donc pas de fichier à y "
+"retrouver."
+msgstr ""
+"\"{v1}\" contains no personal configurations or profiles: it was probably "
+"made without these items. So there is no file to find in it."
+
+msgid ""
+"« {v1} » ne contient pas de sauvegarde non chiffrée, mais l'archive chiffrée"
+" « {v2} »."
+msgstr "\"{v1}\" contains no unencrypted backup, but the encrypted archive \"{v2}\"."
+
+msgid ""
+"« {v1} » ne contient pas de sauvegarde non chiffrée, mais {count} archives "
+"chiffrées. La plus récente est « {v3} »."
+msgstr ""
+"\"{v1}\" contains no unencrypted backup, but {count} encrypted archives. The"
+" most recent is \"{v3}\"."
+
+msgid ""
+"« {v1} » ne contient pas le fichier {v2}, qui sert à contrôler que rien n'est abîmé.\n"
+"\n"
+"Ce n'est pas forcément un problème : ce dossier vient peut-être d'une ancienne version de l'application, ou ce n'est pas un dossier de sauvegarde. Si votre sauvegarde est une archive chiffrée (.gpg), utilisez « Archive chiffrée… » à la place."
+msgstr ""
+"\"{v1}\" does not contain the {v2} file, which is used to check that nothing is damaged.\n"
+"\n"
+"This is not necessarily a problem: this folder may come from an older version of the application, or it is not a backup folder. If your backup is an encrypted archive (.gpg), use \"Encrypted archive…\" instead."
+
+msgid ""
+"« {v1} » ne peut pas être utilisée : {message}.\n"
+"\n"
+"Utilisez une autre sauvegarde, ou refaites-en une dès que possible."
+msgstr ""
+"\"{v1}\" cannot be used: {message}.\n"
+"\n"
+"Use another backup, or make a new one as soon as possible."
+
+msgid ""
+"« {v1} » s'ouvre avec ce mot de passe.\n"
+"\n"
+"Seul le début de l'archive a été déchiffré : rien n'a été restauré ni écrit sur le disque. Le reste du fichier n'est pas lu : la « Répétition de restauration à blanc » le fait, de bout en bout."
+msgstr ""
+"\"{v1}\" opens with this password.\n"
+"\n"
+"Only the beginning of the archive was decrypted: nothing was restored or written to the disk. The rest of the file is not read: the \"Dry-run restore\" does that, from start to finish."
+
+msgid "« {v1} » sera contrôlée, puis proposée à la restauration."
+msgstr "\"{v1}\" will be checked, then offered for restore."
+
+msgid ""
+"« {v1} » sera déchiffrée en entier dans un dossier temporaire privé, extraite et contrôlée, puis tout sera supprimé. Rien n'est restauré sur votre ordinateur.\n"
+"\n"
+"{space} Cela peut durer plusieurs minutes selon la taille de l'archive.\n"
+"\n"
+"Saisissez son mot de passe."
+msgstr ""
+"\"{v1}\" will be fully decrypted into a private temporary folder, extracted and checked, then everything will be deleted. Nothing is restored on your computer.\n"
+"\n"
+"{space} This may take several minutes depending on the size of the archive.\n"
+"\n"
+"Enter its password."
+
+msgid ""
+"« {v1} » sera supprimée définitivement de ce disque, avec sa somme de "
+"contrôle. Une copie envoyée dans le cloud n'est pas touchée.{v2}"
+msgstr ""
+"\"{v1}\" will be permanently deleted from this disk, along with its "
+"checksum. A copy sent to the cloud is not touched.{v2}"
+
+msgid "« {v1} » sera utilisée comme {v2}."
+msgstr "\"{v1}\" will be used as the {v2}."
+
+msgid "« {v1} » sera vérifiée, puis déchiffrée avec votre mot de passe."
+msgstr "\"{v1}\" will be verified, then decrypted with your password."
+
+msgid "À ajouter"
+msgstr "To add"
+
+msgid "À faire"
+msgstr "To do"
+
+msgid "À propos"
+msgstr "About"
+
+msgid "À savoir"
+msgstr "Good to know"
+
+msgid "Échec"
+msgstr "Failed"
+
+msgid "Échec flatpak : {app}"
+msgstr "flatpak failed: {app}"
+
+msgid "Élément non pris en charge"
+msgstr "Unsupported item"
+
+msgid "Étape suivante"
+msgstr "Next step"
+
+msgid "Étape {v1} sur {v2}"
+msgstr "Step {v1} of {v2}"
+
+msgid "État"
+msgstr "Status"
+
+msgid "à ajouter"
+msgstr "to add"
+
+msgid "à installer"
+msgstr "to install"
+
+msgid "à l'instant"
+msgstr "just now"
+
+msgid "à modifier"
+msgstr "to modify"
+
+msgid "à remplacer"
+msgstr "to replace"
+
+msgid "à une date inconnue"
+msgstr "on an unknown date"
+
+msgid "étape réussie"
+msgstr "step succeeded"
+
+msgid "étapes réussies"
+msgstr "steps succeeded"
+
+msgid "• {v1} : {v2} choisis sur {total} à installer"
+msgstr "• {v1}: {v2} of {total} to install chosen"
+
+msgid "… et {v1} archives plus anciennes non affichées"
+msgstr "… and {v1} older archives not shown"
+
+msgid "… et {v1} autres changements non affichés"
+msgstr "… and {v1} other changes not shown"
+
+msgid "… et {v1} autres sections non affichées"
+msgstr "… and {v1} other sections not shown"
+
+msgid "… et {v1} autres éléments non affichés"
+msgstr "… and {v1} other items not shown"

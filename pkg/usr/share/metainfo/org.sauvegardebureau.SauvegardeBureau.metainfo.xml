@@ -1,8 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <component type="desktop-application">
   <id>org.sauvegardebureau.SauvegardeBureau</id>
-  <name>Sauvegarde du bureau</name>
-  <summary>Sauvegarder et restaurer applications, extensions GNOME et réglages</summary>
+  <name>Desktop Backup</name>
+  <name xml:lang="fr">Sauvegarde du bureau</name>
+  <summary>Back up and restore applications, GNOME extensions and settings</summary>
+  <summary xml:lang="fr">Sauvegarder et restaurer applications, extensions GNOME et réglages</summary>
   <developer id="io.github.breizhmann">
     <name>BreizhMann</name>
   </developer>
@@ -15,24 +17,32 @@
   <content_rating type="oars-1.1"/>
   <launchable type="desktop-id">org.sauvegardebureau.SauvegardeBureau.desktop</launchable>
   <description>
-    <p>Sauvegarde et restaure les applications (apt, snap, flatpak), les dépôts tiers, les extensions GNOME et les réglages du bureau (dconf), via une interface GTK4/libadwaita.</p>
-    <p>Les sauvegardes sont protégées par une somme de contrôle SHA-256, vérifiée à la création, avant restauration et après rotation. Elles peuvent être chiffrées et copiées dans le cloud (rclone).</p>
+    <p>Backs up and restores applications (apt, snap, flatpak), third-party repositories, GNOME extensions and desktop settings (dconf), through a GTK4/libadwaita interface.</p>
+    <p xml:lang="fr">Sauvegarde et restaure les applications (apt, snap, flatpak), les dépôts tiers, les extensions GNOME et les réglages du bureau (dconf), via une interface GTK4/libadwaita.</p>
+    <p>Backups are protected by a SHA-256 checksum, verified when created, before restoring and after rotation. They can be encrypted and copied to the cloud (rclone).</p>
+    <p xml:lang="fr">Les sauvegardes sont protégées par une somme de contrôle SHA-256, vérifiée à la création, avant restauration et après rotation. Elles peuvent être chiffrées et copiées dans le cloud (rclone).</p>
+    <p>The interface is available in English and French, following your system language.</p>
+    <p xml:lang="fr">L’interface est disponible en anglais et en français, selon la langue du système.</p>
   </description>
   <screenshots>
     <screenshot type="default">
-      <caption>Choisir ce qu’il faut sauvegarder</caption>
+      <caption>Choose what to back up</caption>
+      <caption xml:lang="fr">Choisir ce qu’il faut sauvegarder</caption>
       <image type="source">https://raw.githubusercontent.com/BreizhMann/sauvegarde-bureau/main/docs/screenshots/01-sauvegarder.png</image>
     </screenshot>
     <screenshot>
-      <caption>Restaurer une sauvegarde, en entier ou un seul fichier</caption>
+      <caption>Restore a backup, in full or a single file</caption>
+      <caption xml:lang="fr">Restaurer une sauvegarde, en entier ou un seul fichier</caption>
       <image type="source">https://raw.githubusercontent.com/BreizhMann/sauvegarde-bureau/main/docs/screenshots/02-restaurer.png</image>
     </screenshot>
     <screenshot>
-      <caption>Assistant « Nouveau PC »</caption>
+      <caption>“New PC” wizard</caption>
+      <caption xml:lang="fr">Assistant « Nouveau PC »</caption>
       <image type="source">https://raw.githubusercontent.com/BreizhMann/sauvegarde-bureau/main/docs/screenshots/04-nouveau-pc.png</image>
     </screenshot>
     <screenshot>
-      <caption>Sauvegardes automatiques planifiées</caption>
+      <caption>Scheduled automatic backups</caption>
+      <caption xml:lang="fr">Sauvegardes automatiques planifiées</caption>
       <image type="source">https://raw.githubusercontent.com/BreizhMann/sauvegarde-bureau/main/docs/screenshots/06-automatique.png</image>
     </screenshot>
   </screenshots>
@@ -40,24 +50,34 @@
     <binary>sauvegarde-bureau</binary>
   </provides>
   <releases>
+    <release version="1.25.0" date="2026-10-16">
+      <description>
+        <p>The interface is now available in English and French. The language follows your system.</p>
+        <p xml:lang="fr">L’interface est désormais disponible en anglais et en français. La langue suit celle du système.</p>
+      </description>
+    </release>
     <release version="1.24.9" date="2026-10-15">
       <description>
-        <p>Ajout des notes de version dans la fiche de l’application.</p>
+        <p>Release notes are now shown in the application page.</p>
+        <p xml:lang="fr">Ajout des notes de version dans la fiche de l’application.</p>
       </description>
     </release>
     <release version="1.24.8" date="2026-10-15">
       <description>
-        <p>Meilleure intégration dans les logithèques : lien avec le paquet, informations sur le développeur et classification d’âge.</p>
+        <p>Better integration in software centers: package link, developer information and age rating.</p>
+        <p xml:lang="fr">Meilleure intégration dans les logithèques : lien avec le paquet, informations sur le développeur et classification d’âge.</p>
       </description>
     </release>
     <release version="1.24.7" date="2026-10-15">
       <description>
-        <p>Ajout des captures d’écran et des liens du projet dans la fiche de l’application.</p>
+        <p>Screenshots and project links added to the application page.</p>
+        <p xml:lang="fr">Ajout des captures d’écran et des liens du projet dans la fiche de l’application.</p>
       </description>
     </release>
     <release version="1.24.6" date="2026-10-15">
       <description>
-        <p>Première version publiée sur GitHub.</p>
+        <p>First version published on GitHub.</p>
+        <p xml:lang="fr">Première version publiée sur GitHub.</p>
       </description>
     </release>
   </releases>

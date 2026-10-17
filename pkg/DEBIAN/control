@@ -1,5 +1,5 @@
 Package: sauvegarde-bureau
-Version: 1.24.9
+Version: 1.25.0
 Installed-Size: 476
 Section: utils
 Priority: optional
@@ -8,44 +8,18 @@ Depends: python3 (>= 3.10), python3-gi, gir1.2-gtk-4.0, gir1.2-adw-1 (>= 1.5), d
 Recommends: flatpak, libnotify-bin, rclone
 Maintainer: BreizhMann <robi@iactualite.info>
 Homepage: https://www.iactualite.info/
-Description: Sauvegarde et restauration du bureau GNOME
- Sauvegarde et restaure les applications (apt, snap, flatpak), les depots
- tiers, les extensions GNOME et les reglages du bureau (dconf), via une
- interface GTK4/libadwaita. Les sauvegardes sont protegees par une somme de
- controle SHA-256 verifiee a la creation, avant restauration et apres rotation.
- Une archive .gpg ou un dossier glisse sur la fenetre est ouvert selon son type.
- Un bouton verifie d un coup toutes les sauvegardes d un dossier.
- La page "Mes sauvegardes" liste tout le dossier (date, taille, etat de la
- derniere verification) et permet d ouvrir, verifier ou supprimer chaque
- sauvegarde. Elle regroupe aussi "Verifier toutes mes sauvegardes", le
- glisser-deposer d un dossier ou d une archive et la rotation des anciennes
- sauvegardes automatiques (les sauvegardes manuelles ne sont jamais touchees).
- L'application se souvient de la derniere verification ("verifiee il y a 3 jours,
- tout est intact" ou "jamais verifiee") et affiche une alerte quand la derniere
- sauvegarde a plus de N jours (reglable dans l'onglet Automatique).
- Apres chaque sauvegarde planifiee, les sauvegardes conservees sont reverifiees
- (somme de controle et, si elles sont chiffrees, mot de passe du trousseau GNOME,
- sans rien demander) et une notification signale tout probleme.
- Les copies cloud (rclone) se controlent sans telechargement : les empreintes
- calculees par le service sont comparees a celles des copies locales.
- Un double-clic sur une archive .gpg de l'application, dans le gestionnaire de
- fichiers, ou "sauvegarde-bureau archive.tar.gz.gpg", l'ouvre dans la fenetre.
- Le mot de passe d une archive peut etre teste sans rien restaurer (seul le debut du
- fichier est lu).
- Un seul fichier ou dossier peut etre restaure sans tout restaurer : on parcourt ou on
- cherche dans le contenu de l'archive (ou d'un dossier de sauvegarde), puis on remet
- uniquement l'element choisi, a son emplacement d'origine ou dans un autre dossier. Chaque
- fichier est compare a sa somme de controle avant d'etre remis, et les fichiers remplaces
- sont conserves en .avant-restauration. Seuls les fichiers personnels sauvegardes
- (configurations, profils de navigateurs et de courrier) sont concernes.
- Une repetition de restauration a blanc, facultative, va plus loin : elle dechiffre toute
- l'archive dans un dossier temporaire prive, l'extrait, controle les sommes de controle
- internes (SHA256SUMS), puis supprime tout. C'est la seule vraie preuve qu'une sauvegarde
- est recuperable. Elle demande de la place disque temporaire et du temps ; son resultat
- est retenu dans la page "Mes sauvegardes".
- Les archives chiffrees envoyees dans le cloud (rclone) peuvent etre
- retelechargees et restaurees depuis l'application.
- Avant chaque sauvegarde, la taille est estimee et comparee a la place libre :
- un avertissement s'affiche si le disque de destination (ou le dossier de
- travail du chiffrement) est trop petit, et une sauvegarde planifiee est
- annulee avec une notification plutot que d'echouer en silence.
+Description: Desktop Backup: back up and restore your GNOME desktop
+ Sauvegarde du bureau backs up and restores applications (apt, snap, flatpak),
+ third-party repositories, GNOME extensions, desktop settings (dconf) and,
+ optionally, browser and mail profiles and personal configurations, through a
+ GTK4/libadwaita interface in English or French.
+ .
+ Backups are protected by a SHA-256 checksum, checked when created, before
+ restoring and after rotation. They can be encrypted (GPG) and copied to the
+ cloud (rclone), restored in full or one file at a time, and compared. A "New
+ PC" wizard sets up a new machine step by step. Scheduled backups are rotated
+ and re-checked automatically, with a notification if anything goes wrong.
+ .
+ An optional dry-run restore decrypts and extracts a whole archive into a
+ private temporary folder, checks its internal checksums, then deletes
+ everything: the only real proof that a backup can be recovered.
