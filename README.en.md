@@ -6,7 +6,7 @@ A GNOME application (GTK4 / libadwaita) to **back up and restore your Ubuntu des
 
 > **Note:** the interface is available in English and French, following your system language. The code's source language is French.
 
-![Backup page](docs/screenshots/01-sauvegarder.png)
+![Backup page](docs/screenshots/en/01-backup.png)
 
 ## What it backs up
 
@@ -28,7 +28,7 @@ A GNOME application (GTK4 / libadwaita) to **back up and restore your Ubuntu des
 
 | Restore | New PC | Automatic |
 |---|---|---|
-| ![](docs/screenshots/02-restaurer.png) | ![](docs/screenshots/04-nouveau-pc.png) | ![](docs/screenshots/06-automatique.png) |
+| ![](docs/screenshots/en/02-restore.png) | ![](docs/screenshots/en/04-new-pc.png) | ![](docs/screenshots/en/06-automatic.png) |
 
 ## Installation
 

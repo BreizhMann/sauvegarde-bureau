@@ -28,28 +28,38 @@
     <screenshot type="default">
       <caption>Choose what to back up</caption>
       <caption xml:lang="fr">Choisir ce qu’il faut sauvegarder</caption>
-      <image type="source">https://raw.githubusercontent.com/BreizhMann/sauvegarde-bureau/main/docs/screenshots/01-sauvegarder.png</image>
+      <image type="source">https://raw.githubusercontent.com/BreizhMann/sauvegarde-bureau/main/docs/screenshots/en/01-backup.png</image>
+      <image type="source" xml:lang="fr">https://raw.githubusercontent.com/BreizhMann/sauvegarde-bureau/main/docs/screenshots/01-sauvegarder.png</image>
     </screenshot>
     <screenshot>
       <caption>Restore a backup, in full or a single file</caption>
       <caption xml:lang="fr">Restaurer une sauvegarde, en entier ou un seul fichier</caption>
-      <image type="source">https://raw.githubusercontent.com/BreizhMann/sauvegarde-bureau/main/docs/screenshots/02-restaurer.png</image>
+      <image type="source">https://raw.githubusercontent.com/BreizhMann/sauvegarde-bureau/main/docs/screenshots/en/02-restore.png</image>
+      <image type="source" xml:lang="fr">https://raw.githubusercontent.com/BreizhMann/sauvegarde-bureau/main/docs/screenshots/02-restaurer.png</image>
     </screenshot>
     <screenshot>
       <caption>“New PC” wizard</caption>
       <caption xml:lang="fr">Assistant « Nouveau PC »</caption>
-      <image type="source">https://raw.githubusercontent.com/BreizhMann/sauvegarde-bureau/main/docs/screenshots/04-nouveau-pc.png</image>
+      <image type="source">https://raw.githubusercontent.com/BreizhMann/sauvegarde-bureau/main/docs/screenshots/en/04-new-pc.png</image>
+      <image type="source" xml:lang="fr">https://raw.githubusercontent.com/BreizhMann/sauvegarde-bureau/main/docs/screenshots/04-nouveau-pc.png</image>
     </screenshot>
     <screenshot>
       <caption>Scheduled automatic backups</caption>
       <caption xml:lang="fr">Sauvegardes automatiques planifiées</caption>
-      <image type="source">https://raw.githubusercontent.com/BreizhMann/sauvegarde-bureau/main/docs/screenshots/06-automatique.png</image>
+      <image type="source">https://raw.githubusercontent.com/BreizhMann/sauvegarde-bureau/main/docs/screenshots/en/06-automatic.png</image>
+      <image type="source" xml:lang="fr">https://raw.githubusercontent.com/BreizhMann/sauvegarde-bureau/main/docs/screenshots/06-automatique.png</image>
     </screenshot>
   </screenshots>
   <provides>
     <binary>sauvegarde-bureau</binary>
   </provides>
   <releases>
+    <release version="1.25.1" date="2026-10-17">
+      <description>
+        <p>Screenshots are now available in English and French.</p>
+        <p xml:lang="fr">Les captures d’écran sont désormais disponibles en anglais et en français.</p>
+      </description>
+    </release>
     <release version="1.25.0" date="2026-10-16">
       <description>
         <p>The interface is now available in English and French. The language follows your system.</p>
